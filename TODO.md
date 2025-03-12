@@ -1,0 +1,3 @@
+- auto refresh tree when a new ignore pattern is entered
+- persist ignore patterns for the selected folder
+- empty the "add new pattern" input after adding the pattern
