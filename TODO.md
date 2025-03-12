@@ -1,3 +1,2 @@
-- auto refresh tree when a new ignore pattern is entered
-- persist ignore patterns for the selected folder
-- empty the "add new pattern" input after adding the pattern
+- "confirm" prompt for deleting bundles
+- in the bundle manager, exporting contents to clipboard WITHOUT loading the bundle (to keep current selections) 

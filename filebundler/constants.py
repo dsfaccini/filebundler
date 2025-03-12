@@ -3,4 +3,5 @@ DEFAULT_IGNORE_PATTERNS = [
     ".venv/**",
     "node_modules/**",
     ".git/**",
+    "**/__pycache__/**",
 ]

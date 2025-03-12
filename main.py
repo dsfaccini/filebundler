@@ -71,7 +71,9 @@ def main():
 
     # App header
     st.title("File Bundler")
-    st.write("Create bundles of files for LLM context or other purposes")
+    st.write(
+        "Bundle project files together for prompting, or estimating and optimizing token and context usage."
+    )
 
     # Two-column layout
     col1, col2 = st.columns([1, 2])
@@ -198,7 +200,7 @@ def main():
         if st.session_state.project_loaded:
             # Tabs for different views
             tab1, tab2, tab3 = st.tabs(
-                ["Selected Files", "Create Bundle", "Manage Bundles"]
+                ["Selected Files", "Export Contents", "Manage Bundles"]
             )
 
             with tab1:
@@ -233,10 +235,10 @@ def main():
                     st.code(st.session_state.file_content, language="python")
 
             with tab2:
-                st.subheader("Create Bundle")
+                st.subheader("Export Contents")
 
                 # Basic bundle creation
-                if st.button("Create Bundle"):
+                if st.button("Export Contents"):
                     bundle_content = st.session_state.app.create_bundle()
 
                     if (

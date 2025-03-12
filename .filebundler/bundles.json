@@ -1,1 +1,11 @@
-[{"name": "test", "file_paths": ["main.py", "pyproject.toml"]}]
+[
+    {
+        "name": "app-stuff-no-settings",
+        "file_paths": [
+            ".cursor/rules/prd.md",
+            "TODO.md",
+            "filebundler/FileBundlerApp.py",
+            "main.py"
+        ]
+    }
+]

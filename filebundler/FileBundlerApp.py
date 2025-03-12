@@ -74,9 +74,7 @@ class FileBundlerApp:
         try:
             # Filter items based on ignore patterns
             filtered_items = [
-                item
-                for item in dir_path.iterdir()
-                if not self.ignore_patterns(item) and not item.name.startswith(".")
+                item for item in dir_path.iterdir() if not self.ignore_patterns(item)
             ]
             if len(filtered_items) > st.session_state.max_files:
                 st.warning(

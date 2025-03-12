@@ -1,1 +1,9 @@
-{"project": "/home/david/projects/file-bundler", "selections": ["/home/david/projects/file-bundler/uv.lock", "/home/david/projects/file-bundler/pyproject.toml"]}
+{
+    "project": "C:\\Users\\lobsp\\projects\\file-bundler",
+    "selections": [
+        "C:\\Users\\lobsp\\projects\\file-bundler\\.cursor\\rules\\prd.md",
+        "C:\\Users\\lobsp\\projects\\file-bundler\\TODO.md",
+        "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\FileBundlerApp.py",
+        "C:\\Users\\lobsp\\projects\\file-bundler\\main.py"
+    ]
+}
