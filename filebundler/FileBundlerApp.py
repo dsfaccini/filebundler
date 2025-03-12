@@ -408,3 +408,51 @@ class FileBundlerApp:
                 return f"Bundle '{old_name}' renamed to '{new_name}'."
 
         return f"Bundle '{old_name}' not found."
+
+    def create_bundle_from_saved(self, bundle_name: str) -> str:
+        """Create a bundle from a saved bundle without loading it"""
+        # Find the bundle
+        bundle = None
+        for b in self.bundles:
+            if b.name == bundle_name:
+                bundle = b
+                break
+
+        if not bundle:
+            return f"Bundle '{bundle_name}' not found."
+
+        # Create bundle content
+        bundle_content = []
+
+        for rel_path in bundle.file_paths:
+            try:
+                full_path = self.project_path / rel_path
+
+                # Check if file exists
+                if not full_path.exists():
+                    return f"The file {rel_path} does not exist or cannot be accessed."
+
+                # Read file content
+                try:
+                    file_content = full_path.read_text(
+                        encoding="utf-8", errors="replace"
+                    )
+                except UnicodeDecodeError:
+                    return f"Could not read {full_path.name} as text. It may be a binary file."
+
+                # Format with the style
+                section = [
+                    f"----- ./{rel_path} -----",
+                    file_content,
+                    "----- END -----",
+                    "",  # Empty line between files
+                ]
+                bundle_content.append("\n".join(section))
+
+            except Exception as e:
+                return f"Failed to read {rel_path}: {str(e)}"
+
+        # Join all content
+        full_bundle = "\n".join(bundle_content)
+
+        return full_bundle

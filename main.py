@@ -304,7 +304,7 @@ def main():
                     st.write("Saved Bundles:")
 
                     for bundle in st.session_state.app.bundles:
-                        col3a, col3b, col3c = st.columns([3, 1, 1])
+                        col3a, col3b, col3c, col4c = st.columns([3, 1, 1, 1])
 
                         with col3a:
                             st.write(
@@ -318,17 +318,67 @@ def main():
                                 st.rerun()
 
                         with col3c:
-                            if st.button("Delete", key=f"del_{bundle.name}"):
-                                result = st.session_state.app.delete_bundle(bundle.name)
-                                show_temp_notification(result, type="success")
-                                st.rerun()
+                            if st.button("Export Content", key=f"export_{bundle.name}"):
+                                bundle_content = (
+                                    st.session_state.app.create_bundle_from_saved(
+                                        bundle.name
+                                    )
+                                )
 
-                        # Expandable section to show files in bundle
+                                if (
+                                    bundle_content.startswith("Bundle")
+                                    or bundle_content.startswith("The file")
+                                    or bundle_content.startswith("Failed to")
+                                ):
+                                    show_temp_notification(bundle_content, type="error")
+                                else:
+                                    try:
+                                        pyperclip.copy(bundle_content)
+                                        show_temp_notification(
+                                            f"Bundle '{bundle.name}' exported to clipboard",
+                                            type="success",
+                                        )
+                                    except Exception as e:
+                                        show_temp_notification(
+                                            f"Could not copy to clipboard: {str(e)}",
+                                            type="error",
+                                        )
+                                        # Store content for manual copying
+                                        st.session_state[
+                                            f"export_content_{bundle.name}"
+                                        ] = bundle_content
+                                        st.rerun()
+
+                        with col4c:
+                            # Store confirmation state in session state
+                            confirm_key = f"confirm_delete_{bundle.name}"
+
+                            # If we're not in confirmation mode, show delete button
+                            if confirm_key not in st.session_state:
+                                if st.button("Delete", key=f"del_{bundle.name}"):
+                                    # Enter confirmation mode
+                                    st.session_state[confirm_key] = True
+                                    st.rerun()
+                            else:
+                                # We're in confirmation mode, show confirm button
+                                if st.button(
+                                    "Confirm?",
+                                    key=f"confirm_{bundle.name}",
+                                    type="primary",
+                                ):
+                                    # Perform deletion
+                                    result = st.session_state.app.delete_bundle(
+                                        bundle.name
+                                    )
+                                    # Exit confirmation mode
+                                    del st.session_state[confirm_key]
+                                    show_temp_notification(result, type="success")
+                                    st.rerun()
+
                         with st.expander(f"Files in {bundle.name}"):
                             for path in bundle.file_paths:
                                 st.write(f"• {path}")
 
-                            # Add rename option inside expander to declutter UI
                             new_name = st.text_input(
                                 "New name", key=f"rename_input_{bundle.name}"
                             )
