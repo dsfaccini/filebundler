@@ -14,6 +14,16 @@
 5. store and display word count and memory use for exported contents
   - propose the logic to compute this
   - this is a substitute for token count, so we don't worry about embeddings
+6. implement a general util for prompting llms using openrouter
+   1. make the util so that we can dynamically choose the model
+   2. use an enum to allow for model selection
+   3. you can store this utility under filebundler/lib/llm/...
+7. create a new tab, next to "manage bundles", called "auto bundle"
+   1. it has a chat where the user can write a prompt he wants to use on a different LLM to help him with his project
+   2. our LLM checks the prompt and the file structure, as well as the available bundles (not the contents, only the bundle names and the files) and selects the files that it deems relevant to answer the prompt
+   3. the "auto bundle" feature clears the current selection before selecting new files
+   4. the user can then review the selected files
+   5. 
 
 
 # IGNORE FOR NOW (may become relevant later)

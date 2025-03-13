@@ -9,7 +9,8 @@ from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
 
 from filebundler.Bundle import Bundle
-from filebundler.utils import json_dump, show_temp_notification
+from filebundler.utils import json_dump, make_file_section
+from filebundler.ui.notification import show_temp_notification
 
 logger = logging.getLogger(__name__)
 
@@ -34,6 +35,10 @@ class FileBundlerApp:
         self.selected_file_paths: Set[Path] = set()
         self.selected_file_content: Optional[str] = None
         self.bundles: List[Bundle] = []
+
+    @property
+    def nr_of_selected_files(self):
+        return len(self.selected_file_paths)
 
     def load_project(self, project_path: str):
         """Load a project directory"""
@@ -220,14 +225,7 @@ class FileBundlerApp:
             if not success:
                 return content  # This is an error message
 
-            # Format with the style
-            section = [
-                f"----- ./{relative_path} -----",
-                content,
-                "----- END -----",
-                "",  # Empty line between files
-            ]
-            bundle_content.append("\n".join(section))
+            bundle_content.append(make_file_section(relative_path, content))
 
         # Join all content
         return "\n".join(bundle_content)
@@ -426,7 +424,7 @@ class FileBundlerApp:
             return
 
         # Convert to Bundle objects
-        self.bundles = [Bundle(item["name"], item["file_paths"]) for item in data]
+        self.bundles = [Bundle.model_validate(item) for item in data]
 
     def show_file_content(self, file_path: Path) -> str:
         """Return file content for display"""

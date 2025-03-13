@@ -1,29 +1,9 @@
 {
     "project": "C:\\Users\\lobsp\\projects\\file-bundler",
     "selections": [
-        "C:\\Users\\lobsp\\projects\\file-bundler\\README.md",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\constants.py",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\ui\\bundle_display.py",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\main.py",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\.gitignore",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\ui\\callbacks\\__init__.py",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\TODO.md",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\.python-version",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\Bundle.py",
         "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\FileBundlerApp.py",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\ui\\file_tree.py",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\settings_manager.py",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\__init__.py",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\uv.lock",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\.filebundler\\settings.json",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\.filebundler\\bundles.json",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\settings_panel.py",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\ui\\SelectionManager.py",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\.filebundler\\selections.json",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\BundleManager.py",
+        "C:\\Users\\lobsp\\projects\\file-bundler\\main.py",
         "C:\\Users\\lobsp\\projects\\file-bundler\\.cursor\\rules\\prd.md",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\utils\\__init__.py",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\pyproject.toml",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\utils\\language_formatting.py"
+        "C:\\Users\\lobsp\\projects\\file-bundler\\TODO.md"
     ]
 }

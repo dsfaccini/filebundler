@@ -5,7 +5,8 @@ description = "File Bundler is an app to bundle project files together and use t
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "pydantic-core>=2.31.1",
+    "pydantic>=2.10.6",
+    "pydantic-core>=2.27.2",
     "pyperclip>=1.9.0",
     "ruff>=0.9.10",
     "streamlit>=1.43.2",

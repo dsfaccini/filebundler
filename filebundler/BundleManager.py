@@ -5,22 +5,33 @@ import logging
 
 from pathlib import Path
 from typing import Dict, List, Optional, Set
+from pydantic import ConfigDict, field_serializer
 
 from filebundler.Bundle import Bundle
-from filebundler.utils import json_dump, show_temp_notification
+from filebundler.ui.notification import show_temp_notification
+from filebundler.utils import (
+    json_dump,
+    make_file_section,
+    read_file,
+    BaseModel,
+)
 
 logger = logging.getLogger(__name__)
 
 
-class BundleManager:
+class BundleManager(BaseModel):
     """
     Manages the creation, loading, saving, and deletion of bundles.
     """
 
-    def __init__(self, project_path: Path = Path()):
-        self.project_path = project_path
-        self.bundles: List[Bundle] = []
-        self.bundle_content: Optional[str] = None
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+    project_path: Optional[Path] = None
+    bundles: List[Bundle] = []
+    bundle_content: Optional[str] = None
+
+    @field_serializer("project_path")
+    def serialize_project_path(project_path):
+        return project_path.as_posix()
 
     def set_project_path(self, project_path: Path):
         """Set the project path and reset bundles"""
@@ -39,28 +50,9 @@ class BundleManager:
             try:
                 relative_path = get_relative_path(file_path)
 
-                # Check if file exists
-                if not file_path.exists():
-                    logger.warning(f"File does not exist: {relative_path}")
-                    return f"The file {relative_path} does not exist or cannot be accessed."
+                file_content = read_file(file_path)
 
-                # Read file content
-                try:
-                    file_content = file_path.read_text(
-                        encoding="utf-8", errors="replace"
-                    )
-                except UnicodeDecodeError as e:
-                    logger.error(f"UnicodeDecodeError for {file_path.name}: {e}")
-                    return f"Could not read {file_path.name} as text. It may be a binary file."
-
-                # Format with the new style
-                section = [
-                    f"----- ./{relative_path} -----",
-                    file_content,
-                    "----- END -----",
-                    "",  # Empty line between files
-                ]
-                bundle_content.append("\n".join(section))
+                bundle_content.append(make_file_section(relative_path, file_content))
 
             except Exception as e:
                 logger.error(f"Failed to read {file_path.name}: {e}", exc_info=True)
@@ -145,29 +137,8 @@ class BundleManager:
         for rel_path in bundle.file_paths:
             try:
                 full_path = self.project_path / rel_path
-
-                # Check if file exists
-                if not full_path.exists():
-                    logger.warning(f"File does not exist: {rel_path}")
-                    return f"The file {rel_path} does not exist or cannot be accessed."
-
-                # Read file content
-                try:
-                    file_content = full_path.read_text(
-                        encoding="utf-8", errors="replace"
-                    )
-                except UnicodeDecodeError as e:
-                    logger.error(f"UnicodeDecodeError for {full_path.name}: {e}")
-                    return f"Could not read {full_path.name} as text. It may be a binary file."
-
-                # Format with the style
-                section = [
-                    f"----- ./{rel_path} -----",
-                    file_content,
-                    "----- END -----",
-                    "",  # Empty line between files
-                ]
-                bundle_content.append("\n".join(section))
+                file_content = read_file(full_path)
+                bundle_content.append(make_file_section(rel_path, file_content))
 
             except Exception as e:
                 logger.error(f"Failed to read {rel_path}: {e}", exc_info=True)
@@ -210,10 +181,7 @@ class BundleManager:
             bundles_file = bundle_dir / "bundles.json"
 
             # Convert bundles to dictionary
-            data = [
-                {"name": bundle.name, "file_paths": bundle.file_paths}
-                for bundle in self.bundles
-            ]
+            data = [bundle.model_dump() for bundle in self.bundles]
 
             # Save to file
             with open(bundles_file, "w") as f:
@@ -240,7 +208,7 @@ class BundleManager:
                 data = json.load(f)
 
             # Convert to Bundle objects
-            self.bundles = [Bundle(item["name"], item["file_paths"]) for item in data]
+            self.bundles = [Bundle.model_validate(item) for item in data]
             logger.info(f"Loaded {len(self.bundles)} bundles from {bundles_file}")
 
         except Exception as e:
