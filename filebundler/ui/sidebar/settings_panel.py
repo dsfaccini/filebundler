@@ -1,9 +1,9 @@
-# filebundler/settings_panel.py
+# filebundler/ui/sidebar/settings_panel.py
 
 import streamlit as st
 
 from filebundler.FileBundlerApp import FileBundlerApp
-from filebundler.settings_manager import SettingsManager
+from filebundler.ui.sidebar.settings_manager import SettingsManager
 from filebundler.ui.notification import show_temp_notification
 
 

@@ -1,8 +1,9 @@
-# filebundler/settings_manager.py
+# filebundler/ui/sidebar/settings_manager.py
 
 import json
 from pathlib import Path
 
+from filebundler.constants import DEFAULT_IGNORE_PATTERNS
 from filebundler.utils import json_dump
 
 
@@ -77,7 +78,7 @@ class SettingsManager:
 
         # Default settings
         default_settings = {
-            "ignore_patterns": ["venv/**", ".venv/**", "node_modules/**", ".git/**"],
+            "ignore_patterns": DEFAULT_IGNORE_PATTERNS,
             "max_files": 500,
         }
 

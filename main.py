@@ -1,21 +1,23 @@
 # main.py
 import os
 import logging
-import pyperclip
 import streamlit as st
 
 from pathlib import Path
 
 from filebundler.BundleManager import BundleManager
 from filebundler.FileBundlerApp import FileBundlerApp
-from filebundler.settings_manager import SettingsManager
 from filebundler.constants import DEFAULT_IGNORE_PATTERNS
-from filebundler.settings_panel import render_settings_panel
-from filebundler.utils.language_formatting import set_language_from_filename
+
+from filebundler.ui.tabs.export_contents import render_export_tab
+from filebundler.ui.tabs.selected_files import render_selected_files_tab
+
+from filebundler.ui.sidebar.settings_manager import SettingsManager
+from filebundler.ui.sidebar.settings_panel import render_settings_panel
 
 from filebundler.ui.file_tree import render_file_tree
 from filebundler.ui.SelectionManager import SelectionManager
-from filebundler.ui.callbacks import render_manage_bundles_tab
+from filebundler.ui.tabs.manage_bundles import render_manage_bundles_tab
 from filebundler.ui.notification import show_temp_notification
 
 # Configure logging
@@ -163,120 +165,6 @@ def render_project_selection():
                 show_temp_notification("No project loaded", type="error")
 
     return project_path
-
-
-def render_selected_files_tab():
-    """Render the Selected Files tab"""
-    st.subheader(f"Selected Files ({st.session_state.app.nr_of_selected_files})")
-    st.text("Click on a file to view its content")
-
-    # Get selected files
-    selected_files = st.session_state.app.get_selected_files()
-
-    if selected_files:
-        for file_item in selected_files:
-            relative_path = st.session_state.app.get_relative_path(file_item.path)
-            if st.button(f"📄 {relative_path}", key=f"sel_{file_item.path}"):
-                st.session_state.selected_file = file_item.path
-                st.session_state.file_content = st.session_state.app.show_file_content(
-                    file_item.path
-                )
-                st.rerun()
-    else:
-        show_temp_notification(
-            "No files selected. Use the checkboxes in the file tree to select files.",
-            type="info",
-        )
-
-    # Show file content if a file is selected
-    if st.session_state.selected_file and st.session_state.file_content:
-        st.subheader(f"File: {Path(st.session_state.selected_file).name}")
-
-        filepath = Path(st.session_state.selected_file)
-        language = set_language_from_filename(filepath)
-
-        st.code(st.session_state.file_content, language=language)
-
-
-def render_export_tab():
-    """Render the Export Contents tab"""
-    st.subheader("Export Contents")
-    bundle_manager = st.session_state.bundle_manager
-    app = st.session_state.app
-
-    # Basic bundle creation
-    if st.button("Export Contents"):
-        try:
-            selected_files = [item.path for item in app.get_selected_files()]
-            bundle_content = bundle_manager.create_bundle(
-                selected_files, app.get_relative_path
-            )
-
-            if (
-                bundle_content.startswith("No files")
-                or bundle_content.startswith("The file")
-                or bundle_content.startswith("Failed to")
-            ):
-                logger.warning(f"Bundle creation issue: {bundle_content}")
-                show_temp_notification(bundle_content, type="error")
-            else:
-                st.session_state.bundle_content = bundle_content
-                pyperclip.copy(bundle_content)
-                # Success message
-                show_temp_notification(
-                    f"Bundle created with {len(app.get_selected_files())} files",
-                    type="success",
-                )
-        except Exception as e:
-            logger.error(f"Error creating bundle: {e}", exc_info=True)
-            show_temp_notification(f"Error creating bundle: {str(e)}", type="error")
-
-    # Save bundle with name
-    col2a, col2b = st.columns([3, 1])
-    with col2a:
-        bundle_name = st.text_input("Bundle Name (lowercase alphanumeric)")
-    with col2b:
-        if st.button("Save Bundle"):
-            try:
-                selected_files = [item.path for item in app.get_selected_files()]
-                result = bundle_manager.save_bundle(
-                    bundle_name, selected_files, app.get_relative_path
-                )
-
-                if (
-                    result.startswith("No files")
-                    or result.startswith("Please")
-                    or result.startswith("Bundle name")
-                ):
-                    logger.warning(f"Bundle save issue: {result}")
-                    show_temp_notification(result, type="error")
-                else:
-                    logger.info(f"Bundle saved: {bundle_name}")
-                    show_temp_notification(result, type="success")
-            except Exception as e:
-                logger.error(f"Error saving bundle: {e}", exc_info=True)
-                show_temp_notification(f"Error saving bundle: {str(e)}", type="error")
-            st.rerun()
-
-    # Display the bundle content
-    if "bundle_content" in st.session_state:
-        st.subheader("Bundle Preview")
-        st.text_area("Bundle Content", st.session_state.bundle_content, height=300)
-
-        # Copy to clipboard button
-        if st.button("Copy to Clipboard"):
-            try:
-                pyperclip.copy(st.session_state.bundle_content)
-                show_temp_notification("Bundle copied to clipboard", type="success")
-            except Exception as e:
-                logger.error(f"Clipboard error: {e}", exc_info=True)
-                show_temp_notification(
-                    f"Could not copy to clipboard: {str(e)}", type="error"
-                )
-                show_temp_notification(
-                    "You can manually copy the content from the text area above",
-                    type="info",
-                )
 
 
 def main():

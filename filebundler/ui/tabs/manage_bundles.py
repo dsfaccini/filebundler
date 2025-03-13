@@ -1,9 +1,8 @@
-# filebundler/ui/callbacks/__init__.py
+# filebundler/ui/tabs/manage_bundles.py
 import logging
 import pyperclip
 import streamlit as st
 
-from filebundler.ui.confirm import confirm
 from filebundler.ui.bundle_display import render_saved_bundles
 from filebundler.ui.notification import show_temp_notification
 
