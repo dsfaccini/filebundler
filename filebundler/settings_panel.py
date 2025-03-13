@@ -4,7 +4,7 @@ import streamlit as st
 
 from filebundler.FileBundlerApp import FileBundlerApp
 from filebundler.settings_manager import SettingsManager
-from filebundler.utils import show_temp_notification
+from filebundler.ui.notification import show_temp_notification
 
 
 def render_settings_panel(settings_manager: SettingsManager, app: FileBundlerApp):

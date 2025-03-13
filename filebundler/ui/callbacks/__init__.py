@@ -4,7 +4,7 @@ import pyperclip
 import streamlit as st
 
 from filebundler.ui.bundle_display import render_saved_bundles
-from filebundler.utils import show_temp_notification
+from filebundler.ui.notification import show_temp_notification
 
 logger = logging.getLogger(__name__)
 

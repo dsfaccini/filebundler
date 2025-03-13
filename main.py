@@ -6,18 +6,17 @@ import streamlit as st
 
 from pathlib import Path
 
-from filebundler.FileBundlerApp import FileBundlerApp
 from filebundler.BundleManager import BundleManager
+from filebundler.FileBundlerApp import FileBundlerApp
 from filebundler.settings_manager import SettingsManager
-from filebundler.settings_panel import render_settings_panel
-from filebundler.ui.callbacks import render_manage_bundles_tab
-from filebundler.utils import show_temp_notification
 from filebundler.constants import DEFAULT_IGNORE_PATTERNS
+from filebundler.settings_panel import render_settings_panel
 from filebundler.utils.language_formatting import set_language_from_filename
 
 from filebundler.ui.file_tree import render_file_tree
-from filebundler.ui.bundle_display import render_saved_bundles
 from filebundler.ui.SelectionManager import SelectionManager
+from filebundler.ui.callbacks import render_manage_bundles_tab
+from filebundler.ui.notification import show_temp_notification
 
 # Configure logging
 logging.basicConfig(
@@ -168,7 +167,7 @@ def render_project_selection():
 
 def render_selected_files_tab():
     """Render the Selected Files tab"""
-    st.subheader("Selected Files")
+    st.subheader(f"Selected Files ({st.session_state.app.nr_of_selected_files})")
     st.text("Click on a file to view its content")
 
     # Get selected files
@@ -323,7 +322,11 @@ def main():
             if st.session_state.project_loaded:
                 # Tabs for different views
                 tab1, tab2, tab3 = st.tabs(
-                    ["Selected Files", "Export Contents", "Manage Bundles"]
+                    [
+                        f"Selected Files ({st.session_state.app.nr_of_selected_files})",
+                        "Export Contents",
+                        "Manage Bundles",
+                    ]
                 )
 
                 with tab1:
