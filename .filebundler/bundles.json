@@ -7,5 +7,13 @@
             "filebundler/FileBundlerApp.py",
             "main.py"
         ]
+    },
+    {
+        "name": "settings-stuff",
+        "file_paths": [
+            "filebundler/settings_panel.py",
+            "filebundler/settings_manager.py",
+            "main.py"
+        ]
     }
 ]

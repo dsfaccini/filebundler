@@ -1,2 +1,4 @@
-- "confirm" prompt for deleting bundles
-- in the bundle manager, exporting contents to clipboard WITHOUT loading the bundle (to keep current selections) 
+- wrap saved bundles in a div with a border so they are clearly separated
+- make all buttons on a saved bundle the same size!
+- add "select all" and "unselect all" buttons
+  - these can be small buttons under the "Files" header

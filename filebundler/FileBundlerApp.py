@@ -1,10 +1,11 @@
+# filebundler/FileBundlerApp.py
 import re
 import json
 import fnmatch
 import streamlit as st
 
 from pathlib import Path
-from typing import Dict, List, Optional, Set
+from typing import Dict, List, Optional, Set, Tuple
 
 from filebundler.utils import json_dump
 
@@ -51,6 +52,9 @@ class FileBundlerApp:
 
         # Load saved selections for this project if exists
         self.load_selections()
+
+        # Load saved bundles
+        self.load_bundles()
 
     def ignore_patterns(self, item_path: Path) -> bool:
         """Check if file matches any ignore patterns"""
@@ -171,47 +175,129 @@ class FileBundlerApp:
             # If the file is not in the project directory, return the full path
             return str(file_path)
 
-    def create_bundle(self) -> str:
-        """Create a bundle from selected files"""
-        selected_files = self.get_selected_files()
+    def _read_file_content(
+        self, file_path: Path, relative_path: str
+    ) -> Tuple[str, bool]:
+        """Read file content with error handling
 
-        if not selected_files:
-            return "No files selected. Please select files to bundle."
+        Returns:
+            tuple: (content_or_error_message, success_flag)
+        """
+        try:
+            # Check if file exists
+            if not file_path.exists():
+                return (
+                    f"The file {relative_path} does not exist or cannot be accessed.",
+                    False,
+                )
+
+            # Read file content
+            try:
+                file_content = file_path.read_text(encoding="utf-8", errors="replace")
+                return file_content, True
+            except UnicodeDecodeError:
+                return (
+                    f"Could not read {file_path.name} as text. It may be a binary file.",
+                    False,
+                )
+
+        except Exception as e:
+            return f"Failed to read {relative_path}: {str(e)}", False
+
+    def _generate_bundle_content(self, file_paths: List[Path]) -> str:
+        """Generate bundle content from a list of file paths
+
+        Returns:
+            str: Generated bundle or error message
+        """
+        if not file_paths:
+            return "No files provided. Please select files to bundle."
 
         bundle_content = []
 
-        for file_item in selected_files:
-            try:
-                relative_path = self.get_relative_path(file_item.path)
+        for file_path in file_paths:
+            relative_path = self.get_relative_path(file_path)
+            content, success = self._read_file_content(file_path, relative_path)
 
-                # Check if file exists
-                if not file_item.path.exists():
-                    return f"The file {relative_path} does not exist or cannot be accessed."
+            if not success:
+                return content  # This is an error message
 
-                # Read file content
-                try:
-                    file_content = file_item.path.read_text(
-                        encoding="utf-8", errors="replace"
-                    )
-                except UnicodeDecodeError:
-                    return f"Could not read {file_item.path.name} as text. It may be a binary file."
-
-                # Format with the new style
-                section = [
-                    f"----- ./{relative_path} -----",
-                    file_content,
-                    "----- END -----",
-                    "",  # Empty line between files
-                ]
-                bundle_content.append("\n".join(section))
-
-            except Exception as e:
-                return f"Failed to read {file_item.path.name}: {str(e)}"
+            # Format with the style
+            section = [
+                f"----- ./{relative_path} -----",
+                content,
+                "----- END -----",
+                "",  # Empty line between files
+            ]
+            bundle_content.append("\n".join(section))
 
         # Join all content
-        full_bundle = "\n".join(bundle_content)
+        return "\n".join(bundle_content)
 
-        return full_bundle
+    def create_bundle(self) -> str:
+        """Create a bundle from selected files"""
+        selected_files = self.get_selected_files()
+        if not selected_files:
+            return "No files selected. Please select files to bundle."
+
+        file_paths = [file_item.path for file_item in selected_files]
+        return self._generate_bundle_content(file_paths)
+
+    def create_bundle_from_saved(self, bundle_name: str) -> str:
+        """Create a bundle from a saved bundle without loading it"""
+        # Find the bundle
+        bundle = None
+        for b in self.bundles:
+            if b.name == bundle_name:
+                bundle = b
+                break
+
+        if not bundle:
+            return f"Bundle '{bundle_name}' not found."
+
+        # Convert relative paths to full paths
+        file_paths = [self.project_path / rel_path for rel_path in bundle.file_paths]
+        return self._generate_bundle_content(file_paths)
+
+    def _save_json_data(self, filename: str, data) -> bool:
+        """Save data to JSON file in .filebundler directory
+
+        Returns:
+            bool: True if successful, False otherwise
+        """
+        try:
+            # Create .filebundler directory if it doesn't exist
+            bundle_dir = self.project_path / ".filebundler"
+            bundle_dir.mkdir(exist_ok=True)
+
+            file_path = bundle_dir / filename
+
+            # Write to file
+            with open(file_path, "w") as f:
+                json_dump(data, f)
+            return True
+
+        except Exception as e:
+            st.error(f"Error saving {filename}: {str(e)}")
+            return False
+
+    def _load_json_data(self, filename: str) -> Optional[dict]:
+        """Load data from JSON file in .filebundler directory
+
+        Returns:
+            Optional[dict]: Loaded data or None if error
+        """
+        file_path = self.project_path / ".filebundler" / filename
+
+        if not file_path.exists():
+            return None
+
+        try:
+            with open(file_path, "r") as f:
+                return json.load(f)
+        except Exception as e:
+            st.error(f"Error loading {filename}: {str(e)}")
+            return None
 
     def save_bundle(self, bundle_name: str) -> str:
         """Save current selection as a named bundle"""
@@ -294,109 +380,60 @@ class FileBundlerApp:
         if not self.project_path.exists():
             return
 
-        try:
-            # Create .filebundler directory if it doesn't exist
-            bundle_dir = self.project_path / ".filebundler"
-            bundle_dir.mkdir(exist_ok=True)
+        # Create data structure with project path and selected files
+        data = {
+            "project": str(self.project_path),
+            "selections": self.get_selected_file_paths(),
+        }
 
-            selections_file = bundle_dir / "selections.json"
-
-            # Create data structure with project path and selected files
-            data = {
-                "project": str(self.project_path),
-                "selections": self.get_selected_file_paths(),
-            }
-
-            # Write to file
-            with open(selections_file, "w") as f:
-                json_dump(data, f)
-
-        except Exception as e:
-            st.error(f"Error saving selections: {str(e)}")
+        # Save to file
+        self._save_json_data("selections.json", data)
 
     def load_selections(self):
         """Load selected files from JSON file"""
-        bundle_dir = self.project_path / ".filebundler"
-        selections_file = bundle_dir / "selections.json"
-
-        if not selections_file.exists():
+        data = self._load_json_data("selections.json")
+        if not data:
             return
 
-        try:
-            # Read from file
-            with open(selections_file, "r") as f:
-                data = json.load(f)
+        # Check if the loaded data is for the current project
+        if data.get("project") != str(self.project_path):
+            return
 
-            # Check if the loaded data is for the current project
-            if data.get("project") != str(self.project_path):
-                return
-
-            # Set selections
-            for path_str in data.get("selections", []):
-                try:
-                    path = Path(path_str)
-                    if path in self.file_items:
-                        file_item = self.file_items[path]
-                        file_item.selected = True
-                        self.selected_file_paths.add(path)
-                except Exception as e:
-                    st.error(f"Error restoring selection for {path_str}: {str(e)}")
-
-        except Exception as e:
-            st.error(f"Error loading selections: {str(e)}")
+        # Set selections
+        for path_str in data.get("selections", []):
+            try:
+                path = Path(path_str)
+                if path in self.file_items:
+                    file_item = self.file_items[path]
+                    file_item.selected = True
+                    self.selected_file_paths.add(path)
+            except Exception as e:
+                st.error(f"Error restoring selection for {path_str}: {str(e)}")
 
     def save_bundles(self):
         """Save bundles to file"""
-        try:
-            # Create .filebundler directory if it doesn't exist
-            bundle_dir = self.project_path / ".filebundler"
-            bundle_dir.mkdir(exist_ok=True)
+        # Convert bundles to dictionary
+        data = [
+            {"name": bundle.name, "file_paths": bundle.file_paths}
+            for bundle in self.bundles
+        ]
 
-            bundles_file = bundle_dir / "bundles.json"
-
-            # Convert bundles to dictionary
-            data = [
-                {"name": bundle.name, "file_paths": bundle.file_paths}
-                for bundle in self.bundles
-            ]
-
-            # Save to file
-            with open(bundles_file, "w") as f:
-                json_dump(data, f)
-
-        except Exception as e:
-            st.error(f"Error saving bundles: {str(e)}")
+        # Save to file
+        self._save_json_data("bundles.json", data)
 
     def load_bundles(self):
         """Load bundles from file"""
-        bundle_dir = self.project_path / ".filebundler"
-        bundles_file = bundle_dir / "bundles.json"
-
-        if not bundles_file.exists():
+        data = self._load_json_data("bundles.json")
+        if not data:
             return
 
-        try:
-            # Read from file
-            with open(bundles_file, "r") as f:
-                data = json.load(f)
-
-            # Convert to Bundle objects
-            self.bundles = [Bundle(item["name"], item["file_paths"]) for item in data]
-
-        except Exception as e:
-            st.error(f"Error loading bundles: {str(e)}")
+        # Convert to Bundle objects
+        self.bundles = [Bundle(item["name"], item["file_paths"]) for item in data]
 
     def show_file_content(self, file_path: Path) -> str:
         """Return file content for display"""
-        try:
-            if not file_path.exists():
-                return f"File not found: {file_path}\nThe file may have been deleted or moved."
-
-            # Read file content
-            return file_path.read_text(encoding="utf-8", errors="replace")
-
-        except Exception as e:
-            return f"Error loading file: {str(e)}"
+        content, success = self._read_file_content(file_path, str(file_path))
+        return content
 
     def rename_bundle(self, old_name: str, new_name: str) -> str:
         """Rename a saved bundle"""
@@ -408,51 +445,3 @@ class FileBundlerApp:
                 return f"Bundle '{old_name}' renamed to '{new_name}'."
 
         return f"Bundle '{old_name}' not found."
-
-    def create_bundle_from_saved(self, bundle_name: str) -> str:
-        """Create a bundle from a saved bundle without loading it"""
-        # Find the bundle
-        bundle = None
-        for b in self.bundles:
-            if b.name == bundle_name:
-                bundle = b
-                break
-
-        if not bundle:
-            return f"Bundle '{bundle_name}' not found."
-
-        # Create bundle content
-        bundle_content = []
-
-        for rel_path in bundle.file_paths:
-            try:
-                full_path = self.project_path / rel_path
-
-                # Check if file exists
-                if not full_path.exists():
-                    return f"The file {rel_path} does not exist or cannot be accessed."
-
-                # Read file content
-                try:
-                    file_content = full_path.read_text(
-                        encoding="utf-8", errors="replace"
-                    )
-                except UnicodeDecodeError:
-                    return f"Could not read {full_path.name} as text. It may be a binary file."
-
-                # Format with the style
-                section = [
-                    f"----- ./{rel_path} -----",
-                    file_content,
-                    "----- END -----",
-                    "",  # Empty line between files
-                ]
-                bundle_content.append("\n".join(section))
-
-            except Exception as e:
-                return f"Failed to read {rel_path}: {str(e)}"
-
-        # Join all content
-        full_bundle = "\n".join(bundle_content)
-
-        return full_bundle
