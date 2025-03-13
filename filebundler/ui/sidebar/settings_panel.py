@@ -3,8 +3,8 @@
 import streamlit as st
 
 from filebundler.FileBundlerApp import FileBundlerApp
-from filebundler.ui.sidebar.settings_manager import SettingsManager
 from filebundler.ui.notification import show_temp_notification
+from filebundler.managers.SettingsManager import SettingsManager
 
 
 def render_settings_panel(settings_manager: SettingsManager, app: FileBundlerApp):

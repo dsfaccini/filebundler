@@ -1,5 +1,6 @@
-# filebundler/ui/SelectionManager.py
+# filebundler/managers/SelectionManager.py
 import logging
+
 from pathlib import Path
 from typing import Dict, List, Set
 

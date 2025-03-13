@@ -1,4 +1,4 @@
-# filebundler/FileTree.py
+# filebundler/ui/file_tree.py
 import logging
 import streamlit as st
 

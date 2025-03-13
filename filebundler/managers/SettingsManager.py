@@ -1,4 +1,4 @@
-# filebundler/ui/sidebar/settings_manager.py
+# filebundler/managers/SettingsManager.py
 
 import json
 from pathlib import Path

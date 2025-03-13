@@ -103,7 +103,8 @@ def delete_bundle_callback(name):
         result = bundle_manager.delete_bundle(name)
         logger.info(f"Bundle deleted: {name}")
         show_temp_notification(result, type="success")
-        st.rerun()
     except Exception as e:
         logger.error(f"Error deleting bundle: {e}", exc_info=True)
         show_temp_notification(f"Error deleting bundle: {str(e)}", type="error")
+
+    # TODO update session_state so the bundler manager shows the correct number of bundles after deletion

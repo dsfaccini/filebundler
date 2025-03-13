@@ -1,4 +1,4 @@
-# filebundler/BundleManager.py
+# filebundler/managers/BundleManager.py
 import re
 import json
 import logging

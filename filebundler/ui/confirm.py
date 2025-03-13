@@ -5,6 +5,7 @@
 import streamlit as st
 
 
+# unused because the required usage is too verbose
 @st.dialog("Confirm")
 def confirm(title: str):
     st.write(title)

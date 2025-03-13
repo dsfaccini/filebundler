@@ -1,9 +1,10 @@
 # filebundler/ui/bundle_display.py
 import logging
 import streamlit as st
+
 from typing import Callable, List
 
-from filebundler.BundleManager import Bundle
+from filebundler.managers.BundleManager import Bundle
 
 logger = logging.getLogger(__name__)
 
