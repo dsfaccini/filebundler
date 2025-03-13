@@ -5,7 +5,8 @@
         "node_modules/**",
         ".git/**",
         "**/__pycache__/**",
-        ".ruff_cache/**"
+        ".ruff_cache/**",
+        "uv.lock"
     ],
     "max_files": 500
 }

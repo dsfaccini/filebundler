@@ -1,14 +1,5 @@
 [
     {
-        "name": "app-stuff-no-settings",
-        "file_paths": [
-            ".cursor/rules/prd.md",
-            "TODO.md",
-            "filebundler/FileBundlerApp.py",
-            "main.py"
-        ]
-    },
-    {
         "name": "settings-stuff",
         "file_paths": [
             "filebundler/settings_panel.py",
@@ -17,12 +8,24 @@
         ]
     },
     {
-        "name": "test",
+        "name": "everything-but-settings",
         "file_paths": [
+            "filebundler/utils/__init__.py",
+            "filebundler/managers/SelectionManager.py",
+            ".python-version",
             "TODO.md",
-            "main.py",
+            "filebundler/models/Bundle.py",
             ".cursor/rules/prd.md",
-            "filebundler/FileBundlerApp.py"
+            "README.md",
+            "pyproject.toml",
+            "filebundler/ui/project_selection.py",
+            "filebundler/ui/file_tree.py",
+            "filebundler/ui/tabs/export_contents.py",
+            "filebundler/ui/tabs/selected_files.py",
+            "filebundler/constants.py",
+            "main.py",
+            "filebundler/FileBundlerApp.py",
+            "filebundler/state.py"
         ]
     }
 ]

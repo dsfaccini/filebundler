@@ -18,6 +18,8 @@
    2. our LLM checks the prompt and the file structure, as well as the available bundles (not the contents, only the bundle names and the files) and selects the files that it deems relevant to answer the prompt
    3. the "auto bundle" feature clears the current selection before selecting new files (add this as a warning in very visible text above the prompt area)
    4. the user can then review the selected files
+8. [UX] notify about added pattern and empty the "add pattern" input after adding a pattern
+9. [BUG] update the displayed number of saved bundles after deleting one
 
 
 # IGNORE FOR NOW (may become relevant later)
