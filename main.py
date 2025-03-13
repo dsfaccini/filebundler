@@ -317,11 +317,6 @@ def main():
                     st.session_state.app.unselect_all_files,  # Add this function to FileBundlerApp
                 )
 
-                # Button to clear all selections
-                if st.button("Clear All Selections"):
-                    st.session_state.app.clear_all_selections()
-                    st.rerun()
-
         # Right column with bundle operations and file preview
         with col2:
             # Only show if project is loaded

@@ -1,5 +1,6 @@
-- add a border to the file tree
-- we want to estimate token count when 1. selections are exported and 2. bundles are exported
+1. add a border to the file tree
+2. the file tree already has all non-ignored files in the project. we should add an option to the file tree to export the current project structure to a file (.filebundler/project-structure.md)
+3. we want to estimate token count when 1. selections are exported and 2. bundles are exported
   - so the token count is done whenever the user makes an export of contents
   - for saved bundles: the token count is persisted together with the bundle data, so it's displayed on load
   - the user needs to know when the last export happens, as files may have changed
