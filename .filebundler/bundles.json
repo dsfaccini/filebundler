@@ -15,5 +15,14 @@
             "filebundler/settings_manager.py",
             "main.py"
         ]
+    },
+    {
+        "name": "test",
+        "file_paths": [
+            "TODO.md",
+            "main.py",
+            ".cursor/rules/prd.md",
+            "filebundler/FileBundlerApp.py"
+        ]
     }
 ]

@@ -6,11 +6,11 @@ from filebundler.utils import BaseModel
 
 
 class Bundle(BaseModel):
-    model_config = ConfigDict(arbitrary_types_allowed=True)
+    # model_config = ConfigDict(arbitrary_types_allowed=True)
 
     name: str
     file_paths: List[str]
 
-    @field_serializer("file_paths")
-    def serialize_file_paths(filepaths):
-        return [p.as_posix() for p in filepaths]
+    # @field_serializer("file_paths")
+    # def serialize_file_paths(filepaths):
+    #     return [p.as_posix() for p in filepaths]

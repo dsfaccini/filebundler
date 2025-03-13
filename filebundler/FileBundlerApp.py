@@ -40,6 +40,10 @@ class FileBundlerApp:
     def nr_of_selected_files(self):
         return len(self.selected_file_paths)
 
+    @property
+    def nr_of_bundles(self):
+        return len(self.bundles)
+
     def load_project(self, project_path: str):
         """Load a project directory"""
         self.project_path = Path(project_path)

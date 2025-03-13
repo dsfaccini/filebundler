@@ -256,6 +256,7 @@ def render_export_tab():
             except Exception as e:
                 logger.error(f"Error saving bundle: {e}", exc_info=True)
                 show_temp_notification(f"Error saving bundle: {str(e)}", type="error")
+            st.rerun()
 
     # Display the bundle content
     if "bundle_content" in st.session_state:
@@ -325,7 +326,7 @@ def main():
                     [
                         f"Selected Files ({st.session_state.app.nr_of_selected_files})",
                         "Export Contents",
-                        "Manage Bundles",
+                        f"Manage Bundles ({st.session_state.app.nr_of_bundles})",
                     ]
                 )
 

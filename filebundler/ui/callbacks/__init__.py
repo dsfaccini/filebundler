@@ -3,6 +3,7 @@ import logging
 import pyperclip
 import streamlit as st
 
+from filebundler.ui.confirm import confirm
 from filebundler.ui.bundle_display import render_saved_bundles
 from filebundler.ui.notification import show_temp_notification
 
@@ -11,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 def render_manage_bundles_tab():
     """Render the Manage Bundles tab"""
-    st.subheader("Manage Bundles")
+    st.subheader(f"Manage Bundles ({st.session_state.app.nr_of_bundles})")
     bundle_manager = st.session_state.bundle_manager
 
     # Use the new component to render bundles
@@ -93,6 +94,11 @@ def create_bundle_from_saved_callback(name):
 
 def delete_bundle_callback(name):
     """Callback for deleting a bundle"""
+    # BUG DONT FIX
+    # st.dialog doesn't close, it works by setting state and rerunning the app
+    # but I don't want to add the complexity so we leave the delete unchecked
+    # if not confirm(f"Delete bundle '{name}'?"):
+    #     return
     try:
         bundle_manager = st.session_state.bundle_manager
         result = bundle_manager.delete_bundle(name)

@@ -89,7 +89,7 @@ class BundleManager(BaseModel):
 
         # Create new bundle
         file_paths = [get_relative_path(item) for item in selected_files]
-        new_bundle = Bundle(bundle_name, file_paths)
+        new_bundle = Bundle(name=bundle_name, file_paths=file_paths)
         self.bundles.append(new_bundle)
 
         # Save bundles to file
