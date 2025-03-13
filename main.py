@@ -10,10 +10,14 @@ from filebundler.FileBundlerApp import FileBundlerApp
 from filebundler.BundleManager import BundleManager
 from filebundler.settings_manager import SettingsManager
 from filebundler.settings_panel import render_settings_panel
-from filebundler.FileTree import render_file_tree
+from filebundler.ui.callbacks import render_manage_bundles_tab
 from filebundler.utils import show_temp_notification
 from filebundler.constants import DEFAULT_IGNORE_PATTERNS
 from filebundler.utils.language_formatting import set_language_from_filename
+
+from filebundler.ui.file_tree import render_file_tree
+from filebundler.ui.bundle_display import render_saved_bundles
+from filebundler.ui.SelectionManager import SelectionManager
 
 # Configure logging
 logging.basicConfig(
@@ -87,6 +91,10 @@ def initialize_session_state():
 
     if "selected_file" not in st.session_state:
         st.session_state.selected_file = None
+
+    # Add selection manager
+    if "selection_manager" not in st.session_state:
+        st.session_state.selection_manager = SelectionManager()
 
 
 def render_project_selection():
@@ -271,158 +279,6 @@ def render_export_tab():
                 )
 
 
-def render_manage_bundles_tab():
-    """Render the Manage Bundles tab"""
-    st.subheader("Manage Bundles")
-    bundle_manager = st.session_state.bundle_manager
-    app = st.session_state.app
-
-    # List existing bundles
-    if bundle_manager.bundles:
-        st.write("Saved Bundles:")
-
-        for bundle in bundle_manager.bundles:
-            col3a, col3b, col3c, col4c = st.columns([3, 1, 1, 1])
-
-            with col3a:
-                st.write(f"**{bundle.name}** ({len(bundle.file_paths)} files)")
-
-            with col3b:
-                if st.button("Load", key=f"load_{bundle.name}"):
-                    try:
-                        message, file_paths = bundle_manager.load_bundle(bundle.name)
-
-                        # Clear current selections
-                        app.clear_all_selections()
-
-                        # Mark selected files
-                        loaded_count = 0
-                        for rel_path in file_paths:
-                            try:
-                                full_path = app.project_path / rel_path
-                                if full_path in app.file_items:
-                                    file_item = app.file_items[full_path]
-                                    file_item.selected = True
-                                    app.selected_file_paths.add(full_path)
-                                    loaded_count += 1
-                            except Exception as e:
-                                logger.error(
-                                    f"Error loading path {rel_path}: {e}", exc_info=True
-                                )
-
-                        # Save selections
-                        app.save_selections()
-
-                        show_temp_notification(
-                            f"Loaded {loaded_count} of {len(file_paths)} files from bundle '{bundle.name}'",
-                            type="success",
-                        )
-                        st.rerun()
-                    except Exception as e:
-                        logger.error(f"Error loading bundle: {e}", exc_info=True)
-                        show_temp_notification(
-                            f"Error loading bundle: {str(e)}", type="error"
-                        )
-
-            with col3c:
-                if st.button("Export Content", key=f"export_{bundle.name}"):
-                    try:
-                        bundle_content = bundle_manager.create_bundle_from_saved(
-                            bundle.name
-                        )
-
-                        if (
-                            bundle_content.startswith("Bundle")
-                            or bundle_content.startswith("The file")
-                            or bundle_content.startswith("Failed to")
-                        ):
-                            logger.warning(f"Bundle export issue: {bundle_content}")
-                            show_temp_notification(bundle_content, type="error")
-                        else:
-                            try:
-                                pyperclip.copy(bundle_content)
-                                show_temp_notification(
-                                    f"Bundle '{bundle.name}' exported to clipboard",
-                                    type="success",
-                                )
-                            except Exception as e:
-                                logger.error(f"Clipboard error: {e}", exc_info=True)
-                                show_temp_notification(
-                                    f"Could not copy to clipboard: {str(e)}",
-                                    type="error",
-                                )
-                                # Store content for manual copying
-                                st.session_state[f"export_content_{bundle.name}"] = (
-                                    bundle_content
-                                )
-                                st.rerun()
-                    except Exception as e:
-                        logger.error(f"Error exporting bundle: {e}", exc_info=True)
-                        show_temp_notification(
-                            f"Error exporting bundle: {str(e)}", type="error"
-                        )
-
-            with col4c:
-                # Store confirmation state in session state
-                confirm_key = f"confirm_delete_{bundle.name}"
-
-                # If we're not in confirmation mode, show delete button
-                if confirm_key not in st.session_state:
-                    if st.button("Delete", key=f"del_{bundle.name}"):
-                        # Enter confirmation mode
-                        st.session_state[confirm_key] = True
-                        st.rerun()
-                else:
-                    # We're in confirmation mode, show confirm button
-                    if st.button(
-                        "Confirm?", key=f"confirm_{bundle.name}", type="primary"
-                    ):
-                        try:
-                            # Perform deletion
-                            result = bundle_manager.delete_bundle(bundle.name)
-                            # Exit confirmation mode
-                            del st.session_state[confirm_key]
-                            logger.info(f"Bundle deleted: {bundle.name}")
-                            show_temp_notification(result, type="success")
-                            st.rerun()
-                        except Exception as e:
-                            logger.error(f"Error deleting bundle: {e}", exc_info=True)
-                            show_temp_notification(
-                                f"Error deleting bundle: {str(e)}", type="error"
-                            )
-
-            with st.expander(f"Files in {bundle.name}"):
-                for path in bundle.file_paths:
-                    st.write(f"• {path}")
-
-                new_name = st.text_input("New name", key=f"rename_input_{bundle.name}")
-                if st.button("Rename", key=f"rename_{bundle.name}"):
-                    try:
-                        if new_name and new_name != bundle.name:
-                            result = bundle_manager.rename_bundle(bundle.name, new_name)
-                            if "renamed" in result:
-                                logger.info(
-                                    f"Bundle renamed: {bundle.name} -> {new_name}"
-                                )
-                                show_temp_notification(result, type="success")
-                            else:
-                                logger.warning(f"Bundle rename issue: {result}")
-                                show_temp_notification(result, type="error")
-                            st.rerun()
-                        else:
-                            show_temp_notification(
-                                "Please enter a new name different from the current one.",
-                                type="error",
-                            )
-                    except Exception as e:
-                        logger.error(f"Error renaming bundle: {e}", exc_info=True)
-                        show_temp_notification(
-                            f"Error renaming bundle: {str(e)}", type="error"
-                        )
-    else:
-        show_temp_notification("No saved bundles found", type="info")
-
-
 def main():
     try:
         st.set_page_config(page_title="File Bundler", layout="wide")
@@ -457,6 +313,8 @@ def main():
                     st.session_state.app.project_path,
                     st.session_state.app.selected_file_paths,
                     st.session_state.app.toggle_file_selection,
+                    st.session_state.app.select_all_files,  # Add this function to FileBundlerApp
+                    st.session_state.app.unselect_all_files,  # Add this function to FileBundlerApp
                 )
 
                 # Button to clear all selections

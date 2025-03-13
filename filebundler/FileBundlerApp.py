@@ -1,13 +1,17 @@
 # filebundler/FileBundlerApp.py
 import re
 import json
+import logging
 import fnmatch
 import streamlit as st
 
 from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
 
-from filebundler.utils import json_dump
+from filebundler.Bundle import Bundle
+from filebundler.utils import json_dump, show_temp_notification
+
+logger = logging.getLogger(__name__)
 
 
 class FileItem:
@@ -21,12 +25,6 @@ class FileItem:
 
     def __repr__(self):
         return f"FileItem({self.path}, is_dir={self.is_dir})"
-
-
-class Bundle:
-    def __init__(self, name: str, file_paths: List[str]):
-        self.name = name
-        self.file_paths = file_paths
 
 
 class FileBundlerApp:
@@ -445,3 +443,49 @@ class FileBundlerApp:
                 return f"Bundle '{old_name}' renamed to '{new_name}'."
 
         return f"Bundle '{old_name}' not found."
+
+    def select_all_files(self):
+        """Select all files in the project"""
+        try:
+            selected_count = 0
+
+            # Recursive function to select all files in a directory
+            def select_all_in_dir(directory_item):
+                nonlocal selected_count
+
+                for child in directory_item.children:
+                    if child.is_dir:
+                        select_all_in_dir(child)
+                    else:
+                        if not child.selected:
+                            child.selected = True
+                            self.selected_file_paths.add(child.path)
+                            selected_count += 1
+
+            # Start from root directory
+            root_item = self.file_items[self.project_path]
+            select_all_in_dir(root_item)
+
+            # Save selections
+            self.save_selections()
+
+            logger.info(f"Selected all {selected_count} files")
+            show_temp_notification(
+                f"Selected all {selected_count} files", type="success"
+            )
+        except Exception as e:
+            logger.error(f"Error selecting all files: {e}", exc_info=True)
+            show_temp_notification(f"Error selecting all files: {str(e)}", type="error")
+
+    def unselect_all_files(self):
+        """Unselect all files"""
+        try:
+            count = len(self.selected_file_paths)
+            self.clear_all_selections()
+            logger.info(f"Unselected all {count} files")
+            show_temp_notification(f"Unselected all {count} files", type="success")
+        except Exception as e:
+            logger.error(f"Error unselecting all files: {e}", exc_info=True)
+            show_temp_notification(
+                f"Error unselecting all files: {str(e)}", type="error"
+            )

@@ -1,9 +1,9 @@
-# filebundler/file_tree.py
+# filebundler/FileTree.py
 import logging
 import streamlit as st
 
 from pathlib import Path
-from typing import Callable
+from typing import Callable, Set
 
 logger = logging.getLogger(__name__)
 
@@ -11,8 +11,10 @@ logger = logging.getLogger(__name__)
 def render_file_tree(
     file_items: dict,
     project_path: Path,
-    selected_file_paths: set,
+    selected_file_paths: Set[Path],
     toggle_file_selection: Callable,
+    select_all_files: Callable = None,
+    unselect_all_files: Callable = None,
 ):
     """
     Render a file tree with checkboxes in the Streamlit UI
@@ -22,6 +24,8 @@ def render_file_tree(
         project_path: Root path of the project
         selected_file_paths: Set of currently selected file paths
         toggle_file_selection: Callback function for toggling file selection
+        select_all_files: Callback function to select all files
+        unselect_all_files: Callback function to unselect all files
     """
     # Add custom CSS for scrollable tree
     st.markdown(
@@ -38,8 +42,21 @@ def render_file_tree(
         unsafe_allow_html=True,
     )
 
-    # Subheader
-    st.subheader("Files")
+    # Files subheader with select/unselect buttons
+    col1, col2, col3 = st.columns([2, 1, 1])
+    with col1:
+        st.subheader("Files")
+
+    # Only show select all/unselect all buttons if callbacks are provided
+    if select_all_files and unselect_all_files:
+        with col2:
+            if st.button("Select All", key="select_all", use_container_width=True):
+                select_all_files()
+                st.rerun()
+        with col3:
+            if st.button("Unselect All", key="unselect_all", use_container_width=True):
+                unselect_all_files()
+                st.rerun()
 
     # Define recursive function to display directories and files
     def display_directory(directory_item, indent=0):

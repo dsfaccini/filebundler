@@ -2,18 +2,14 @@
 import re
 import json
 import logging
+
 from pathlib import Path
 from typing import Dict, List, Optional, Set
 
+from filebundler.Bundle import Bundle
 from filebundler.utils import json_dump, show_temp_notification
 
 logger = logging.getLogger(__name__)
-
-
-class Bundle:
-    def __init__(self, name: str, file_paths: List[str]):
-        self.name = name
-        self.file_paths = file_paths
 
 
 class BundleManager:
