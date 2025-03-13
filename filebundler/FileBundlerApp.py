@@ -8,7 +8,7 @@ import streamlit as st
 from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
 
-from filebundler.Bundle import Bundle
+from filebundler.models.Bundle import Bundle
 from filebundler.utils import json_dump, make_file_section
 from filebundler.ui.notification import show_temp_notification
 
@@ -67,7 +67,7 @@ class FileBundlerApp:
         """Check if file matches any ignore patterns"""
         return any(
             fnmatch.fnmatch(str(item_path.relative_to(self.project_path)), pattern)
-            for pattern in st.session_state.ignore_patterns
+            for pattern in st.session_state.settings_manager.project_settings.ignore_patterns
         )
 
     def sort_files(self, files: List[Path]) -> List[Path]:
@@ -87,11 +87,16 @@ class FileBundlerApp:
             filtered_items = [
                 item for item in dir_path.iterdir() if not self.ignore_patterns(item)
             ]
-            if len(filtered_items) > st.session_state.max_files:
+            if (
+                len(filtered_items)
+                > st.session_state.settings_manager.project_settings.max_files
+            ):
                 st.warning(
-                    f"Directory contains {len(filtered_items)} files which exceeds the limit of {st.session_state.max_files}. Some files may not be displayed."
+                    f"Directory contains {len(filtered_items)} files which exceeds the limit of {st.session_state.settings_manager.project_settings.max_files}. Some files may not be displayed."
                 )
-                items = self.sort_files(filtered_items)[: st.session_state.max_files]
+                items = self.sort_files(filtered_items)[
+                    : st.session_state.settings_manager.project_settings.max_files
+                ]
             else:
                 items = self.sort_files(filtered_items)
 

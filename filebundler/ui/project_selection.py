@@ -5,9 +5,9 @@ import streamlit as st
 
 from pathlib import Path
 
-from filebundler.FileBundlerApp import FileBundlerApp
-
 from filebundler.ui.notification import show_temp_notification
+
+from filebundler.FileBundlerApp import FileBundlerApp
 
 from filebundler.managers.BundleManager import BundleManager
 from filebundler.managers.SettingsManager import SettingsManager
@@ -22,6 +22,7 @@ def load_project(
     bundle_manager: BundleManager,
 ):
     """Load a project and its settings"""
+
     if not project_path:
         show_temp_notification("Please enter a project path", type="error")
         return False
@@ -35,9 +36,7 @@ def load_project(
     try:
         # Load project settings BEFORE loading the project
         # This ensures ignore patterns are available when loading the file tree
-        project_settings = settings_manager.load_project_settings(project_path)
-        st.session_state.ignore_patterns = project_settings["ignore_patterns"]
-        st.session_state.max_files = project_settings["max_files"]
+        settings_manager.load_project_settings(project_path)
 
         # Now load the project with the correct settings
         app.load_project(project_path)

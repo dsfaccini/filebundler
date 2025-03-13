@@ -10,12 +10,6 @@ from filebundler.managers.SelectionManager import SelectionManager
 
 def initialize_session_state():
     """Initialize all session state variables"""
-    # Settings
-    if "ignore_patterns" not in st.session_state:
-        st.session_state.ignore_patterns = DEFAULT_IGNORE_PATTERNS
-
-    if "max_files" not in st.session_state:
-        st.session_state.max_files = 500
 
     # App state
     if "app" not in st.session_state:
@@ -27,6 +21,9 @@ def initialize_session_state():
     if "settings_manager" not in st.session_state:
         st.session_state.settings_manager = SettingsManager()
 
+    if "selection_manager" not in st.session_state:
+        st.session_state.selection_manager = SelectionManager()
+
     # UI state
     if "project_loaded" not in st.session_state:
         st.session_state.project_loaded = False
@@ -36,7 +33,3 @@ def initialize_session_state():
 
     if "selected_file" not in st.session_state:
         st.session_state.selected_file = None
-
-    # Add selection manager
-    if "selection_manager" not in st.session_state:
-        st.session_state.selection_manager = SelectionManager()

@@ -1,4 +1,4 @@
-# filebundler/Bundle.py
+# filebundler/models/Bundle.py
 from typing import List
 from pydantic import ConfigDict, field_serializer
 

@@ -7,11 +7,11 @@ from filebundler.ui.project_selection import render_project_selection
 from filebundler.ui.tabs.export_contents import render_export_tab
 from filebundler.ui.tabs.selected_files import render_selected_files_tab
 
-from filebundler.ui.sidebar.settings_panel import render_settings_panel
 
 from filebundler.ui.file_tree import render_file_tree
-from filebundler.ui.tabs.manage_bundles import render_manage_bundles_tab
 from filebundler.ui.notification import show_temp_notification
+from filebundler.ui.sidebar.settings_panel import render_settings_panel
+from filebundler.ui.tabs.manage_bundles import render_manage_bundles_tab
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
@@ -27,7 +27,7 @@ def main():
 
         with st.sidebar:
             render_settings_panel(
-                st.session_state.settings_manager, st.session_state.app
+                st.session_state.app, st.session_state.settings_manager
             )
 
         st.title("File Bundler")

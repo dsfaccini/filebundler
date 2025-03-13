@@ -1,10 +1,13 @@
 # filebundler/managers/SettingsManager.py
 
 import json
+
 from pathlib import Path
 
-from filebundler.constants import DEFAULT_IGNORE_PATTERNS
 from filebundler.utils import json_dump
+from filebundler.constants import DISPLAY_NR_OF_RECENT_PROJECTS
+
+from filebundler.models.ProjectSettings import ProjectSettings
 
 
 class SettingsManager:
@@ -14,7 +17,7 @@ class SettingsManager:
         self.settings_dir.mkdir(exist_ok=True)
 
         # Project-level settings are stored in the project directory
-        self.project_settings = {}
+        self.project_settings = ProjectSettings()
 
         # Recent projects file
         self.recent_projects_file = self.settings_dir / "recent_projects.json"
@@ -54,7 +57,7 @@ class SettingsManager:
         self.recent_projects.insert(0, project_path)
 
         # Keep only the last 5 projects
-        self.recent_projects = self.recent_projects[:5]
+        self.recent_projects = self.recent_projects[:DISPLAY_NR_OF_RECENT_PROJECTS]
 
         # Save the updated list
         self.save_recent_projects()
@@ -71,32 +74,26 @@ class SettingsManager:
 
         return self.recent_projects
 
-    def load_project_settings(self, project_path):
+    def load_project_settings(self, project_path: str):
         """Load settings for a specific project"""
         project_path = Path(project_path)
         settings_file = project_path / ".filebundler" / "settings.json"
 
-        # Default settings
-        default_settings = {
-            "ignore_patterns": DEFAULT_IGNORE_PATTERNS,
-            "max_files": 500,
-        }
-
         if not settings_file.exists():
-            return default_settings
+            return self.project_settings
 
         try:
-            # Ensure directory exists
             (project_path / ".filebundler").mkdir(exist_ok=True)
+            self.project_settings = ProjectSettings.model_validate_json(
+                settings_file.read_text()
+            )
+            return self.project_settings
 
-            # Read from file
-            with open(settings_file, "r") as f:
-                return json.load(f)
         except Exception as e:
             print(f"Error loading project settings: {str(e)}")
-            return default_settings
+            return self.project_settings
 
-    def save_project_settings(self, project_path, settings):
+    def save_project_settings(self, project_path: str):
         """Save settings for a specific project"""
         project_path = Path(project_path)
         settings_dir = project_path / ".filebundler"
@@ -105,7 +102,7 @@ class SettingsManager:
         try:
             settings_dir.mkdir(exist_ok=True)
             with open(settings_file, "w") as f:
-                json_dump(settings, f)
+                json_dump(self.project_settings.model_dump(), f)
 
             return True
         except Exception as e:

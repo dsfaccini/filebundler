@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Dict, List, Optional, Set
 from pydantic import ConfigDict, field_serializer
 
-from filebundler.Bundle import Bundle
+from filebundler.models.Bundle import Bundle
 from filebundler.ui.notification import show_temp_notification
 from filebundler.utils import (
     json_dump,
