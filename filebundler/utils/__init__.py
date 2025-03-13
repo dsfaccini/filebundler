@@ -1,5 +1,4 @@
-# filebundler/utils.py
-
+# filebundler/utils/__init__.py
 import io
 import json
 import time

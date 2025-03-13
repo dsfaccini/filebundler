@@ -1,4 +1,7 @@
-- wrap saved bundles in a div with a border so they are clearly separated
-- make all buttons on a saved bundle the same size!
+- display a border for saved bundles in so they are visually separated 
+- we can also change how saved bundles are displayed
+  - as it is, they are displayed as label "{bundle.name} ({bundle.size} files)" + buttons, and underneath a dropdown with the format "Files in {bundle.name}
+  - we can change this to only the dropdown, formatted as 'Files in "{bundle.name} ({bundle.size} files)"' + buttons, to make each row smaller 
+  - also make all buttons on a saved bundle the same size!
 - add "select all" and "unselect all" buttons
   - these can be small buttons under the "Files" header
