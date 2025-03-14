@@ -5,7 +5,7 @@ import streamlit as st
 from pathlib import Path
 from typing import Callable, Set
 
-from filebundler.utils.project_structure import (
+from filebundler.services.project_structure import (
     generate_project_structure,
     save_project_structure,
 )

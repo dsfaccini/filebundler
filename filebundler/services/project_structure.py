@@ -1,4 +1,4 @@
-# filebundler/utils/project_structure.py
+# filebundler/services/project_structure.py
 import logging
 
 from pathlib import Path
