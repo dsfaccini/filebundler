@@ -1,18 +1,18 @@
 {
-    "project": "C:\\Users\\lobsp\\projects\\file-bundler",
+    "project": ".",
     "selections": [
-        "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\FileBundlerApp.py",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\ui\\file_tree.py",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\ui\\tabs\\manage_bundles\\bundle_display.py",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\ui\\tabs\\manage_bundles\\main.py",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\ui\\tabs\\export_contents.py",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\.filebundler\\selections.json",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\models\\Bundle.py",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\managers\\SelectionsManager.py",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\ui\\project_selection.py",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\state.py",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\managers\\BundleManager.py",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\.filebundler\\project-structure.md",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\main.py"
+        "filebundler\\managers\\BundleManager.py",
+        "filebundler\\ui\\tabs\\manage_bundles\\bundle_display.py",
+        "filebundler\\managers\\SelectionsManager.py",
+        "filebundler\\ui\\tabs\\manage_bundles\\main.py",
+        "filebundler\\ui\\project_selection.py",
+        "main.py",
+        "filebundler\\models\\Bundle.py",
+        ".filebundler\\project-structure.md",
+        ".filebundler\\selections.json",
+        "filebundler\\ui\\tabs\\export_contents.py",
+        "filebundler\\ui\\file_tree.py",
+        "filebundler\\FileBundlerApp.py",
+        "filebundler\\state.py"
     ]
 }

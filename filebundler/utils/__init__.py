@@ -40,8 +40,25 @@ def read_file(file_path: str):
         return f"Could not read {file_path.name} as text. It may be a binary file."
 
 
-def make_file_section(relative_path: str, file_content: str):
-    return f"""----- ./{relative_path} -----
-{file_content}
------ END -----
+def generate_file_bundle(relative_paths: List[Path]):
+    return f"""<?xml version="1.0" encoding="UTF-8"?>
+<FileBundle>
+    {"".join(make_file_section(p) for p in relative_paths)}
+</FileBundle>
+"""
+
+
+def make_file_section(relative_path: Path):
+    # except Exception as e:
+    # logger.error(f"Failed to read {file_path.name}: {e}", exc_info=True)
+    # return f"Failed to read {file_path.name}: {str(e)}"
+
+    return f"""<File>
+    <FilePath>
+        {relative_path.as_posix()}
+    </FilePath>
+    <FileContent>
+{read_file(relative_path)}
+    </FileContent>
+</File>
 """

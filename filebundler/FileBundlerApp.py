@@ -11,7 +11,7 @@ from filebundler.models.FileItem import FileItem
 from filebundler.managers.BundleManager import BundleManager
 
 from filebundler.ui.notification import show_temp_notification
-from filebundler.utils import ignore_patterns, json_dump, make_file_section, sort_files
+from filebundler.utils import ignore_patterns, json_dump, sort_files
 
 logger = logging.getLogger(__name__)
 

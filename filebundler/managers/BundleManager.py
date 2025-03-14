@@ -10,9 +10,8 @@ from pydantic import ConfigDict, field_serializer
 from filebundler.models.Bundle import Bundle
 from filebundler.ui.notification import show_temp_notification
 from filebundler.utils import (
+    generate_file_bundle,
     json_dump,
-    make_file_section,
-    read_file,
     BaseModel,
 )
 
@@ -44,25 +43,13 @@ class BundleManager(BaseModel):
         if not selected_files:
             return "No files selected. Please select files to bundle."
 
-        bundle_content = []
+        relative_paths = [
+            file_path.relative_to(self.project_path) for file_path in selected_files
+        ]
 
-        for file_path in selected_files:
-            try:
-                relative_path = file_path.relative_to(self.project_path)
+        self.bundle_content = generate_file_bundle(relative_paths)
 
-                file_content = read_file(file_path)
-
-                bundle_content.append(make_file_section(relative_path, file_content))
-
-            except Exception as e:
-                logger.error(f"Failed to read {file_path.name}: {e}", exc_info=True)
-                return f"Failed to read {file_path.name}: {str(e)}"
-
-        # Join all content
-        full_bundle = "\n".join(bundle_content)
-        self.bundle_content = full_bundle
-
-        return full_bundle
+        return self.bundle_content
 
     def save_bundle(self, bundle_name: str, selected_files: List[Path]):
         """Save current selection as a named bundle"""
@@ -110,23 +97,9 @@ class BundleManager(BaseModel):
         if not bundle:
             return f"Bundle '{bundle_name}' not found."
 
-        bundle_content = []
+        self.bundle_content = generate_file_bundle(bundle.file_paths)
 
-        for rel_path in bundle.file_paths:
-            try:
-                full_path = self.project_path / rel_path
-                file_content = read_file(full_path)
-                bundle_content.append(make_file_section(rel_path, file_content))
-
-            except Exception as e:
-                logger.error(f"Failed to read {rel_path}: {e}", exc_info=True)
-                return f"Failed to read {rel_path}: {str(e)}"
-
-        # Join all content
-        full_bundle = "\n".join(bundle_content)
-        self.bundle_content = full_bundle
-
-        return full_bundle
+        return self.bundle_content
 
     def delete_bundle(self, bundle_name: str):
         """Delete a saved bundle"""
