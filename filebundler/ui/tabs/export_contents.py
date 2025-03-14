@@ -66,8 +66,10 @@ def render_export_tab(app: FileBundlerApp):
                 if not result.startswith("No files") and not result.startswith(
                     "Please enter"
                 ):
-                    # NOTE remove this if we can't fix
-                    st.session_state.export_bundle_name = ""
+                    # TODO empty the input field after save
+                    # we need a different implementation because this one raises an error
+                    # streamlit.errors.StreamlitAPIException: `st.session_state.export_bundle_name` cannot be modified after the widget with key `export_bundle_name` is instantiated.
+                    # st.session_state.export_bundle_name = ""
                     st.rerun()
             except Exception as e:
                 logger.error(f"Save bundle error: {e}", exc_info=True)
