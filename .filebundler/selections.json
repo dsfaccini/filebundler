@@ -1,18 +1,6 @@
 {
     "project": ".",
     "selections": [
-        "filebundler\\managers\\BundleManager.py",
-        "filebundler\\ui\\tabs\\manage_bundles\\bundle_display.py",
-        "filebundler\\managers\\SelectionsManager.py",
-        "filebundler\\ui\\tabs\\manage_bundles\\main.py",
-        "filebundler\\ui\\project_selection.py",
-        "main.py",
-        "filebundler\\models\\Bundle.py",
-        ".filebundler\\project-structure.md",
-        ".filebundler\\selections.json",
-        "filebundler\\ui\\tabs\\export_contents.py",
-        "filebundler\\ui\\file_tree.py",
-        "filebundler\\FileBundlerApp.py",
-        "filebundler\\state.py"
+        "main.py"
     ]
 }

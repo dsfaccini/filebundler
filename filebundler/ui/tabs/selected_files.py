@@ -13,13 +13,13 @@ logger = logging.getLogger(__name__)
 
 def render_selected_files_tab(app: FileBundlerApp):
     """Render the Selected Files tab"""
-    st.subheader(f"Selected Files ({app.nr_of_selected_files})")
+    st.subheader(f"Selected Files ({app.selections.nr_of_selected_files})")
     st.text(
         "Click on a file to view its content. Click 'x' to remove a file from selection."
     )
 
     # Get selected files
-    selected_files = app.get_selected_files()
+    selected_files = app.selections.get_selected_files()
 
     # TODO make this section scrollable, set a max height
     if selected_files:
@@ -35,9 +35,9 @@ def render_selected_files_tab(app: FileBundlerApp):
                     key=f"sel_{file_item.path}",
                     use_container_width=True,
                 ):
-                    st.session_state.selected_file = file_item.path
-                    st.session_state.file_content = app.show_file_content(
-                        file_item.path
+                    st.session_state.app.selections.selected_file = file_item.path
+                    st.session_state.app.selections.selected_file_content = (
+                        app.show_file_content(file_item.path)
                     )
                     st.rerun()
 
@@ -48,15 +48,18 @@ def render_selected_files_tab(app: FileBundlerApp):
                     help=f"Remove {relative_path} from selection",
                 ):
                     try:
-                        app.toggle_file_selection(file_item.path)
+                        app.selections.toggle_file_selection(file_item.path)
                         show_temp_notification(
                             f"Removed {Path(file_item.path).name} from selection",
                             type="info",
                         )
                         # If we were viewing this file, clear it
-                        if st.session_state.selected_file == file_item.path:
-                            st.session_state.selected_file = None
-                            st.session_state.file_content = None
+                        if (
+                            st.session_state.app.selections.selected_file
+                            == file_item.path
+                        ):
+                            st.session_state.app.selections.selected_file = None
+                            st.session_state.app.selections.selected_file_content = None
                         st.rerun()
                     except Exception as e:
                         logger.error(
@@ -72,10 +75,17 @@ def render_selected_files_tab(app: FileBundlerApp):
         )
 
     # Show file content if a file is selected
-    if st.session_state.selected_file and st.session_state.file_content:
-        st.subheader(f"File: {Path(st.session_state.selected_file).name}")
+    if (
+        st.session_state.app.selections.selected_file
+        and st.session_state.app.selections.selected_file_content
+    ):
+        st.subheader(
+            f"File: {Path(st.session_state.app.selections.selected_file).name}"
+        )
 
-        filepath = Path(st.session_state.selected_file)
+        filepath = Path(st.session_state.app.selections.selected_file)
         language = set_language_from_filename(filepath)
 
-        st.code(st.session_state.file_content, language=language)
+        st.code(
+            st.session_state.app.selections.selected_file_content, language=language
+        )

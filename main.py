@@ -52,7 +52,7 @@ def main():
             if st.session_state.project_loaded:
                 tab1, tab2, tab3 = st.tabs(
                     [
-                        f"Selected Files ({st.session_state.app.nr_of_selected_files})",
+                        f"Selected Files ({st.session_state.app.selections.nr_of_selected_files})",
                         "Export Contents",
                         f"Manage Bundles ({st.session_state.app.nr_of_bundles})",
                     ]

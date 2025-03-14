@@ -36,7 +36,7 @@ def activate_bundle_callback(name):
             return
 
         # Clear current selections
-        app.clear_all_selections()
+        app.selections.clear_all_selections()
 
         # Mark selected files
         loaded_count = 0
@@ -46,13 +46,13 @@ def activate_bundle_callback(name):
                 if full_path in app.file_items:
                     file_item = app.file_items[full_path]
                     file_item.selected = True
-                    app.selected_file_paths.add(full_path)
+                    app.selections.selected_file_paths.add(full_path)
                     loaded_count += 1
             except Exception as e:
                 logger.error(f"Error loading path {rel_path}: {e}", exc_info=True)
 
         # Save selections
-        app.save_selections()
+        app.selections.save_selections()
 
         show_temp_notification(
             f"Loaded {loaded_count} of {len(bundle.file_paths)} files from bundle '{name}'",

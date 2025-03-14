@@ -14,11 +14,11 @@ def render_export_tab(app: FileBundlerApp):
     st.subheader("Export Contents")
 
     # Selected files info
-    if app.nr_of_selected_files == 0:
+    if app.selections.nr_of_selected_files == 0:
         st.warning("No files selected. Please select files to export.")
         return
 
-    st.write(f"{app.nr_of_selected_files} files selected for export.")
+    st.write(f"{app.selections.nr_of_selected_files} files selected for export.")
 
     # Add bundle name field for saving
     bundle_name = st.text_input(
@@ -32,7 +32,9 @@ def render_export_tab(app: FileBundlerApp):
     with btn_cols[0]:
         if st.button("Copy to Clipboard", use_container_width=True):
             try:
-                selected_files = [item.path for item in app.get_selected_files()]
+                selected_files = [
+                    item.path for item in app.selections.get_selected_files()
+                ]
                 bundle_content = app.bundles.create_bundle(selected_files)
 
                 if bundle_content.startswith("No files") or bundle_content.startswith(
@@ -43,7 +45,7 @@ def render_export_tab(app: FileBundlerApp):
                     try:
                         pyperclip.copy(bundle_content)
                         show_temp_notification(
-                            f"Bundle copied to clipboard: {app.nr_of_selected_files} files, {len(bundle_content)} characters",
+                            f"Bundle copied to clipboard: {app.selections.nr_of_selected_files} files, {len(bundle_content)} characters",
                             type="success",
                         )
                     except Exception as e:
@@ -55,7 +57,9 @@ def render_export_tab(app: FileBundlerApp):
     with btn_cols[1]:
         if st.button("Save Bundle", use_container_width=True):
             try:
-                selected_files = [item.path for item in app.get_selected_files()]
+                selected_files = [
+                    item.path for item in app.selections.get_selected_files()
+                ]
                 result = app.bundles.save_bundle(bundle_name, selected_files)
                 show_temp_notification(result, type="success")
                 # Clear the input field after successful save
@@ -77,7 +81,7 @@ def render_export_tab(app: FileBundlerApp):
 
     with preview_expander:
         try:
-            selected_files = [item.path for item in app.get_selected_files()]
+            selected_files = [item.path for item in app.selections.get_selected_files()]
             preview_content = app.bundles.create_bundle(selected_files)
             if preview_content.startswith("No files") or preview_content.startswith(
                 "Failed to"
