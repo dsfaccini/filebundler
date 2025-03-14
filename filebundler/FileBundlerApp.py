@@ -2,16 +2,16 @@
 import re
 import json
 import logging
-import fnmatch
 import streamlit as st
 
 from pathlib import Path
-from typing import Dict, List, Optional, Set, Tuple
+from typing import Dict, List, Optional, Set
 
 from filebundler.models.Bundle import Bundle
 from filebundler.models.FileItem import FileItem
-from filebundler.utils import json_dump, make_file_section
+
 from filebundler.ui.notification import show_temp_notification
+from filebundler.utils import ignore_patterns, json_dump, make_file_section, sort_files
 
 logger = logging.getLogger(__name__)
 
@@ -54,18 +54,7 @@ class FileBundlerApp:
         # Load saved bundles
         self.load_bundles()
 
-    def ignore_patterns(self, item_path: Path) -> bool:
-        """Check if file matches any ignore patterns"""
-        return any(
-            fnmatch.fnmatch(str(item_path.relative_to(self.project_path)), pattern)
-            for pattern in st.session_state.settings_manager.project_settings.ignore_patterns
-        )
-
-    def sort_files(self, files: List[Path]) -> List[Path]:
-        """Sort files alphabetically"""
-        return sorted(files, key=lambda p: (not p.is_dir(), p.name.lower()))
-
-    def load_directory_recursive(self, dir_path: Path, parent_item: FileItem) -> bool:
+    def load_directory_recursive(self, dir_path: Path, parent_item: FileItem):
         """
         Recursively load directory structure
 
@@ -76,7 +65,12 @@ class FileBundlerApp:
         try:
             # Filter items based on ignore patterns
             filtered_items = [
-                item for item in dir_path.iterdir() if not self.ignore_patterns(item)
+                item
+                for item in dir_path.iterdir()
+                if not ignore_patterns(
+                    self.get_relative_path(item),
+                    st.session_state.settings_manager.project_settings.ignore_patterns,
+                )
             ]
             if (
                 len(filtered_items)
@@ -85,11 +79,11 @@ class FileBundlerApp:
                 st.warning(
                     f"Directory contains {len(filtered_items)} files which exceeds the limit of {st.session_state.settings_manager.project_settings.max_files}. Some files may not be displayed."
                 )
-                items = self.sort_files(filtered_items)[
+                items = sort_files(filtered_items)[
                     : st.session_state.settings_manager.project_settings.max_files
                 ]
             else:
-                items = self.sort_files(filtered_items)
+                items = sort_files(filtered_items)
 
             # Track if this directory contains any visible files or non-empty subdirectories
             has_visible_content = False
@@ -158,7 +152,7 @@ class FileBundlerApp:
         # Save empty selections
         self.save_selections()
 
-    def get_selected_files(self) -> List[FileItem]:
+    def get_selected_files(self):
         """Get all selected files"""
         return [
             self.file_items[path]
@@ -166,11 +160,11 @@ class FileBundlerApp:
             if path in self.file_items
         ]
 
-    def get_selected_file_paths(self) -> List[str]:
+    def get_selected_file_paths(self):
         """Get paths of all selected files as strings"""
         return [str(path) for path in self.selected_file_paths]
 
-    def get_relative_path(self, file_path: Path) -> str:
+    def get_relative_path(self, file_path: Path):
         """Get path relative to project root"""
         try:
             return str(file_path.relative_to(self.project_path).as_posix())
@@ -178,9 +172,7 @@ class FileBundlerApp:
             # If the file is not in the project directory, return the full path
             return str(file_path)
 
-    def _read_file_content(
-        self, file_path: Path, relative_path: str
-    ) -> Tuple[str, bool]:
+    def _read_file_content(self, file_path: Path, relative_path: str):
         """Read file content with error handling
 
         Returns:
@@ -207,7 +199,7 @@ class FileBundlerApp:
         except Exception as e:
             return f"Failed to read {relative_path}: {str(e)}", False
 
-    def _generate_bundle_content(self, file_paths: List[Path]) -> str:
+    def _generate_bundle_content(self, file_paths: List[Path]):
         """Generate bundle content from a list of file paths
 
         Returns:
@@ -230,7 +222,7 @@ class FileBundlerApp:
         # Join all content
         return "\n".join(bundle_content)
 
-    def create_bundle(self) -> str:
+    def create_bundle(self):
         """Create a bundle from selected files"""
         selected_files = self.get_selected_files()
         if not selected_files:
@@ -239,7 +231,7 @@ class FileBundlerApp:
         file_paths = [file_item.path for file_item in selected_files]
         return self._generate_bundle_content(file_paths)
 
-    def create_bundle_from_saved(self, bundle_name: str) -> str:
+    def create_bundle_from_saved(self, bundle_name: str):
         """Create a bundle from a saved bundle without loading it"""
         # Find the bundle
         bundle = None
@@ -255,7 +247,7 @@ class FileBundlerApp:
         file_paths = [self.project_path / rel_path for rel_path in bundle.file_paths]
         return self._generate_bundle_content(file_paths)
 
-    def _save_json_data(self, filename: str, data) -> bool:
+    def _save_json_data(self, filename: str, data):
         """Save data to JSON file in .filebundler directory
 
         Returns:
@@ -277,7 +269,7 @@ class FileBundlerApp:
             st.error(f"Error saving {filename}: {str(e)}")
             return False
 
-    def _load_json_data(self, filename: str) -> Optional[dict]:
+    def _load_json_data(self, filename: str):
         """Load data from JSON file in .filebundler directory
 
         Returns:
@@ -295,7 +287,7 @@ class FileBundlerApp:
             st.error(f"Error loading {filename}: {str(e)}")
             return None
 
-    def save_bundle(self, bundle_name: str) -> str:
+    def save_bundle(self, bundle_name: str):
         """Save current selection as a named bundle"""
         selected_files = self.get_selected_files()
         if not selected_files:
@@ -327,7 +319,7 @@ class FileBundlerApp:
 
         return f"Bundle '{bundle_name}' saved with {len(file_paths)} files."
 
-    def load_bundle(self, bundle_name: str) -> str:
+    def load_bundle(self, bundle_name: str):
         """Load a saved bundle"""
         # Find the bundle
         bundle = None
@@ -361,7 +353,7 @@ class FileBundlerApp:
 
         return f"Loaded {loaded_count} of {len(bundle.file_paths)} files from bundle '{bundle_name}'."
 
-    def delete_bundle(self, bundle_name: str) -> str:
+    def delete_bundle(self, bundle_name: str):
         """Delete a saved bundle"""
         for i, bundle in enumerate(self.bundles):
             if bundle.name == bundle_name:
@@ -426,12 +418,12 @@ class FileBundlerApp:
         # Convert to Bundle objects
         self.bundles = [Bundle.model_validate(item) for item in data]
 
-    def show_file_content(self, file_path: Path) -> str:
+    def show_file_content(self, file_path: Path):
         """Return file content for display"""
         content, success = self._read_file_content(file_path, str(file_path))
         return content
 
-    def rename_bundle(self, old_name: str, new_name: str) -> str:
+    def rename_bundle(self, old_name: str, new_name: str):
         """Rename a saved bundle"""
         # Find the bundle
         for bundle in self.bundles:

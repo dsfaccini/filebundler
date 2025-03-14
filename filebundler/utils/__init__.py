@@ -2,8 +2,10 @@
 import io
 import json
 import logging
+import fnmatch
 
-from typing import Any, Dict
+from typing import Any, Dict, List
+from pathlib import Path
 from pydantic import BaseModel  # noqa: F401
 
 logger = logging.getLogger(__name__)
@@ -11,6 +13,18 @@ logger = logging.getLogger(__name__)
 
 def json_dump(data: Dict[str, Any], f: io.BytesIO):
     json.dump(data, f, indent=4)
+
+
+def ignore_patterns(relative_path: Path, ignore_patterns: List[str]):
+    """Check if file matches any ignore patterns"""
+    return any(
+        fnmatch.fnmatch(str(relative_path), pattern) for pattern in ignore_patterns
+    )
+
+
+def sort_files(files: List[Path]):
+    """Sort files alphabetically"""
+    return sorted(files, key=lambda p: (not p.is_dir(), p.name.lower()))
 
 
 def read_file(file_path: str):
