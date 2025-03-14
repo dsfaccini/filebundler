@@ -2,10 +2,8 @@
 import streamlit as st
 
 from filebundler.FileBundlerApp import FileBundlerApp
-from filebundler.constants import DEFAULT_IGNORE_PATTERNS
 from filebundler.managers.BundleManager import BundleManager
 from filebundler.managers.SettingsManager import SettingsManager
-from filebundler.managers.SelectionManager import SelectionManager
 
 
 def initialize_session_state():
@@ -20,9 +18,6 @@ def initialize_session_state():
 
     if "settings_manager" not in st.session_state:
         st.session_state.settings_manager = SettingsManager()
-
-    if "selection_manager" not in st.session_state:
-        st.session_state.selection_manager = SelectionManager()
 
     # UI state
     if "project_loaded" not in st.session_state:

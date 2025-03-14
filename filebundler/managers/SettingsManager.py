@@ -1,5 +1,4 @@
 # filebundler/managers/SettingsManager.py
-
 import json
 
 from pathlib import Path
@@ -10,6 +9,7 @@ from filebundler.constants import DISPLAY_NR_OF_RECENT_PROJECTS
 from filebundler.models.ProjectSettings import ProjectSettings
 
 
+# TODO settings should be divided into global and project settings
 class SettingsManager:
     def __init__(self):
         # Settings directory in user home

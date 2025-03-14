@@ -16,6 +16,9 @@ from filebundler.ui.notification import show_temp_notification
 logger = logging.getLogger(__name__)
 
 
+# TODO selection state should be managed by a SelectionsManager, accessed via self.selections
+# TODO selected_file should be stored in self.selections.selected_file
+# TODO file_content should be a property of self.selections.selected_file
 class FileBundlerApp:
     def __init__(self):
         self.project_path = Path()

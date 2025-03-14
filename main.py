@@ -39,18 +39,11 @@ def main():
 
         with col1:
             # Project selection section
-            project_path = render_project_selection()
+            render_project_selection()
 
             # Only show file tree if project is loaded
             if st.session_state.project_loaded:
-                render_file_tree(
-                    st.session_state.app.file_items,
-                    st.session_state.app.project_path,
-                    st.session_state.app.selected_file_paths,
-                    st.session_state.app.toggle_file_selection,
-                    st.session_state.app.select_all_files,  # Add this function to FileBundlerApp
-                    st.session_state.app.unselect_all_files,  # Add this function to FileBundlerApp
-                )
+                render_file_tree(st.session_state.app)
 
         # Right column with bundle operations and file preview
         with col2:

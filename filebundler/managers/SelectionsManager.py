@@ -1,4 +1,4 @@
-# filebundler/managers/SelectionManager.py
+# filebundler/managers/SelectionsManager.py
 import logging
 
 from pathlib import Path
@@ -7,9 +7,9 @@ from typing import Dict, List, Set
 logger = logging.getLogger(__name__)
 
 
-class SelectionManager:
+class SelectionsManager:
     """
-    Manages the selection of files for bundling
+    Manages the state of selected files
     """
 
     def __init__(self):
