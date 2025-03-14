@@ -9,23 +9,11 @@ from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
 
 from filebundler.models.Bundle import Bundle
+from filebundler.models.FileItem import FileItem
 from filebundler.utils import json_dump, make_file_section
 from filebundler.ui.notification import show_temp_notification
 
 logger = logging.getLogger(__name__)
-
-
-class FileItem:
-    def __init__(self, path: Path, is_dir: bool = False, parent=None):
-        self.path = path
-        self.name = path.name
-        self.is_dir = is_dir
-        self.parent = parent
-        self.children = []
-        self.selected = False
-
-    def __repr__(self):
-        return f"FileItem({self.path}, is_dir={self.is_dir})"
 
 
 class FileBundlerApp:
@@ -51,7 +39,7 @@ class FileBundlerApp:
         self.selected_file_paths = set()
 
         # Load the root directory
-        root_item = FileItem(self.project_path, is_dir=True)
+        root_item = FileItem(self.project_path)
         self.file_items[self.project_path] = root_item
 
         # Load the directory structure
@@ -107,7 +95,7 @@ class FileBundlerApp:
                 try:
                     if item_path.is_dir():
                         # Create file item
-                        file_item = FileItem(item_path, is_dir=True, parent=parent_item)
+                        file_item = FileItem(item_path)
                         self.file_items[item_path] = file_item
 
                         # Recursively load subdirectory and check if it has visible content
@@ -125,7 +113,7 @@ class FileBundlerApp:
 
                     elif item_path.is_file():
                         # Create file item
-                        file_item = FileItem(item_path, parent=parent_item)
+                        file_item = FileItem(item_path)
                         self.file_items[item_path] = file_item
                         parent_item.children.append(file_item)
                         has_visible_content = True
