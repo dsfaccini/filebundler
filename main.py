@@ -62,10 +62,10 @@ def main():
                     render_selected_files_tab()
 
                 with tab2:
-                    render_export_tab()
+                    render_export_tab(st.session_state.app)
 
                 with tab3:
-                    render_manage_bundles_tab()
+                    render_manage_bundles_tab(app=st.session_state.app)
             else:
                 # If no project loaded
                 show_temp_notification(

@@ -4,26 +4,23 @@ import pyperclip
 import streamlit as st
 
 from filebundler.FileBundlerApp import FileBundlerApp
-from filebundler.managers.BundleManager import BundleManager
-
 from filebundler.ui.tabs.manage_bundles.bundle_display import render_saved_bundles
 from filebundler.ui.notification import show_temp_notification
 
 logger = logging.getLogger(__name__)
 
 
-def render_manage_bundles_tab():
+def render_manage_bundles_tab(app: FileBundlerApp):
     """Render the Manage Bundles tab"""
     st.subheader(f"Manage Bundles ({st.session_state.app.nr_of_bundles})")
-    bundle_manager: BundleManager = st.session_state.bundle_manager
 
     # Use the new component to render bundles
     render_saved_bundles(
-        bundles=bundle_manager.bundles,
+        bundles=app.bundles.bundles,
         load_bundle=lambda name: load_bundle_callback(name),
         create_bundle_from_saved=lambda name: create_bundle_from_saved_callback(name),
         delete_bundle=lambda name: delete_bundle_callback(name),
-        rename_bundle=lambda old, new: bundle_manager.rename_bundle(old, new),
+        rename_bundle=lambda old, new: app.bundles.rename_bundle(old, new),
     )
 
 
@@ -31,10 +28,9 @@ def render_manage_bundles_tab():
 def load_bundle_callback(name):
     """Callback for loading a bundle"""
     try:
-        bundle_manager: BundleManager = st.session_state.bundle_manager
         app: FileBundlerApp = st.session_state.app
 
-        message, file_paths = bundle_manager.load_bundle(name)
+        message, file_paths = app.bundles.load_bundle(name)
 
         # Clear current selections
         app.clear_all_selections()
@@ -68,8 +64,8 @@ def load_bundle_callback(name):
 def create_bundle_from_saved_callback(name):
     """Callback for creating a bundle from saved bundle"""
     try:
-        bundle_manager = st.session_state.bundle_manager
-        bundle_content = bundle_manager.create_bundle_from_saved(name)
+        app: FileBundlerApp = st.session_state.app
+        bundle_content = app.bundles.create_bundle_from_saved(name)
 
         if (
             bundle_content.startswith("Bundle")
@@ -102,12 +98,11 @@ def delete_bundle_callback(name):
     # if not confirm(f"Delete bundle '{name}'?"):
     #     return
     try:
-        bundle_manager = st.session_state.bundle_manager
-        result = bundle_manager.delete_bundle(name)
+        app: FileBundlerApp = st.session_state.app
+        result = app.bundles.delete_bundle(name)
         logger.info(f"Bundle deleted: {name}")
         show_temp_notification(result, type="success")
+        st.rerun()  # Add rerun to update UI after deletion
     except Exception as e:
         logger.error(f"Error deleting bundle: {e}", exc_info=True)
         show_temp_notification(f"Error deleting bundle: {str(e)}", type="error")
-
-    # TODO update session_state so the bundler manager shows the correct number of bundles after deletion

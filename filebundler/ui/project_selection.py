@@ -103,7 +103,7 @@ def render_project_selection():
                 project_path,
                 st.session_state.app,
                 st.session_state.settings_manager,
-                st.session_state.bundle_manager,
+                st.session_state.app.bundles,
             )
             st.rerun()
 
@@ -112,7 +112,7 @@ def render_project_selection():
             if st.session_state.project_loaded:
                 try:
                     st.session_state.app.load_project(st.session_state.app.project_path)
-                    st.session_state.bundle_manager.load_bundles()
+                    st.session_state.app.bundles.load_bundles()
                     show_temp_notification("Project refreshed", type="success")
                 except Exception as e:
                     logger.error(f"Error refreshing project: {e}", exc_info=True)

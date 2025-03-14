@@ -4,7 +4,7 @@ import json
 import logging
 
 from pathlib import Path
-from typing import Dict, List, Optional, Set
+from typing import Dict, List, Optional, Set, Tuple
 from pydantic import ConfigDict, field_serializer
 
 from filebundler.models.Bundle import Bundle
@@ -31,7 +31,7 @@ class BundleManager(BaseModel):
 
     @field_serializer("project_path")
     def serialize_project_path(project_path):
-        return project_path.as_posix()
+        return project_path.as_posix() if project_path else None
 
     def set_project_path(self, project_path: Path):
         """Set the project path and reset bundles"""
@@ -97,7 +97,7 @@ class BundleManager(BaseModel):
 
         return f"Bundle '{bundle_name}' saved with {len(file_paths)} files."
 
-    def load_bundle(self, bundle_name: str) -> tuple[str, List[str]]:
+    def load_bundle(self, bundle_name: str) -> Tuple[str, List[str]]:
         """
         Find a saved bundle by name
 
@@ -195,6 +195,10 @@ class BundleManager(BaseModel):
 
     def load_bundles(self):
         """Load bundles from file"""
+        if not self.project_path:
+            logger.warning("No project path set, cannot load bundles")
+            return
+
         bundle_dir = self.project_path / ".filebundler"
         bundles_file = bundle_dir / "bundles.json"
 

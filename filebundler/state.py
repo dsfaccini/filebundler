@@ -2,7 +2,6 @@
 import streamlit as st
 
 from filebundler.FileBundlerApp import FileBundlerApp
-from filebundler.managers.BundleManager import BundleManager
 from filebundler.managers.SettingsManager import SettingsManager
 
 
@@ -12,9 +11,6 @@ def initialize_session_state():
     # App state
     if "app" not in st.session_state:
         st.session_state.app = FileBundlerApp()
-
-    if "bundle_manager" not in st.session_state:
-        st.session_state.bundle_manager = BundleManager()
 
     if "settings_manager" not in st.session_state:
         st.session_state.settings_manager = SettingsManager()

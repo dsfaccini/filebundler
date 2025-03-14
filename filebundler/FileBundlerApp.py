@@ -5,10 +5,10 @@ import logging
 import streamlit as st
 
 from pathlib import Path
-from typing import Dict, List, Optional, Set
+from typing import Dict, Optional, Set
 
-from filebundler.models.Bundle import Bundle
 from filebundler.models.FileItem import FileItem
+from filebundler.managers.BundleManager import BundleManager
 
 from filebundler.ui.notification import show_temp_notification
 from filebundler.utils import ignore_patterns, json_dump, make_file_section, sort_files
@@ -25,7 +25,7 @@ class FileBundlerApp:
         self.file_items: Dict[Path, FileItem] = {}
         self.selected_file_paths: Set[Path] = set()
         self.selected_file_content: Optional[str] = None
-        self.bundles: List[Bundle] = []
+        self.bundles = BundleManager()
 
     @property
     def nr_of_selected_files(self):
@@ -33,7 +33,7 @@ class FileBundlerApp:
 
     @property
     def nr_of_bundles(self):
-        return len(self.bundles)
+        return len(self.bundles.bundles)
 
     def load_project(self, project_path: str):
         """Load a project directory"""
@@ -51,8 +51,8 @@ class FileBundlerApp:
         # Load saved selections for this project if exists
         self.load_selections()
 
-        # Load saved bundles
-        self.load_bundles()
+        # Initialize the bundle manager with the project path
+        self.bundles.set_project_path(self.project_path)
 
     def load_directory_recursive(self, dir_path: Path, parent_item: FileItem):
         """
@@ -199,54 +199,6 @@ class FileBundlerApp:
         except Exception as e:
             return f"Failed to read {relative_path}: {str(e)}", False
 
-    def _generate_bundle_content(self, file_paths: List[Path]):
-        """Generate bundle content from a list of file paths
-
-        Returns:
-            str: Generated bundle or error message
-        """
-        if not file_paths:
-            return "No files provided. Please select files to bundle."
-
-        bundle_content = []
-
-        for file_path in file_paths:
-            relative_path = self.get_relative_path(file_path)
-            content, success = self._read_file_content(file_path, relative_path)
-
-            if not success:
-                return content  # This is an error message
-
-            bundle_content.append(make_file_section(relative_path, content))
-
-        # Join all content
-        return "\n".join(bundle_content)
-
-    def create_bundle(self):
-        """Create a bundle from selected files"""
-        selected_files = self.get_selected_files()
-        if not selected_files:
-            return "No files selected. Please select files to bundle."
-
-        file_paths = [file_item.path for file_item in selected_files]
-        return self._generate_bundle_content(file_paths)
-
-    def create_bundle_from_saved(self, bundle_name: str):
-        """Create a bundle from a saved bundle without loading it"""
-        # Find the bundle
-        bundle = None
-        for b in self.bundles:
-            if b.name == bundle_name:
-                bundle = b
-                break
-
-        if not bundle:
-            return f"Bundle '{bundle_name}' not found."
-
-        # Convert relative paths to full paths
-        file_paths = [self.project_path / rel_path for rel_path in bundle.file_paths]
-        return self._generate_bundle_content(file_paths)
-
     def _save_json_data(self, filename: str, data):
         """Save data to JSON file in .filebundler directory
 
@@ -287,82 +239,6 @@ class FileBundlerApp:
             st.error(f"Error loading {filename}: {str(e)}")
             return None
 
-    def save_bundle(self, bundle_name: str):
-        """Save current selection as a named bundle"""
-        selected_files = self.get_selected_files()
-        if not selected_files:
-            return "No files selected. Please select files to save as a bundle."
-
-        if not bundle_name:
-            return "Please enter a valid bundle name."
-
-        # Check if name is valid (lowercase alphanumeric)
-        if not re.fullmatch(r"[a-z0-9-]+", bundle_name):
-            return (
-                "Bundle name must be lowercase, alphanumeric, and may include hyphens."
-            )
-
-        # Check for duplicate names
-        for b in self.bundles:
-            if b.name == bundle_name:
-                # Remove existing bundle with same name
-                self.bundles = [b for b in self.bundles if b.name != bundle_name]
-                break
-
-        # Create new bundle
-        file_paths = [self.get_relative_path(item.path) for item in selected_files]
-        new_bundle = Bundle(bundle_name, file_paths)
-        self.bundles.append(new_bundle)
-
-        # Save bundles to file
-        self.save_bundles()
-
-        return f"Bundle '{bundle_name}' saved with {len(file_paths)} files."
-
-    def load_bundle(self, bundle_name: str):
-        """Load a saved bundle"""
-        # Find the bundle
-        bundle = None
-        for b in self.bundles:
-            if b.name == bundle_name:
-                bundle = b
-                break
-
-        if not bundle:
-            return f"Bundle '{bundle_name}' not found."
-
-        # Clear current selections
-        self.clear_all_selections()
-
-        # Mark selected files
-        loaded_count = 0
-        for rel_path in bundle.file_paths:
-            try:
-                full_path = self.project_path / rel_path
-
-                if full_path in self.file_items:
-                    file_item = self.file_items[full_path]
-                    file_item.selected = True
-                    self.selected_file_paths.add(full_path)
-                    loaded_count += 1
-            except Exception as e:
-                st.error(f"Error loading path {rel_path}: {str(e)}")
-
-        # Save selections
-        self.save_selections()
-
-        return f"Loaded {loaded_count} of {len(bundle.file_paths)} files from bundle '{bundle_name}'."
-
-    def delete_bundle(self, bundle_name: str):
-        """Delete a saved bundle"""
-        for i, bundle in enumerate(self.bundles):
-            if bundle.name == bundle_name:
-                self.bundles.pop(i)
-                self.save_bundles()
-                return f"Bundle '{bundle_name}' has been deleted."
-
-        return f"Bundle '{bundle_name}' not found."
-
     def save_selections(self):
         """Save selected files to JSON file"""
         if not self.project_path.exists():
@@ -398,41 +274,10 @@ class FileBundlerApp:
             except Exception as e:
                 st.error(f"Error restoring selection for {path_str}: {str(e)}")
 
-    def save_bundles(self):
-        """Save bundles to file"""
-        # Convert bundles to dictionary
-        data = [
-            {"name": bundle.name, "file_paths": bundle.file_paths}
-            for bundle in self.bundles
-        ]
-
-        # Save to file
-        self._save_json_data("bundles.json", data)
-
-    def load_bundles(self):
-        """Load bundles from file"""
-        data = self._load_json_data("bundles.json")
-        if not data:
-            return
-
-        # Convert to Bundle objects
-        self.bundles = [Bundle.model_validate(item) for item in data]
-
     def show_file_content(self, file_path: Path):
         """Return file content for display"""
         content, success = self._read_file_content(file_path, str(file_path))
         return content
-
-    def rename_bundle(self, old_name: str, new_name: str):
-        """Rename a saved bundle"""
-        # Find the bundle
-        for bundle in self.bundles:
-            if bundle.name == old_name:
-                bundle.name = new_name
-                self.save_bundles()
-                return f"Bundle '{old_name}' renamed to '{new_name}'."
-
-        return f"Bundle '{old_name}' not found."
 
     def select_all_files(self):
         """Select all files in the project"""

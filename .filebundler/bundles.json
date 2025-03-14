@@ -29,12 +29,6 @@
         ]
     },
     {
-        "name": "only-prd",
-        "file_paths": [
-            ".cursor/rules/prd.md"
-        ]
-    },
-    {
         "name": "bundle-management",
         "file_paths": [
             "filebundler/FileBundlerApp.py",
@@ -64,6 +58,12 @@
             "filebundler/managers/BundleManager.py",
             ".filebundler/project-structure.md",
             "main.py"
+        ]
+    },
+    {
+        "name": "only-prd",
+        "file_paths": [
+            ".cursor/rules/prd.md"
         ]
     }
 ]
