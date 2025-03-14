@@ -14,7 +14,6 @@ def render_saved_bundles(
     load_bundle: Callable,
     create_bundle_from_saved: Callable,
     delete_bundle: Callable,
-    rename_bundle: Callable,
 ):
     """
     Render the list of saved bundles with improved UI and border separation

@@ -5,12 +5,11 @@ import streamlit as st
 
 from pathlib import Path
 
-from filebundler.ui.notification import show_temp_notification
-
 from filebundler.FileBundlerApp import FileBundlerApp
 
-from filebundler.managers.BundleManager import BundleManager
 from filebundler.managers.SettingsManager import SettingsManager
+
+from filebundler.ui.notification import show_temp_notification
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +18,6 @@ def load_project(
     project_path: str,
     app: FileBundlerApp,
     settings_manager: SettingsManager,
-    bundle_manager: BundleManager,
 ):
     """Load a project and its settings"""
 
@@ -40,8 +38,8 @@ def load_project(
 
         # Now load the project with the correct settings
         app.load_project(project_path)
-        bundle_manager.set_project_path(project_path_obj)
-        bundle_manager.load_bundles()
+        app.bundles.set_project_path(project_path_obj)
+        app.bundles.load_bundles()
         st.session_state.project_loaded = True
 
         # Add to recent projects

@@ -4,7 +4,7 @@ import json
 import logging
 
 from pathlib import Path
-from typing import Dict, List, Optional, Set, Tuple
+from typing import Any, List, Optional
 from pydantic import ConfigDict, field_serializer
 
 from filebundler.models.Bundle import Bundle
@@ -39,7 +39,7 @@ class BundleManager(BaseModel):
         self.bundles = []
         self.load_bundles()
 
-    def create_bundle(self, selected_files: List[Path], get_relative_path) -> str:
+    def create_bundle(self, selected_files: List[Path]):
         """Create a bundle from selected files"""
         if not selected_files:
             return "No files selected. Please select files to bundle."
@@ -48,7 +48,7 @@ class BundleManager(BaseModel):
 
         for file_path in selected_files:
             try:
-                relative_path = get_relative_path(file_path)
+                relative_path = file_path.relative_to(self.project_path)
 
                 file_content = read_file(file_path)
 
@@ -64,9 +64,7 @@ class BundleManager(BaseModel):
 
         return full_bundle
 
-    def save_bundle(
-        self, bundle_name: str, selected_files: List[Path], get_relative_path
-    ) -> str:
+    def save_bundle(self, bundle_name: str, selected_files: List[Path]):
         """Save current selection as a named bundle"""
         if not selected_files:
             return "No files selected. Please select files to save as a bundle."
@@ -88,7 +86,7 @@ class BundleManager(BaseModel):
                 break
 
         # Create new bundle
-        file_paths = [get_relative_path(item) for item in selected_files]
+        file_paths = [item.relative_to(self.project_path) for item in selected_files]
         new_bundle = Bundle(name=bundle_name, file_paths=file_paths)
         self.bundles.append(new_bundle)
 
@@ -97,41 +95,21 @@ class BundleManager(BaseModel):
 
         return f"Bundle '{bundle_name}' saved with {len(file_paths)} files."
 
-    def load_bundle(self, bundle_name: str) -> Tuple[str, List[str]]:
-        """
-        Find a saved bundle by name
-
-        Returns:
-            tuple: (message, list of file paths in the bundle)
-        """
-        # Find the bundle
-        bundle = None
+    def _find_bundle_by_name(self, bundle_name: str):
+        """Find a saved bundle by name"""
         for b in self.bundles:
             if b.name == bundle_name:
-                bundle = b
-                break
+                return b
 
-        if not bundle:
-            return (f"Bundle '{bundle_name}' not found.", [])
+        return
 
-        return (
-            f"Found bundle '{bundle_name}' with {len(bundle.file_paths)} files.",
-            bundle.file_paths,
-        )
-
-    def create_bundle_from_saved(self, bundle_name: str) -> str:
+    def create_bundle_from_saved(self, bundle_name: str):
         """Create a bundle from a saved bundle without loading it"""
-        # Find the bundle
-        bundle = None
-        for b in self.bundles:
-            if b.name == bundle_name:
-                bundle = b
-                break
+        bundle = self._find_bundle_by_name(bundle_name)
 
         if not bundle:
             return f"Bundle '{bundle_name}' not found."
 
-        # Create bundle content
         bundle_content = []
 
         for rel_path in bundle.file_paths:
@@ -150,7 +128,7 @@ class BundleManager(BaseModel):
 
         return full_bundle
 
-    def delete_bundle(self, bundle_name: str) -> str:
+    def delete_bundle(self, bundle_name: str):
         """Delete a saved bundle"""
         for i, bundle in enumerate(self.bundles):
             if bundle.name == bundle_name:
@@ -160,7 +138,7 @@ class BundleManager(BaseModel):
 
         return f"Bundle '{bundle_name}' not found."
 
-    def rename_bundle(self, old_name: str, new_name: str) -> str:
+    def rename_bundle(self, old_name: str, new_name: str):
         """Rename a saved bundle"""
         # Find the bundle
         for bundle in self.bundles:
@@ -171,23 +149,34 @@ class BundleManager(BaseModel):
 
         return f"Bundle '{old_name}' not found."
 
+    def _get_bundles_file(self):
+        """Get the path to the bundles file"""
+        if not self.project_path:
+            raise ValueError("No project path set, cannot save bundles")
+
+        bundle_dir = self.project_path / ".filebundler"
+        bundle_dir.mkdir(exist_ok=True)
+
+        return bundle_dir / "bundles.json"
+
+    def _persist_to_bundles_file(self, data: Any):
+        """Persist data to bundles file"""
+        bundles_file = self._get_bundles_file()
+
+        # Save to file
+        with open(bundles_file, "w") as f:
+            json_dump(data, f)
+
+        logger.info(f"Saved {len(data)} bundles to {bundles_file}")
+
     def save_bundles_to_disk(self):
         """Save bundles to file"""
         try:
-            # Create .filebundler directory if it doesn't exist
-            bundle_dir = self.project_path / ".filebundler"
-            bundle_dir.mkdir(exist_ok=True)
-
-            bundles_file = bundle_dir / "bundles.json"
-
             # Convert bundles to dictionary
             data = [bundle.model_dump() for bundle in self.bundles]
 
             # Save to file
-            with open(bundles_file, "w") as f:
-                json_dump(data, f)
-
-            logger.info(f"Saved {len(self.bundles)} bundles to {bundles_file}")
+            self._persist_to_bundles_file(data)
 
         except Exception as e:
             logger.error(f"Error saving bundles: {e}", exc_info=True)
@@ -195,16 +184,7 @@ class BundleManager(BaseModel):
 
     def load_bundles(self):
         """Load bundles from file"""
-        if not self.project_path:
-            logger.warning("No project path set, cannot load bundles")
-            return
-
-        bundle_dir = self.project_path / ".filebundler"
-        bundles_file = bundle_dir / "bundles.json"
-
-        if not bundles_file.exists():
-            logger.info(f"No bundles file found at {bundles_file}")
-            return
+        bundles_file = self._get_bundles_file()
 
         try:
             # Read from file

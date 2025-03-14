@@ -26,7 +26,12 @@
 7. [UX] notify about added pattern and empty the "add pattern" input after adding a pattern
 8. [BUG] after adding a bundle, the bundle count is not updated on the "Bundle Manager" tab
    1. also after deleting a bundle this count is also not updated
-   2. we also want to clear the fiel
+9. [ROADMAP] move project selection and filetree to the sidebar
+   1.  this way the user can hide the sidebar if the want to take a better look at the main content
+   2.  we would need to implement tabs on the sidebar, so the user can switch between the project selection and file tree screens
+10. [ROADMAP] add tabs for project settings and global settings
+    1.  this tabs should be on the main page
+    2.  so the main page would have three tabs: FileBundler (where the selected files, exports and bundles are displayed), Project Settings and Global Settings
 
 
 # IGNORE FOR NOW (may become relevant later)

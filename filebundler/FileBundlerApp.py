@@ -68,7 +68,7 @@ class FileBundlerApp:
                 item
                 for item in dir_path.iterdir()
                 if not ignore_patterns(
-                    self.get_relative_path(item),
+                    item.relative_to(self.project_path).as_posix(),
                     st.session_state.settings_manager.project_settings.ignore_patterns,
                 )
             ]
@@ -149,7 +149,6 @@ class FileBundlerApp:
 
         self.selected_file_paths.clear()
 
-        # Save empty selections
         self.save_selections()
 
     def get_selected_files(self):
@@ -159,18 +158,6 @@ class FileBundlerApp:
             for path in self.selected_file_paths
             if path in self.file_items
         ]
-
-    def get_selected_file_paths(self):
-        """Get paths of all selected files as strings"""
-        return [str(path) for path in self.selected_file_paths]
-
-    def get_relative_path(self, file_path: Path):
-        """Get path relative to project root"""
-        try:
-            return str(file_path.relative_to(self.project_path).as_posix())
-        except ValueError:
-            # If the file is not in the project directory, return the full path
-            return str(file_path)
 
     def _read_file_content(self, file_path: Path, relative_path: str):
         """Read file content with error handling
@@ -247,7 +234,7 @@ class FileBundlerApp:
         # Create data structure with project path and selected files
         data = {
             "project": str(self.project_path),
-            "selections": self.get_selected_file_paths(),
+            "selections": [str(path) for path in self.selected_file_paths],
         }
 
         # Save to file

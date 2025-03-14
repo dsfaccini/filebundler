@@ -4,26 +4,27 @@ import streamlit as st
 
 from pathlib import Path
 
+from filebundler.FileBundlerApp import FileBundlerApp
 from filebundler.ui.notification import show_temp_notification
 from filebundler.utils.language_formatting import set_language_from_filename
 
 logger = logging.getLogger(__name__)
 
 
-def render_selected_files_tab():
+def render_selected_files_tab(app: FileBundlerApp):
     """Render the Selected Files tab"""
-    st.subheader(f"Selected Files ({st.session_state.app.nr_of_selected_files})")
+    st.subheader(f"Selected Files ({app.nr_of_selected_files})")
     st.text(
         "Click on a file to view its content. Click 'x' to remove a file from selection."
     )
 
     # Get selected files
-    selected_files = st.session_state.app.get_selected_files()
+    selected_files = app.get_selected_files()
 
     # TODO make this section scrollable, set a max height
     if selected_files:
         for file_item in selected_files:
-            relative_path = st.session_state.app.get_relative_path(file_item.path)
+            relative_path = file_item.path.relative_to(app.project_path)
 
             # Create a row with file button and remove button
             col1, col2 = st.columns([10, 1])
@@ -35,8 +36,8 @@ def render_selected_files_tab():
                     use_container_width=True,
                 ):
                     st.session_state.selected_file = file_item.path
-                    st.session_state.file_content = (
-                        st.session_state.app.show_file_content(file_item.path)
+                    st.session_state.file_content = app.show_file_content(
+                        file_item.path
                     )
                     st.rerun()
 
@@ -47,7 +48,7 @@ def render_selected_files_tab():
                     help=f"Remove {relative_path} from selection",
                 ):
                     try:
-                        st.session_state.app.toggle_file_selection(file_item.path)
+                        app.toggle_file_selection(file_item.path)
                         show_temp_notification(
                             f"Removed {Path(file_item.path).name} from selection",
                             type="info",

@@ -4,8 +4,9 @@ import pyperclip
 import streamlit as st
 
 from filebundler.FileBundlerApp import FileBundlerApp
-from filebundler.ui.tabs.manage_bundles.bundle_display import render_saved_bundles
+
 from filebundler.ui.notification import show_temp_notification
+from filebundler.ui.tabs.manage_bundles.bundle_display import render_saved_bundles
 
 logger = logging.getLogger(__name__)
 
@@ -17,27 +18,29 @@ def render_manage_bundles_tab(app: FileBundlerApp):
     # Use the new component to render bundles
     render_saved_bundles(
         bundles=app.bundles.bundles,
-        load_bundle=lambda name: load_bundle_callback(name),
+        load_bundle=lambda name: activate_bundle_callback(name),
         create_bundle_from_saved=lambda name: create_bundle_from_saved_callback(name),
         delete_bundle=lambda name: delete_bundle_callback(name),
-        rename_bundle=lambda old, new: app.bundles.rename_bundle(old, new),
+        # rename_bundle=lambda old, new: app.bundles.rename_bundle(old, new),
     )
 
 
-# Add callback functions for bundle operations
-def load_bundle_callback(name):
+def activate_bundle_callback(name):
     """Callback for loading a bundle"""
     try:
         app: FileBundlerApp = st.session_state.app
 
-        message, file_paths = app.bundles.load_bundle(name)
+        bundle = app.bundles._find_bundle_by_name(name)
+        if not bundle:
+            show_temp_notification(f"Bundle '{name}' not found", type="error")
+            return
 
         # Clear current selections
         app.clear_all_selections()
 
         # Mark selected files
         loaded_count = 0
-        for rel_path in file_paths:
+        for rel_path in bundle.file_paths:
             try:
                 full_path = app.project_path / rel_path
                 if full_path in app.file_items:
@@ -52,7 +55,7 @@ def load_bundle_callback(name):
         app.save_selections()
 
         show_temp_notification(
-            f"Loaded {loaded_count} of {len(file_paths)} files from bundle '{name}'",
+            f"Loaded {loaded_count} of {len(bundle.file_paths)} files from bundle '{name}'",
             type="success",
         )
         st.rerun()
