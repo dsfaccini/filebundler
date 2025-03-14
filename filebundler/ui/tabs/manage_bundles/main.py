@@ -1,9 +1,12 @@
-# filebundler/ui/tabs/manage_bundles.py
+# filebundler/ui/tabs/manage_bundles/main.py
 import logging
 import pyperclip
 import streamlit as st
 
-from filebundler.ui.bundle_display import render_saved_bundles
+from filebundler.FileBundlerApp import FileBundlerApp
+from filebundler.managers.BundleManager import BundleManager
+
+from filebundler.ui.tabs.manage_bundles.bundle_display import render_saved_bundles
 from filebundler.ui.notification import show_temp_notification
 
 logger = logging.getLogger(__name__)
@@ -12,7 +15,7 @@ logger = logging.getLogger(__name__)
 def render_manage_bundles_tab():
     """Render the Manage Bundles tab"""
     st.subheader(f"Manage Bundles ({st.session_state.app.nr_of_bundles})")
-    bundle_manager = st.session_state.bundle_manager
+    bundle_manager: BundleManager = st.session_state.bundle_manager
 
     # Use the new component to render bundles
     render_saved_bundles(
@@ -28,8 +31,8 @@ def render_manage_bundles_tab():
 def load_bundle_callback(name):
     """Callback for loading a bundle"""
     try:
-        bundle_manager = st.session_state.bundle_manager
-        app = st.session_state.app
+        bundle_manager: BundleManager = st.session_state.bundle_manager
+        app: FileBundlerApp = st.session_state.app
 
         message, file_paths = bundle_manager.load_bundle(name)
 

@@ -1,20 +1,32 @@
-1. [FEATURE] the user should know when the last export happens, as files may have changed since the last export
-  1. also the files displayed should show their last modified date
-      1. create @property fields on the Models to easily display file size and last modified datetime
-2. [FEATURE] store and display word count and memory use for exported contents
-  - propose the logic to compute this
-  - this is a substitute for token count, so we don't worry about embeddings
-3. [ROADMAP] implement a general util for prompting llms using openrouter
+1. [REFACTOR] for quality of life we should rename the action of "Load Bundle" to "Activate Bundle"
+  1. this is the action that selects the files that belong to the bundle
+  2. the reason we should rename it is that we also "load a bundle" when we retrieve saved bundles from disk and "load" them onto the app
+  3. we also need to rename all functions that refer to "activating bundles" so we as developers can differentiate them
+2. [QOL] we a bundle is activated we should populate the "Bundle Name" input field with the name of the activated bundle (so it's easy for the user to re-save it)
+   1. we can set a field in the app
+3. [BUG] deleted or renamed files are not removed from bundles
+  1. we shoud fix this by checking that they exist when we load the bundle or we activate it
+  2. we should display a notification so the user knows which files have changed and re-adds them to the bundle
+4. [FEATURE] bundles should display the last date they were exported
+   1. if the were never exported we don't need to display anything
+   2. if the last exported date is earlier than the latest modification date of one of the files in the bundle we should color the displayed bundle yellow and show a tooltip that says "files in this bundle have been modified after it was last exported: {last_modified_date = }
+   3. lets create an model called "BundleMetadata" to store last_exported (e.g. bundle.metadata.export_stats.last_exported)
+   4. the last_modified_date can be a @property
+   5. also the size of the bundle can be exposed as a @property (as the sum of the sizes of all files in the bundle)
+   6. lastly we can add a word_count @property that uses a utility function "compute_token_count" to count the words
+5. [ROADMAP] implement a general util for prompting llms using openrouter
    1. make the util so that we can dynamically choose the model
    2. use an enum to allow for model selection
    3. you can store this utility under filebundler/lib/llm/...
-4. [ROADMAP] create a new tab after "Manage Bundles" called "Auto-Bundle"
+6. [ROADMAP] create a new tab after "Manage Bundles" called "Auto-Bundle"
    1. it has a chat where the user can write a prompt he wants to use on a different LLM to help him with his project
    2. our LLM checks the prompt and the file structure, as well as the available bundles (not the contents, only the bundle names and the files) and selects the files that it deems relevant to answer the prompt
    3. the "auto bundle" feature clears the current selection before selecting new files (add this as a warning in very visible text above the prompt area)
    4. the user can then review the selected files
-5. [UX] notify about added pattern and empty the "add pattern" input after adding a pattern
-6. [BUG] update the displayed number of saved bundles after deleting one
+7. [UX] notify about added pattern and empty the "add pattern" input after adding a pattern
+8. [BUG] after adding a bundle, the bundle count is not updated on the "Bundle Manager" tab
+   1. also after deleting a bundle this count is also not updated
+   2. we also want to clear the fiel
 
 
 # IGNORE FOR NOW (may become relevant later)

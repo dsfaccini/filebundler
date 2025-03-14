@@ -1,4 +1,4 @@
-# filebundler/ui/bundle_display.py
+# filebundler/ui/manage_bundles/bundle_display.py
 import logging
 import streamlit as st
 
@@ -63,7 +63,16 @@ def render_saved_bundles(
         # Bundle actions with equal-sized buttons
         col1, col2, col3 = st.columns(3)
         with col1:
-            if st.button("Load", key=f"load_{bundle.name}", use_container_width=True):
+            activate_bundle_help = """Activating a bundle will select the files in the bundle.
+Selecting new files will not automatically add them to the bundle. 
+You must manually save the bundle again if you want to add them.
+"""
+            if st.button(
+                "Activate",
+                key=f"activate_{bundle.name}",
+                use_container_width=True,
+                help=activate_bundle_help,
+            ):
                 load_bundle(bundle.name)
         with col2:
             if st.button(

@@ -27,5 +27,25 @@
             "filebundler/FileBundlerApp.py",
             "filebundler/state.py"
         ]
+    },
+    {
+        "name": "only-prd",
+        "file_paths": [
+            ".cursor/rules/prd.md"
+        ]
+    },
+    {
+        "name": "bundle-management",
+        "file_paths": [
+            "filebundler/FileBundlerApp.py",
+            "filebundler/ui/tabs/manage_bundles/bundle_display.py",
+            "filebundler/ui/tabs/manage_bundles/main.py",
+            ".filebundler/bundles.json",
+            "filebundler/models/Bundle.py",
+            "filebundler/state.py",
+            "filebundler/managers/BundleManager.py",
+            ".filebundler/project-structure.md",
+            "main.py"
+        ]
     }
 ]

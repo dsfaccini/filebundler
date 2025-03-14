@@ -1,13 +1,4 @@
 # Project Structure: file-bundler
-## Ignored Patterns
-- `**/__pycache__/**`
-- `.git/**`
-- `.ruff_cache/**`
-- `.venv/**`
-- `node_modules/**`
-- `uv.lock`
-- `venv/**`
-
 ## Directory Structure
 ```
 file-bundler/
@@ -22,19 +13,23 @@ file-bundler/
 ├── 📁 filebundler/
 │   ├── 📁 managers/
 │   │   ├── 📄 BundleManager.py
-│   │   ├── 📄 SelectionManager.py
+│   │   ├── 📄 SelectionsManager.py
 │   │   └── 📄 SettingsManager.py
 │   ├── 📁 models/
 │   │   ├── 📄 Bundle.py
+│   │   ├── 📄 FileItem.py
 │   │   └── 📄 ProjectSettings.py
+│   ├── 📁 services/
+│   │   └── 📄 project_structure.py
 │   ├── 📁 ui/
 │   │   ├── 📁 sidebar/
 │   │   │   └── 📄 settings_panel.py
 │   │   ├── 📁 tabs/
+│   │   │   ├── 📁 manage_bundles/
+│   │   │   │   ├── 📄 bundle_display.py
+│   │   │   │   └── 📄 main.py
 │   │   │   ├── 📄 export_contents.py
-│   │   │   ├── 📄 manage_bundles.py
 │   │   │   └── 📄 selected_files.py
-│   │   ├── 📄 bundle_display.py
 │   │   ├── 📄 confirm.py
 │   │   ├── 📄 file_tree.py
 │   │   ├── 📄 notification.py
@@ -42,8 +37,7 @@ file-bundler/
 │   ├── 📁 utils/
 │   │   ├── 📄 __init__.py
 │   │   ├── 📄 filepath_checker.py
-│   │   ├── 📄 language_formatting.py
-│   │   └── 📄 project_structure.py
+│   │   └── 📄 language_formatting.py
 │   ├── 📄 constants.py
 │   ├── 📄 FileBundlerApp.py
 │   └── 📄 state.py

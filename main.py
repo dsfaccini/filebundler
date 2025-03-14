@@ -3,15 +3,16 @@ import logging
 import streamlit as st
 
 from filebundler.state import initialize_session_state
-from filebundler.ui.project_selection import render_project_selection
+
 from filebundler.ui.tabs.export_contents import render_export_tab
 from filebundler.ui.tabs.selected_files import render_selected_files_tab
-
+from filebundler.ui.tabs.manage_bundles.main import render_manage_bundles_tab
 
 from filebundler.ui.file_tree import render_file_tree
 from filebundler.ui.notification import show_temp_notification
+from filebundler.ui.project_selection import render_project_selection
 from filebundler.ui.sidebar.settings_panel import render_settings_panel
-from filebundler.ui.tabs.manage_bundles import render_manage_bundles_tab
+
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"

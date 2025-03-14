@@ -1,21 +1,14 @@
 {
     "project": "C:\\Users\\lobsp\\projects\\file-bundler",
     "selections": [
-        "C:\\Users\\lobsp\\projects\\file-bundler\\TODO.md",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\.cursor\\rules\\prd.md",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\constants.py",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\main.py",
         "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\FileBundlerApp.py",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\README.md",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\utils\\__init__.py",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\managers\\SelectionManager.py",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\.python-version",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\state.py",
+        "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\ui\\tabs\\manage_bundles\\bundle_display.py",
+        "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\ui\\tabs\\manage_bundles\\main.py",
+        "C:\\Users\\lobsp\\projects\\file-bundler\\.filebundler\\bundles.json",
         "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\models\\Bundle.py",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\pyproject.toml",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\ui\\project_selection.py",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\ui\\file_tree.py",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\ui\\tabs\\export_contents.py",
-        "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\ui\\tabs\\selected_files.py"
+        "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\state.py",
+        "C:\\Users\\lobsp\\projects\\file-bundler\\filebundler\\managers\\BundleManager.py",
+        "C:\\Users\\lobsp\\projects\\file-bundler\\.filebundler\\project-structure.md",
+        "C:\\Users\\lobsp\\projects\\file-bundler\\main.py"
     ]
 }
