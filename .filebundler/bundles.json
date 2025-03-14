@@ -47,5 +47,23 @@
             ".filebundler/project-structure.md",
             "main.py"
         ]
+    },
+    {
+        "name": "selections-management",
+        "file_paths": [
+            "filebundler/FileBundlerApp.py",
+            "filebundler/ui/file_tree.py",
+            "filebundler/ui/tabs/manage_bundles/main.py",
+            "filebundler/ui/tabs/manage_bundles/bundle_display.py",
+            "filebundler/ui/tabs/export_contents.py",
+            ".filebundler/selections.json",
+            "filebundler/models/Bundle.py",
+            "filebundler/managers/SelectionsManager.py",
+            "filebundler/ui/project_selection.py",
+            "filebundler/state.py",
+            "filebundler/managers/BundleManager.py",
+            ".filebundler/project-structure.md",
+            "main.py"
+        ]
     }
 ]
