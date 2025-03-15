@@ -8,8 +8,9 @@ from typing import Any, Optional, List
 
 from pydantic import ConfigDict, field_serializer
 
-from filebundler.models.AppProtocol import AppProtocol
 from filebundler.models.FileItem import FileItem
+from filebundler.models.AppProtocol import AppProtocol
+
 from filebundler.utils import json_dump, read_file, BaseModel
 from filebundler.ui.notification import show_temp_notification
 
@@ -111,14 +112,14 @@ class SelectionsManager:
         ]
 
         # Set selections
-        for file_item in selected_file_items:
-            file_item = self.app.file_items.get(file_item.path)
+        for select_file_item in selected_file_items:
+            file_item = self.app.file_items.get(select_file_item.path)
             if file_item:
                 file_item.selected = True
             else:
-                logger.warning(f"Error restoring selection for {file_item.path}")
+                logger.warning(f"Error restoring selection for {select_file_item.path}")
                 show_temp_notification(
-                    f"Couldn't select {file_item.path} because it's not in this project",
+                    f"Couldn't select {select_file_item.path} because it's not in this project",
                     type="warning",
                 )
 
@@ -126,16 +127,16 @@ class SelectionsManager:
         """Select all files in the project"""
 
         for file_item in self.app.file_items.values():
+            # TODO we need to handle the cases when a dir is marked as selected, it should actually just mark its children
             if not file_item.is_dir:
                 file_item.selected = True
 
-            # Save selections
-            self.save_selections()
+        self.save_selections()
 
-            logger.info(f"Selected all {self.selected_file_items} files")
-            show_temp_notification(
-                f"Selected all {self.selected_file_items} files", type="success"
-            )
+        logger.info(f"Selected all {self.nr_of_selected_files} files")
+        show_temp_notification(
+            f"Selected all {self.nr_of_selected_files} files", type="success"
+        )
 
     def clear_all_selections(self):
         """Clear all selected files"""

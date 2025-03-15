@@ -32,7 +32,7 @@ def read_file(file_path: Path):
     assert file_path.exists(), f"Can't read file {file_path} because it doesn't exist"
 
     try:
-        return file_path.read_text(encoding="utf-8", errors="replace")
+        return file_path.read_text(encoding="utf-8")
     except UnicodeDecodeError as e:
         logger.error(f"UnicodeDecodeError for {file_path.name}: {e}")
         return f"Could not read {file_path.name} as text. It may be a binary file."

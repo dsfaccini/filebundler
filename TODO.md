@@ -28,12 +28,8 @@
     2.  so the main page would have three tabs: FileBundler (where the selected files, exports and bundles are displayed), Project Settings and Global Settings
 9.  [TEST] we haven't written any test
 10. [TEST] test what happens when we open a new project (after already opening one)
-11. [UX] replace the ignore pattern inputs with a text area
-   1. the patterns are stored as a list of strings, so we join them with a "\n" and display them in a text area
-   2. remove "add patern" logic, the user can simply edit the text area and save
-   3. the UI is a lot better that way
-12. [BUG] persisted selection are not being loaded or displayed on project load!
-13. [BUG] an error notification flashes when we open a new project, but I don't know where it comes from and it doesn't get logged
+11. [BUG] sometimes persisted selections are not being loaded or displayed on project load!
+12. [BUG] an error notification flashes when we open a new project, but I don't know where it comes from and it doesn't get logged
 
 
 # IGNORE FOR NOW (may become relevant later)

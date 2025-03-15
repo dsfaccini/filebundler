@@ -44,6 +44,17 @@ class FileItem(BaseModel):
 
     def toggle_selected(self):
         self.selected = not self.selected
+        if self.is_dir:
+            for child in self.children:
+                if child.is_dir and child.selected != self.selected:
+                    child.toggle_selected()
+                else:
+                    child.selected = self.selected
+        else:
+            if self.parent:
+                self.parent.selected = all(
+                    [child.selected for child in self.parent.children]
+                )
 
     def __str__(self):
         return self.relative.as_posix()

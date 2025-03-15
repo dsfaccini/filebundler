@@ -95,23 +95,26 @@ def render_file_tree(app: FileBundlerApp):
     def display_directory(file_item: FileItem, indent: int = 0):
         try:
             for child in file_item.children:
-                if child.is_dir:
-                    # Directory entry
-                    st.markdown(f"{'&nbsp;' * indent * 4}📁 **{child.name}**")
-                    display_directory(child, indent + 1)
-                else:
-                    # Using checkbox for selection
-                    new_state = st.checkbox(
-                        f"{'&nbsp;' * indent * 4} {child.name}",
-                        value=child.selected,
-                        key=f"file_{child.path}",
-                        help=f"Select {child.name} for bundling",
-                    )
+                checkbox_label = (
+                    f"{'&nbsp;' * indent * 4}📁 **{child.name}**"
+                    if child.is_dir
+                    else f"{'&nbsp;' * indent * 4} {child.name}"
+                )
+                new_state = st.checkbox(
+                    checkbox_label,
+                    value=child.selected,
+                    key=f"file_{child.path}",
+                    help=f"Select {child.name} for bundling",
+                )
 
-                    # Handle checkbox change
-                    if new_state != child.selected:
-                        child.toggle_selected()
-                        st.rerun()
+                # Handle checkbox change
+                if new_state != child.selected:
+                    child.toggle_selected()
+                    st.rerun()
+
+                if child.is_dir:
+                    display_directory(child, indent + 1)
+
         except Exception as e:
             logger.error(f"Error displaying directory: {e}", exc_info=True)
             st.error(f"Error displaying directory: {str(e)}")

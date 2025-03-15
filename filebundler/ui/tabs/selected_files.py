@@ -21,6 +21,9 @@ def render_selected_files_tab(app: FileBundlerApp):
     # TODO make this section scrollable, set a max height
     if app.selections.selected_file_items:
         for file_item in app.selections.selected_file_items:
+            if file_item.is_dir:
+                continue
+
             relative_path = file_item.path.relative_to(app.project_path)
 
             # Create a row with file button and remove button

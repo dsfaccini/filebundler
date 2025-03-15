@@ -13,9 +13,7 @@ class Bundle(BaseModel):
     def code_export(self):
         return f"""<?xml version="1.0" encoding="UTF-8"?>
 <FileBundle>
-    {"".join(make_file_section(file_item) for file_item in self.file_items)}
-</FileBundle>
-"""
+    {"".join(make_file_section(file_item) for file_item in self.file_items)}</FileBundle>"""
 
 
 def make_file_section(file_item: FileItem):

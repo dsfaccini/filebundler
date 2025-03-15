@@ -26,53 +26,25 @@ def render_settings_panel(settings_manager: SettingsManager):
         st.write("Files matching these patterns will be ignored (glob syntax)")
 
         with st.expander("Show/Hide Ignore Patterns", expanded=False):
-            updated_patterns: List[str] = []
+            updated_patterns = st.text_area(
+                "Edit ignore patterns",
+                "\n".join(settings_manager.project_settings.ignore_patterns),
+            )
 
-            for i, pattern in enumerate(
-                settings_manager.project_settings.ignore_patterns
-            ):
-                cols = st.columns([4, 1])
-                with cols[0]:
-                    updated_pattern = st.text_input(
-                        f"Pattern {i + 1}", value=pattern, key=f"pat_{i}"
-                    )
-                    updated_patterns.append(updated_pattern)
-                with cols[1]:
-                    if st.button("❌", key=f"del_pat_{i}"):
-                        settings_manager.project_settings.ignore_patterns.pop(i)
-
-                        # Save settings after change
-                        if st.session_state.project_loaded:
-                            settings_manager.save_project_settings()
-
-                        st.rerun()
-
-        settings_manager.project_settings.ignore_patterns = updated_patterns
-
-        # Add new pattern
-        new_pattern = st.text_input("Add new pattern")
-        if st.button("Add") and new_pattern:
-            settings_manager.project_settings.ignore_patterns.append(new_pattern)
-
-            # Save settings after adding new pattern
-            if st.session_state.project_loaded:
-                settings_manager.save_project_settings()
-
-            st.rerun()
-
-        # Update patterns with edited values
-        settings_manager.project_settings.ignore_patterns = updated_patterns
+            if updated_patterns:
+                settings_manager.project_settings.ignore_patterns = (
+                    updated_patterns.split("\n")
+                )
 
         # Save button for all settings
         if st.button("Save Settings"):
-            if st.session_state.project_loaded:
-                settings_manager.save_project_settings()
+            settings_manager.save_project_settings()
 
-                success = settings_manager.save_project_settings()
+            success = settings_manager.save_project_settings()
 
-                if success:
-                    show_temp_notification("Settings saved", type="success")
-                else:
-                    show_temp_notification("Error saving settings", type="error")
+            if success:
+                show_temp_notification("Settings saved", type="success")
+            else:
+                show_temp_notification("Error saving settings", type="error")
     else:
         st.info("Open a project to configure settings")
