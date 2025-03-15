@@ -6,7 +6,7 @@ from filebundler.state import initialize_session_state
 
 from filebundler.ui.tabs.export_contents import render_export_tab
 from filebundler.ui.tabs.selected_files import render_selected_files_tab
-from filebundler.ui.tabs.manage_bundles.main import render_manage_bundles_tab
+from filebundler.ui.tabs.manage_bundles.display_tab import render_manage_bundles_tab
 
 from filebundler.ui.file_tree import render_file_tree
 from filebundler.ui.notification import show_temp_notification
@@ -54,7 +54,7 @@ def main():
                     [
                         f"Selected Files ({st.session_state.app.selections.nr_of_selected_files})",
                         "Export Contents",
-                        f"Manage Bundles ({st.session_state.app.nr_of_bundles})",
+                        f"Manage Bundles ({st.session_state.app.bundles.nr_of_bundles})",
                     ]
                 )
 

@@ -1,69 +1,43 @@
 [
     {
-        "name": "settings-stuff",
-        "file_paths": [
-            "filebundler/settings_panel.py",
-            "filebundler/settings_manager.py",
-            "main.py"
-        ]
-    },
-    {
-        "name": "everything-but-settings",
-        "file_paths": [
-            "filebundler/utils/__init__.py",
-            "filebundler/managers/SelectionManager.py",
-            ".python-version",
-            "TODO.md",
-            "filebundler/models/Bundle.py",
-            ".cursor/rules/prd.md",
-            "README.md",
-            "pyproject.toml",
-            "filebundler/ui/project_selection.py",
-            "filebundler/ui/file_tree.py",
-            "filebundler/ui/tabs/export_contents.py",
-            "filebundler/ui/tabs/selected_files.py",
-            "filebundler/constants.py",
-            "main.py",
-            "filebundler/FileBundlerApp.py",
-            "filebundler/state.py"
-        ]
-    },
-    {
         "name": "bundle-management",
-        "file_paths": [
-            "filebundler/FileBundlerApp.py",
-            "filebundler/ui/tabs/manage_bundles/bundle_display.py",
-            "filebundler/ui/tabs/manage_bundles/main.py",
-            ".filebundler/bundles.json",
-            "filebundler/models/Bundle.py",
-            "filebundler/state.py",
-            "filebundler/managers/BundleManager.py",
-            ".filebundler/project-structure.md",
-            "main.py"
-        ]
-    },
-    {
-        "name": "selections-management",
-        "file_paths": [
-            "filebundler/FileBundlerApp.py",
-            "filebundler/ui/file_tree.py",
-            "filebundler/ui/tabs/manage_bundles/main.py",
-            "filebundler/ui/tabs/manage_bundles/bundle_display.py",
-            "filebundler/ui/tabs/export_contents.py",
-            ".filebundler/selections.json",
-            "filebundler/models/Bundle.py",
-            "filebundler/managers/SelectionsManager.py",
-            "filebundler/ui/project_selection.py",
-            "filebundler/state.py",
-            "filebundler/managers/BundleManager.py",
-            ".filebundler/project-structure.md",
-            "main.py"
-        ]
-    },
-    {
-        "name": "only-prd",
-        "file_paths": [
-            ".cursor/rules/prd.md"
+        "file_items": [
+            {
+                "path": ".cursor/rules/prd.md",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": ".filebundler/bundles.json",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/managers/BundleManager.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/models/Bundle.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/models/FileItem.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/ui/tabs/manage_bundles/display_bundles.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/ui/tabs/manage_bundles/display_tab.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/ui/tabs/export_contents.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/ui/tabs/selected_files.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            }
         ]
     }
 ]

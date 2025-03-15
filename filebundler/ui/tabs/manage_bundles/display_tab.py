@@ -5,32 +5,33 @@ import streamlit as st
 
 from filebundler.FileBundlerApp import FileBundlerApp
 
+from filebundler.models.Bundle import Bundle
 from filebundler.ui.notification import show_temp_notification
-from filebundler.ui.tabs.manage_bundles.bundle_display import render_saved_bundles
+from filebundler.ui.tabs.manage_bundles.display_bundles import render_saved_bundles
 
 logger = logging.getLogger(__name__)
 
 
 def render_manage_bundles_tab(app: FileBundlerApp):
     """Render the Manage Bundles tab"""
-    st.subheader(f"Manage Bundles ({st.session_state.app.nr_of_bundles})")
+    st.subheader(f"Manage Bundles ({st.session_state.app.bundles.nr_of_bundles})")
 
     # Use the new component to render bundles
     render_saved_bundles(
-        bundles=app.bundles.bundles,
-        load_bundle=lambda name: activate_bundle_callback(name),
-        create_bundle_from_saved=lambda name: create_bundle_from_saved_callback(name),
+        bundle_manager=app.bundles,
+        activate_bundle=lambda name: activate_bundle_callback(name),
+        export_code_from_bundle=lambda name: export_code_from_bundle_callback(name),
         delete_bundle=lambda name: delete_bundle_callback(name),
         # rename_bundle=lambda old, new: app.bundles.rename_bundle(old, new),
     )
 
 
-def activate_bundle_callback(name):
+def activate_bundle_callback(name: str):
     """Callback for loading a bundle"""
     try:
         app: FileBundlerApp = st.session_state.app
-
         bundle = app.bundles._find_bundle_by_name(name)
+
         if not bundle:
             show_temp_notification(f"Bundle '{name}' not found", type="error")
             return
@@ -40,22 +41,24 @@ def activate_bundle_callback(name):
 
         # Mark selected files
         loaded_count = 0
-        for rel_path in bundle.file_paths:
-            try:
-                full_path = app.project_path / rel_path
-                if full_path in app.file_items:
-                    file_item = app.file_items[full_path]
-                    file_item.selected = True
-                    app.selections.selected_file_paths.add(full_path)
-                    loaded_count += 1
-            except Exception as e:
-                logger.error(f"Error loading path {rel_path}: {e}", exc_info=True)
+        for file_item in bundle.file_items:
+            corresponding_file_item = app.file_items.get(file_item.path)
+            if not corresponding_file_item:
+                warning_msg = (
+                    f"File item not found in this project: {file_item.path = }"
+                )
+                logger.warning(warning_msg)
+                show_temp_notification(warning_msg, type="warning")
+                continue
+            else:
+                corresponding_file_item.selected = True
+                loaded_count += 1
 
         # Save selections
         app.selections.save_selections()
 
         show_temp_notification(
-            f"Loaded {loaded_count} of {len(bundle.file_paths)} files from bundle '{name}'",
+            f"Loaded {loaded_count} of {len(bundle.file_items)} files from bundle '{name}'",
             type="success",
         )
         st.rerun()
@@ -64,24 +67,21 @@ def activate_bundle_callback(name):
         show_temp_notification(f"Error loading bundle: {str(e)}", type="error")
 
 
-def create_bundle_from_saved_callback(name):
+def export_code_from_bundle_callback(bundle: Bundle):
     """Callback for creating a bundle from saved bundle"""
     try:
-        app: FileBundlerApp = st.session_state.app
-        bundle_content = app.bundles.create_bundle_from_saved(name)
-
         if (
-            bundle_content.startswith("Bundle")
-            or bundle_content.startswith("The file")
-            or bundle_content.startswith("Failed to")
+            bundle.code_export.startswith("Bundle")
+            or bundle.code_export.startswith("The file")
+            or bundle.code_export.startswith("Failed to")
         ):
-            logger.warning(f"Bundle export issue: {bundle_content}")
-            show_temp_notification(bundle_content, type="error")
+            logger.warning(f"Bundle export issue: {bundle.code_export}")
+            show_temp_notification(bundle.code_export, type="error")
         else:
             try:
-                pyperclip.copy(bundle_content)
+                pyperclip.copy(bundle.code_export)
                 show_temp_notification(
-                    f"Bundle '{name}' exported to clipboard", type="success"
+                    f"Bundle '{bundle.name}' exported to clipboard", type="success"
                 )
             except Exception as e:
                 logger.error(f"Clipboard error: {e}", exc_info=True)

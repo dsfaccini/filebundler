@@ -1,16 +1,32 @@
 # filebundler/models/Bundle.py
 from typing import List
-from pydantic import ConfigDict, field_serializer
 
-from filebundler.utils import BaseModel
+from filebundler.models.FileItem import FileItem
+from filebundler.utils import BaseModel, read_file
 
 
 class Bundle(BaseModel):
-    # model_config = ConfigDict(arbitrary_types_allowed=True)
-
     name: str
-    file_paths: List[str]
+    file_items: List[FileItem]
 
-    # @field_serializer("file_paths")
-    # def serialize_file_paths(filepaths):
-    #     return [p.as_posix() for p in filepaths]
+    @property
+    def code_export(self):
+        return f"""<?xml version="1.0" encoding="UTF-8"?>
+<FileBundle>
+    {"".join(make_file_section(file_item) for file_item in self.file_items)}
+</FileBundle>
+"""
+
+
+def make_file_section(file_item: FileItem):
+    # NOTE we could add error handling
+
+    return f"""<File>
+    <FilePath>
+        {file_item}
+    </FilePath>
+    <FileContent>
+{read_file(file_item.path)}
+    </FileContent>
+</File>
+"""

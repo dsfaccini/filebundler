@@ -18,6 +18,7 @@ file-bundler/
 │   ├── 📁 models/
 │   │   ├── 📄 Bundle.py
 │   │   ├── 📄 FileItem.py
+│   │   ├── 📄 GlobalSettings.py
 │   │   └── 📄 ProjectSettings.py
 │   ├── 📁 services/
 │   │   └── 📄 project_structure.py
@@ -26,8 +27,8 @@ file-bundler/
 │   │   │   └── 📄 settings_panel.py
 │   │   ├── 📁 tabs/
 │   │   │   ├── 📁 manage_bundles/
-│   │   │   │   ├── 📄 bundle_display.py
-│   │   │   │   └── 📄 main.py
+│   │   │   │   ├── 📄 display_bundles.py
+│   │   │   │   └── 📄 display_tab.py
 │   │   │   ├── 📄 export_contents.py
 │   │   │   └── 📄 selected_files.py
 │   │   ├── 📄 confirm.py
@@ -46,5 +47,6 @@ file-bundler/
 ├── 📄 main.py
 ├── 📄 pyproject.toml
 ├── 📄 README.md
+├── 📄 test-utils.ipynb
 └── 📄 TODO.md
 ```

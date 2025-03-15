@@ -4,14 +4,15 @@ import json
 import logging
 import fnmatch
 
-from typing import Any, Dict, List
 from pathlib import Path
+from typing import Any, Dict, List
 from pydantic import BaseModel  # noqa: F401
+
 
 logger = logging.getLogger(__name__)
 
 
-def json_dump(data: Dict[str, Any], f: io.BytesIO):
+def json_dump(data: Any, f: io.TextIOWrapper):
     json.dump(data, f, indent=4)
 
 
@@ -27,7 +28,7 @@ def sort_files(files: List[Path]):
     return sorted(files, key=lambda p: (not p.is_dir(), p.name.lower()))
 
 
-def read_file(file_path: str):
+def read_file(file_path: Path):
     if not file_path.exists():
         logger.warning(f"File does not exist: {file_path}")
         return f"The file {file_path} does not exist or cannot be accessed."
@@ -40,25 +41,47 @@ def read_file(file_path: str):
         return f"Could not read {file_path.name} as text. It may be a binary file."
 
 
-def generate_file_bundle(relative_paths: List[Path]):
-    return f"""<?xml version="1.0" encoding="UTF-8"?>
-<FileBundle>
-    {"".join(make_file_section(p) for p in relative_paths)}
-</FileBundle>
-"""
+def ignore_directory_patterns(path: Path, ignored_patterns: List[str]):
+    """
+    Returns a list of all non-ignored folders, subfolders, and files in the given path.
 
+    Args:
+        path (str): The root directory path to scan
+        ignored_patterns (List[str]): List of glob-style patterns to ignore (e.g., ['*.txt', '*.git/*'])
 
-def make_file_section(relative_path: Path):
-    # except Exception as e:
-    # logger.error(f"Failed to read {file_path.name}: {e}", exc_info=True)
-    # return f"Failed to read {file_path.name}: {str(e)}"
+    Returns:
+        List[str]: List of relative paths to non-ignored directories and files
 
-    return f"""<File>
-    <FilePath>
-        {relative_path.as_posix()}
-    </FilePath>
-    <FileContent>
-{read_file(relative_path)}
-    </FileContent>
-</File>
-"""
+    Raises:
+        AssertionError: If the path is not a directory
+    """
+    # Convert string path to Path object and assert it's a directory
+    root_path = Path(path)
+    assert root_path.is_dir(), f"'{path}' must be a directory"
+
+    result = []
+
+    for item in root_path.rglob("*"):
+        rel_path = item.relative_to(root_path)
+
+        is_ignored = ignore_patterns(rel_path, ignored_patterns)
+
+        if is_ignored:
+            continue
+
+        if item.is_file():
+            result.append(rel_path)
+
+    # Process directories - only include those that have non-ignored content
+    final_result = []
+    for item in result:
+        final_result.append(item)
+        # Add all parent directories of included files
+        parent = Path(item).parent
+        while parent != Path("."):
+            parent_str = str(parent)
+            if parent_str not in final_result:
+                final_result.append(parent_str)
+            parent = parent.parent
+
+    return sort_files(final_result)

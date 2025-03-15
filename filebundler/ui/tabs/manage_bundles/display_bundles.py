@@ -2,17 +2,17 @@
 import logging
 import streamlit as st
 
-from typing import Callable, List
+from typing import Callable
 
-from filebundler.managers.BundleManager import Bundle
+from filebundler.managers.BundleManager import BundleManager
 
 logger = logging.getLogger(__name__)
 
 
 def render_saved_bundles(
-    bundles: List[Bundle],
-    load_bundle: Callable,
-    create_bundle_from_saved: Callable,
+    bundle_manager: BundleManager,
+    activate_bundle: Callable,
+    export_code_from_bundle: Callable,
     delete_bundle: Callable,
 ):
     """
@@ -20,8 +20,8 @@ def render_saved_bundles(
 
     Args:
         bundles: List of Bundle objects
-        load_bundle: Callback function to load a bundle
-        create_bundle_from_saved: Callback function to create a bundle from saved
+        activate_bundle: Callback function to load a bundle
+        export_code_from_bundle: Callback function to create a bundle from saved
         delete_bundle: Callback function to delete a bundle
         rename_bundle: Callback function to rename a bundle
     """
@@ -46,18 +46,23 @@ def render_saved_bundles(
         unsafe_allow_html=True,
     )
 
-    if not bundles:
-        st.write("No saved bundles.")
-        return
+    if not bundle_manager:
+        if bundle_manager.current_bundle:
+            st.write("Clipboard contents:")
+            st.code(bundle_manager.current_bundle.code_export)
+            return
+        else:
+            st.write("No saved bundles.")
+            return
 
     # Display each bundle with border
-    for bundle in bundles:
+    for bundle in bundle_manager.bundles:
         st.markdown('<div class="bundle-container">', unsafe_allow_html=True)
 
         # Bundle dropdown with files
-        with st.expander(f'Files in "{bundle.name}" ({len(bundle.file_paths)} files)'):
-            for file_path in bundle.file_paths:
-                st.write(f"- {file_path}")
+        with st.expander(f'Files in "{bundle.name}" ({len(bundle.file_items)} files)'):
+            for file_item in bundle.file_items:
+                st.write(f"- {file_item}")
 
         # Bundle actions with equal-sized buttons
         col1, col2, col3 = st.columns(3)
@@ -72,12 +77,14 @@ You must manually save the bundle again if you want to add them.
                 use_container_width=True,
                 help=activate_bundle_help,
             ):
-                load_bundle(bundle.name)
+                activate_bundle(bundle.name)
         with col2:
             if st.button(
                 "Export Contents", key=f"create_{bundle.name}", use_container_width=True
             ):
-                create_bundle_from_saved(bundle.name)
+                export_code_from_bundle(bundle)
+                bundle_manager.current_bundle = bundle
+                st.rerun()
         with col3:
             if st.button(
                 "Delete", key=f"delete_{bundle.name}", use_container_width=True

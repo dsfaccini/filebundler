@@ -18,12 +18,9 @@ def render_selected_files_tab(app: FileBundlerApp):
         "Click on a file to view its content. Click 'x' to remove a file from selection."
     )
 
-    # Get selected files
-    selected_files = app.selections.get_selected_files()
-
     # TODO make this section scrollable, set a max height
-    if selected_files:
-        for file_item in selected_files:
+    if app.selections.selected_file_items:
+        for file_item in app.selections.selected_file_items:
             relative_path = file_item.path.relative_to(app.project_path)
 
             # Create a row with file button and remove button
@@ -36,9 +33,6 @@ def render_selected_files_tab(app: FileBundlerApp):
                     use_container_width=True,
                 ):
                     st.session_state.app.selections.selected_file = file_item.path
-                    st.session_state.app.selections.selected_file_content = (
-                        app.show_file_content(file_item.path)
-                    )
                     st.rerun()
 
             with col2:
@@ -48,7 +42,7 @@ def render_selected_files_tab(app: FileBundlerApp):
                     help=f"Remove {relative_path} from selection",
                 ):
                     try:
-                        app.selections.toggle_file_selection(file_item.path)
+                        file_item.toggle_selected()
                         show_temp_notification(
                             f"Removed {Path(file_item.path).name} from selection",
                             type="info",
@@ -59,7 +53,6 @@ def render_selected_files_tab(app: FileBundlerApp):
                             == file_item.path
                         ):
                             st.session_state.app.selections.selected_file = None
-                            st.session_state.app.selections.selected_file_content = None
                         st.rerun()
                     except Exception as e:
                         logger.error(
@@ -79,12 +72,11 @@ def render_selected_files_tab(app: FileBundlerApp):
         st.session_state.app.selections.selected_file
         and st.session_state.app.selections.selected_file_content
     ):
-        st.subheader(
-            f"File: {Path(st.session_state.app.selections.selected_file).name}"
-        )
+        st.subheader(f"File: {st.session_state.app.selections.selected_file.name}")
 
-        filepath = Path(st.session_state.app.selections.selected_file)
-        language = set_language_from_filename(filepath)
+        language = set_language_from_filename(
+            st.session_state.app.selections.selected_file
+        )
 
         st.code(
             st.session_state.app.selections.selected_file_content, language=language

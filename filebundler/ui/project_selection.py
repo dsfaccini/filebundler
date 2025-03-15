@@ -20,7 +20,7 @@ def load_project(
 ):
     """Load a project and its settings"""
 
-    if not app.project_path:
+    if app is None:
         show_temp_notification("Please enter a project path", type="error")
         return False
 
@@ -33,12 +33,10 @@ def load_project(
     try:
         # Load project settings BEFORE loading the project
         # This ensures ignore patterns are available when loading the file tree
-        settings_manager.load_project_settings(app.project_path)
+        settings_manager.load_project_settings(project_path_obj)
 
         # Now load the project with the correct settings
-        app.load_project(app.project_path)
-        app.bundles.set_project_path(project_path_obj)
-        app.bundles.load_bundles()
+        app.load_project(project_path_obj, settings_manager.project_settings)
         st.session_state.project_loaded = True
 
         # Add to recent projects
@@ -106,7 +104,7 @@ def render_project_selection():
         if st.button("Refresh Project"):
             if st.session_state.project_loaded:
                 try:
-                    st.session_state.app.load_project(st.session_state.app.project_path)
+                    st.session_state.app.refresh()
                     st.session_state.app.bundles.load_bundles()
                     show_temp_notification("Project refreshed", type="success")
                 except Exception as e:

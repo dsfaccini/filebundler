@@ -3,6 +3,7 @@ import logging
 import streamlit as st
 
 from filebundler.FileBundlerApp import FileBundlerApp
+from filebundler.models.FileItem import FileItem
 from filebundler.services.project_structure import (
     generate_project_structure,
     save_project_structure,
@@ -35,7 +36,7 @@ def render_file_tree(app: FileBundlerApp):
         unsafe_allow_html=True,
     )
 
-    st.subheader("Files")
+    st.subheader(f"Files ({app.nr_of_files})")
 
     col1, col2, col3 = st.columns([1, 1, 1])
 
@@ -47,7 +48,7 @@ def render_file_tree(app: FileBundlerApp):
             st.rerun()
     with col2:
         if st.button("Unselect All", key="unselect_all", use_container_width=True):
-            app.selections.unselect_all_files()
+            app.selections.clear_all_selections()
             st.rerun()
 
     with col3:
@@ -56,12 +57,7 @@ def render_file_tree(app: FileBundlerApp):
         ):
             try:
                 # Generate project structure markdown
-                ignore_patterns = (
-                    st.session_state.settings_manager.project_settings.ignore_patterns
-                )
-                structure_md = generate_project_structure(
-                    app.file_items, app.project_path, ignore_patterns
-                )
+                structure_md = generate_project_structure(app)
 
                 output_file = save_project_structure(app.project_path, structure_md)
 
@@ -70,11 +66,7 @@ def render_file_tree(app: FileBundlerApp):
                     type="success",
                 )
 
-                # Set session state to show preview
-                if "selected_file" not in st.session_state:
-                    st.session_state.app.selections.selected_file = output_file
-                if "file_content" not in st.session_state:
-                    st.session_state.app.selections.selected_file_content = structure_md
+                st.session_state.app.selections.selected_file = output_file
 
             except Exception as e:
                 logger.error(f"Error exporting project structure: {e}", exc_info=True)
@@ -85,29 +77,25 @@ def render_file_tree(app: FileBundlerApp):
             st.rerun()
 
     # Define recursive function to display directories and files
-    def display_directory(directory_item, indent=0):
+    def display_directory(file_item: FileItem, indent: int = 0):
         try:
-            for child in directory_item.children:
+            for child in file_item.children:
                 if child.is_dir:
                     # Directory entry
                     st.markdown(f"{'&nbsp;' * indent * 4}📁 **{child.name}**")
                     display_directory(child, indent + 1)
                 else:
-                    # File entry with checkbox
-                    is_selected = child.path in app.selections.selected_file_paths
-
                     # Using checkbox for selection
                     new_state = st.checkbox(
                         f"{'&nbsp;' * indent * 4} {child.name}",
-                        value=is_selected,
+                        value=child.selected,
                         key=f"file_{child.path}",
                         help=f"Select {child.name} for bundling",
                     )
 
                     # Handle checkbox change
-                    if new_state != is_selected:
-                        app.selections.toggle_file_selection(child.path)
-                        # Force refresh
+                    if new_state != child.selected:
+                        child.toggle_selected()
                         st.rerun()
         except Exception as e:
             logger.error(f"Error displaying directory: {e}", exc_info=True)

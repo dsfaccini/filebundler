@@ -9,6 +9,9 @@ from filebundler.models.FileItem import FileItem
 from filebundler.managers.BundleManager import BundleManager
 from filebundler.managers.SelectionsManager import SelectionsManager
 
+from filebundler.models.ProjectSettings import ProjectSettings
+from filebundler.ui.notification import show_temp_notification
+
 from filebundler.utils import ignore_patterns, sort_files
 
 logger = logging.getLogger(__name__)
@@ -16,142 +19,128 @@ logger = logging.getLogger(__name__)
 
 class FileBundlerApp:
     def __init__(self):
-        self.project_path = Path()
+        self.project_path = Path().resolve()
         self.file_items: Dict[Path, FileItem] = {}
-        self.bundles = BundleManager()
-        self.selections = SelectionsManager(self.project_path)
+        self.bundles = BundleManager(project_path=self.project_path)
+        self.selections = SelectionsManager(
+            project_path=self.project_path, file_items=self.file_items
+        )
+        self.project_settings = ProjectSettings()
 
     @property
-    def nr_of_selected_files(self):
-        return self.selections.nr_of_selected_files
+    def nr_of_files(self):
+        return len(self.file_items)
 
-    @property
-    def nr_of_bundles(self):
-        return len(self.bundles.bundles)
+    def refresh(self):
+        self.load_project(self.project_path, self.project_settings)
 
-    def load_project(self, project_path: str):
+    def load_project(self, project_path: Path, project_settings: ProjectSettings):
         """Load a project directory"""
-        self.project_path = Path(project_path)
-        self.file_items = {}
-
-        # Update SelectionsManager with new project path
-        self.selections = SelectionsManager(self.project_path)
-
-        # Load the root directory
-        root_item = FileItem(self.project_path)
-        self.file_items[self.project_path] = root_item
+        self.project_path = Path(project_path).resolve()
+        self.project_settings = project_settings
 
         # Load the directory structure
-        self.load_directory_recursive(self.project_path, root_item)
-
-        # Update SelectionsManager with file_items
-        self.selections.set_file_items(self.file_items)
+        root_item = FileItem(
+            path=self.project_path,
+            project_path=self.project_path,
+            children=[],
+            parent=None,
+            selected=False,
+        )
+        self.file_items[self.project_path] = root_item
+        self.load_directory_recursive(
+            self.project_path,
+            root_item,
+            self.project_settings,
+        )
 
         # Load saved selections for this project if exists
-        self.selections.load_selections()
+        self.selections = SelectionsManager(
+            project_path=self.project_path, file_items=self.file_items
+        )
+        self.selections.load_selections(self.project_path)
 
         # Initialize the bundle manager with the project path
-        self.bundles.set_project_path(self.project_path)
+        self.bundles.load_bundles(self.project_path)
 
-    def load_directory_recursive(self, dir_path: Path, parent_item: FileItem):
+    def load_directory_recursive(
+        self, dir_path: Path, parent_item: FileItem, project_settings: ProjectSettings
+    ):
         """
-        Recursively load directory structure
+        Recursively load directory structure into a parent/child hierarchy.
+
+        Args:
+            dir_path: Directory to scan
+            parent_item: Parent FileItem to attach children to
+            project_settings: List of glob patterns to ignore
+            max_files: Maximum number of files to include
 
         Returns:
-            bool: True if the directory or any of its subdirectories contains visible files,
-                False if the directory is empty or all its files are ignored
+            bool: True if directory has visible content, False otherwise
         """
         try:
-            # Filter items based on ignore patterns
-            filtered_items = [
-                item
-                for item in dir_path.iterdir()
+            # Filter items efficiently using relative paths
+            filtered_filepaths = [
+                filepath
+                for filepath in list(dir_path.iterdir())
                 if not ignore_patterns(
-                    item.relative_to(self.project_path).as_posix(),
-                    st.session_state.settings_manager.project_settings.ignore_patterns,
+                    filepath.relative_to(self.project_path),
+                    project_settings.ignore_patterns,
                 )
             ]
-            if (
-                len(filtered_items)
-                > st.session_state.settings_manager.project_settings.max_files
-            ):
-                st.warning(
-                    f"Directory contains {len(filtered_items)} files which exceeds the limit of {st.session_state.settings_manager.project_settings.max_files}. Some files may not be displayed."
-                )
-                items = sort_files(filtered_items)[
-                    : st.session_state.settings_manager.project_settings.max_files
-                ]
-            else:
-                items = sort_files(filtered_items)
 
-            # Track if this directory contains any visible files or non-empty subdirectories
+            # Apply max_files limit with warning
+            if len(filtered_filepaths) > project_settings.max_files:
+                st.warning(
+                    f"Directory contains {len(filtered_filepaths)} files, exceeding limit of {project_settings.max_files}. Truncating."
+                )
+                filepaths = sort_files(filtered_filepaths)[: project_settings.max_files]
+            else:
+                filepaths = sort_files(filtered_filepaths)
+
             has_visible_content = False
 
-            for item_path in items:
+            # Process filepaths in a single pass
+            for filepath in filepaths:
                 try:
-                    if item_path.is_dir():
-                        # Create file item
-                        file_item = FileItem(item_path)
-                        self.file_items[item_path] = file_item
+                    # Create FileItem once and reuse
+                    file_item = FileItem(
+                        path=filepath,
+                        project_path=self.project_path,
+                        parent=parent_item,
+                        children=[],
+                        selected=False,
+                    )
 
-                        # Recursively load subdirectory and check if it has visible content
+                    if filepath.is_dir():
+                        # Recursively process subdirectory
                         subdirectory_has_content = self.load_directory_recursive(
-                            item_path, file_item
+                            filepath,
+                            file_item,
+                            project_settings,
                         )
-
-                        # Only add non-empty directories to the tree
                         if subdirectory_has_content:
+                            self.file_items[filepath] = file_item
                             parent_item.children.append(file_item)
                             has_visible_content = True
-                        else:
-                            # Remove the empty directory from file_items
-                            del self.file_items[item_path]
-
-                    elif item_path.is_file():
-                        # Create file item
-                        file_item = FileItem(item_path)
-                        self.file_items[item_path] = file_item
+                    else:  # File
+                        self.file_items[filepath] = file_item
                         parent_item.children.append(file_item)
                         has_visible_content = True
-                except (PermissionError, OSError) as e:
-                    # Skip files/directories we can't access
+
+                except (PermissionError, OSError):
+                    show_temp_notification(
+                        f"Error accessing {filepath.relative_to(self.project_path)}",
+                        type="error",
+                    )
                     continue
+
+            # Clean up empty directories (optional, based on your needs)
+            if not has_visible_content and dir_path in self.file_items:
+                del self.file_items[dir_path]
 
             return has_visible_content
 
         except Exception as e:
             st.error(f"Error loading directory {dir_path}: {str(e)}")
-            return False  # Assume no content on error
-
-    # Delegate selection methods to SelectionsManager
-    def toggle_file_selection(self, file_path: Path):
-        """Delegate to SelectionsManager"""
-        return self.selections.toggle_file_selection(file_path)
-
-    def clear_all_selections(self):
-        """Delegate to SelectionsManager"""
-        self.selections.clear_all_selections()
-
-    def get_selected_files(self):
-        """Delegate to SelectionsManager"""
-        return self.selections.get_selected_files()
-
-    def show_file_content(self, file_path: Path):
-        """Delegate to SelectionsManager"""
-        return self.selections.show_file_content(file_path)
-
-    def save_selections(self):
-        """Delegate to SelectionsManager"""
-        self.selections.save_selections()
-
-    def load_selections(self):
-        """Delegate to SelectionsManager"""
-        self.selections.load_selections()
-
-    def select_all_files(self):
-        """Delegate to SelectionsManager"""
-        self.selections.select_all_files()
-
-    def unselect_all_files(self):
-        """Delegate to SelectionsManager"""
-        self.selections.unselect_all_files()
+            return False

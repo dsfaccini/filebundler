@@ -44,7 +44,7 @@ def render_settings_panel(app: FileBundlerApp, settings_manager: SettingsManager
 
                         # Save settings after change
                         if st.session_state.project_loaded:
-                            settings_manager.save_project_settings(app.project_path)
+                            settings_manager.save_project_settings()
 
                         st.rerun()
 
@@ -57,7 +57,7 @@ def render_settings_panel(app: FileBundlerApp, settings_manager: SettingsManager
 
             # Save settings after adding new pattern
             if st.session_state.project_loaded:
-                settings_manager.save_project_settings(app.project_path)
+                settings_manager.save_project_settings()
 
             st.rerun()
 
@@ -67,9 +67,9 @@ def render_settings_panel(app: FileBundlerApp, settings_manager: SettingsManager
         # Save button for all settings
         if st.button("Save Settings"):
             if st.session_state.project_loaded:
-                settings_manager.save_project_settings(app.project_path)
+                settings_manager.save_project_settings()
 
-                success = settings_manager.save_project_settings(app.project_path)
+                success = settings_manager.save_project_settings()
 
                 if success:
                     show_temp_notification("Settings saved", type="success")

@@ -2,43 +2,36 @@
 import logging
 
 from pathlib import Path
-from typing import Dict, Set
+
+from filebundler.FileBundlerApp import FileBundlerApp
 
 logger = logging.getLogger(__name__)
 
 
-def generate_project_structure(
-    file_items: Dict[Path, object],
-    project_path: Path,
-    ignored_patterns: Set[str] = None,
-) -> str:
+def generate_project_structure(app: FileBundlerApp):
     """
     Generate a markdown representation of the project structure
 
     Args:
         file_items: Dictionary of FileItem objects
         project_path: Root path of the project
-        ignored_patterns: Set of patterns that were ignored during file scanning
 
     Returns:
         str: Markdown representation of the project structure
     """
     try:
-        structure_markdown = [f"# Project Structure: {project_path.name}\n"]
-
-        # Add information about ignored patterns if provided
-        # if ignored_patterns:
-        #     structure_markdown.append("## Ignored Patterns\n")
-        #     for pattern in sorted(ignored_patterns):
-        #         structure_markdown.append(f"- `{pattern}`\n")
-        #     structure_markdown.append("\n")
+        project_name = app.project_path.name
+        logger.info(
+            f"Generating project structure for {project_name} ({app.project_path = })"
+        )
+        structure_markdown = [f"# Project Structure: {project_name}\n"]
 
         structure_markdown.append("## Directory Structure\n```\n")
 
         # Get the root item
-        root_item = file_items.get(project_path)
+        root_item = app.file_items.get(app.project_path)
         if not root_item:
-            logger.error(f"Root item not found for {project_path}")
+            logger.error(f"Root item not found for {app.project_path}")
             return "Error: Root directory not found in file items"
 
         # Recursive function to build the directory tree
@@ -72,7 +65,7 @@ def generate_project_structure(
 
         # Generate tree starting from root
         tree_lines = build_tree(root_item)
-        structure_markdown.append(f"{project_path.name}/\n")
+        structure_markdown.append(f"{app.project_path.name}/\n")
         structure_markdown.extend([f"{line}\n" for line in tree_lines])
         structure_markdown.append("```\n")
 
