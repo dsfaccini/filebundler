@@ -7,6 +7,10 @@
                 "project_path": "C:/Users/lobsp/projects/file-bundler"
             },
             {
+                "path": "inexistent file.md",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
                 "path": ".filebundler/bundles.json",
                 "project_path": "C:/Users/lobsp/projects/file-bundler"
             },

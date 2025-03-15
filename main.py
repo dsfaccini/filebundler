@@ -6,7 +6,7 @@ from filebundler.state import initialize_session_state
 
 from filebundler.ui.tabs.export_contents import render_export_tab
 from filebundler.ui.tabs.selected_files import render_selected_files_tab
-from filebundler.ui.tabs.manage_bundles.display_tab import render_manage_bundles_tab
+from filebundler.ui.tabs.manage_bundles import render_saved_bundles
 
 from filebundler.ui.file_tree import render_file_tree
 from filebundler.ui.notification import show_temp_notification
@@ -27,27 +27,22 @@ def main():
         initialize_session_state()
 
         with st.sidebar:
-            render_settings_panel(
-                st.session_state.app, st.session_state.settings_manager
+            (tab1, tab2) = st.tabs(["Project", "Project Settings"])
+            with tab1:
+                render_project_selection()
+                if st.session_state.project_loaded:
+                    render_file_tree(st.session_state.app)
+
+            with tab2:
+                render_settings_panel(st.session_state.settings_manager)
+
+        tab1, tab2 = st.tabs(["File Bundler", "About"])
+        with tab1:
+            st.subheader("File Bundler")
+            st.write(
+                "Bundle project files together for prompting, or estimating and optimizing token and context usage."
             )
 
-        st.title("File Bundler")
-        st.write(
-            "Bundle project files together for prompting, or estimating and optimizing token and context usage."
-        )
-
-        col1, col2 = st.columns([1, 2])
-
-        with col1:
-            # Project selection section
-            render_project_selection()
-
-            # Only show file tree if project is loaded
-            if st.session_state.project_loaded:
-                render_file_tree(st.session_state.app)
-
-        # Right column with bundle operations and file preview
-        with col2:
             # Only show if project is loaded
             if st.session_state.project_loaded:
                 tab1, tab2, tab3 = st.tabs(
@@ -65,7 +60,7 @@ def main():
                     render_export_tab(st.session_state.app)
 
                 with tab3:
-                    render_manage_bundles_tab(st.session_state.app)
+                    render_saved_bundles(st.session_state.app.bundles)
             else:
                 # If no project loaded
                 show_temp_notification(

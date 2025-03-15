@@ -5,7 +5,7 @@ import random
 import streamlit as st
 
 
-def show_temp_notification(message, type="info", duration=3):
+def show_temp_notification(message: str, type="info", duration=3):
     """
     Show a temporary notification that automatically disappears.
 

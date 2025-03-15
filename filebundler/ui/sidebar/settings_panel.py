@@ -4,13 +4,12 @@ import streamlit as st
 
 from typing import List
 
-from filebundler.FileBundlerApp import FileBundlerApp
 from filebundler.managers.SettingsManager import SettingsManager
 
 from filebundler.ui.notification import show_temp_notification
 
 
-def render_settings_panel(app: FileBundlerApp, settings_manager: SettingsManager):
+def render_settings_panel(settings_manager: SettingsManager):
     """Render the settings sidebar panel"""
 
     st.header("Settings")

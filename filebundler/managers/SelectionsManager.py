@@ -109,7 +109,8 @@ class SelectionsManager(BaseModel):
             else:
                 logger.warning(f"Error restoring selection for {path_string}")
                 show_temp_notification(
-                    f"Error restoring selection for {path_string}", type="error"
+                    f"Couldn't select {path_string} because it's not in this project",
+                    type="warning",
                 )
 
     def select_all_files(self):

@@ -53,66 +53,49 @@ def load_project(
 
 def render_project_selection():
     """Render the project selection section"""
-    st.subheader("Project")
+    with st.expander("Select Project", expanded=True):
+        st.subheader("Project Selection")
 
-    # Get recent projects
-    recent_projects = st.session_state.settings_manager.get_recent_projects()
+        # Get recent projects
+        recent_projects = st.session_state.settings_manager.get_recent_projects()
 
-    # Initialize project path
-    project_path = ""
+        # Initialize project path
+        project_path = ""
 
-    if recent_projects:
-        project_source = st.radio(
-            "Choose project source:",
-            options=["Enter manually", "Select recent project"],
-        )
-
-        if project_source == "Select recent project":
-            selected_recent = st.selectbox(
-                "Recent projects:",
-                options=recent_projects,
-                format_func=lambda x: os.path.basename(x) + f" ({x})",
+        if recent_projects:
+            project_source = st.radio(
+                "Choose project source:",
+                options=["Select recent project", "Enter manually"],
             )
-            if selected_recent:
-                project_path = selected_recent
+
+            if project_source == "Select recent project":
+                selected_recent = st.selectbox(
+                    "Recent projects:",
+                    options=recent_projects,
+                    format_func=lambda x: os.path.basename(x) + f" ({x})",
+                )
+                if selected_recent:
+                    project_path = selected_recent
+            else:
+                project_path = st.text_input(
+                    "Project Path",
+                    value=str(st.session_state.app.project_path)
+                    if st.session_state.project_loaded
+                    else "",
+                )
         else:
+            # No recent projects, just show the text input
             project_path = st.text_input(
                 "Project Path",
                 value=str(st.session_state.app.project_path)
                 if st.session_state.project_loaded
                 else "",
             )
-    else:
-        # No recent projects, just show the text input
-        project_path = st.text_input(
-            "Project Path",
-            value=str(st.session_state.app.project_path)
-            if st.session_state.project_loaded
-            else "",
-        )
-
-    col1a, col1b = st.columns(2)
-    with col1a:
         if st.button("Open Project"):
             load_project(
                 st.session_state.app,
                 st.session_state.settings_manager,
             )
             st.rerun()
-
-    with col1b:
-        if st.button("Refresh Project"):
-            if st.session_state.project_loaded:
-                try:
-                    st.session_state.app.refresh()
-                    st.session_state.app.bundles.load_bundles()
-                    show_temp_notification("Project refreshed", type="success")
-                except Exception as e:
-                    logger.error(f"Error refreshing project: {e}", exc_info=True)
-                    show_temp_notification(
-                        f"Error refreshing project: {str(e)}", type="error"
-                    )
-            else:
-                show_temp_notification("No project loaded", type="error")
 
     return project_path

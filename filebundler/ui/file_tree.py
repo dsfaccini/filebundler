@@ -38,7 +38,7 @@ def render_file_tree(app: FileBundlerApp):
 
     st.subheader(f"Files ({app.nr_of_files})")
 
-    col1, col2, col3 = st.columns([1, 1, 1])
+    col1, col2 = st.columns([1, 1])
 
     with col1:
         # this button has less text so it's smaller than the other ones
@@ -46,12 +46,7 @@ def render_file_tree(app: FileBundlerApp):
         if st.button("Select All", key="select_all", use_container_width=True):
             app.selections.select_all_files()
             st.rerun()
-    with col2:
-        if st.button("Unselect All", key="unselect_all", use_container_width=True):
-            app.selections.clear_all_selections()
-            st.rerun()
 
-    with col3:
         if st.button(
             "Export Structure", key="export_structure", use_container_width=True
         ):
@@ -75,6 +70,27 @@ def render_file_tree(app: FileBundlerApp):
                 )
 
             st.rerun()
+
+    with col2:
+        if st.button("Unselect All", key="unselect_all", use_container_width=True):
+            app.selections.clear_all_selections()
+            st.rerun()
+
+        if st.button(
+            "Refresh Project", key="refresh_project", use_container_width=True
+        ):
+            if st.session_state.project_loaded:
+                try:
+                    st.session_state.app.refresh()  # this runs st.rerun for us
+                    st.session_state.app.bundles.load_bundles()
+                    show_temp_notification("Project refreshed", type="success")
+                except Exception as e:
+                    logger.error(f"Error refreshing project: {e}", exc_info=True)
+                    show_temp_notification(
+                        f"Error refreshing project: {str(e)}", type="error"
+                    )
+            else:
+                show_temp_notification("No project loaded", type="error")
 
     # Define recursive function to display directories and files
     def display_directory(file_item: FileItem, indent: int = 0):
