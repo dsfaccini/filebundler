@@ -17,16 +17,17 @@ logger = logging.getLogger(__name__)
 def load_project(
     app: FileBundlerApp,
     settings_manager: SettingsManager,
+    project_path: str,
 ):
     """Load a project and its settings"""
 
-    if app is None:
-        show_temp_notification("Please enter a project path", type="error")
-        return False
+    # if app is None:
+    #     show_temp_notification("Please enter a project path", type="error")
+    #     return False
 
-    project_path_obj = Path(app.project_path)
+    project_path_obj = Path(project_path)
     if not project_path_obj.exists() or not project_path_obj.is_dir():
-        logger.error(f"Invalid directory path: {app.project_path}")
+        logger.error(f"Invalid directory path: {project_path}")
         show_temp_notification("Invalid directory path", type="error")
         return False
 
@@ -51,18 +52,11 @@ def load_project(
         return False
 
 
-def render_project_selection():
+def render_project_selection(app: FileBundlerApp, settings_manager: SettingsManager):
     """Render the project selection section"""
+    project_path = ""
     with st.expander("Select Project", expanded=True):
-        st.subheader("Project Selection")
-
-        # Get recent projects
-        recent_projects = st.session_state.settings_manager.get_recent_projects()
-
-        # Initialize project path
-        project_path = ""
-
-        if recent_projects:
+        if settings_manager.recent_projects:
             project_source = st.radio(
                 "Choose project source:",
                 options=["Select recent project", "Enter manually"],
@@ -71,31 +65,31 @@ def render_project_selection():
             if project_source == "Select recent project":
                 selected_recent = st.selectbox(
                     "Recent projects:",
-                    options=recent_projects,
+                    options=settings_manager.recent_projects,
                     format_func=lambda x: os.path.basename(x) + f" ({x})",
                 )
                 if selected_recent:
                     project_path = selected_recent
             else:
-                project_path = st.text_input(
+                explicit_project_path = st.text_input(
                     "Project Path",
-                    value=str(st.session_state.app.project_path)
-                    if st.session_state.project_loaded
-                    else "",
+                    value="",
                 )
+                if explicit_project_path:
+                    project_path = explicit_project_path
         else:
             # No recent projects, just show the text input
             project_path = st.text_input(
                 "Project Path",
-                value=str(st.session_state.app.project_path)
-                if st.session_state.project_loaded
-                else "",
+                value="",
             )
+            if project_path:
+                project_path = project_path
+
         if st.button("Open Project"):
             load_project(
-                st.session_state.app,
-                st.session_state.settings_manager,
+                app,
+                settings_manager,
+                project_path,
             )
             st.rerun()
-
-    return project_path

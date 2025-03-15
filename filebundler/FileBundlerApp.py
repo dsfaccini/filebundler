@@ -6,10 +6,12 @@ from typing import Dict
 from pathlib import Path
 
 from filebundler.models.FileItem import FileItem
+from filebundler.models.AppProtocol import AppProtocol
+from filebundler.models.ProjectSettings import ProjectSettings
+
 from filebundler.managers.BundleManager import BundleManager
 from filebundler.managers.SelectionsManager import SelectionsManager
 
-from filebundler.models.ProjectSettings import ProjectSettings
 from filebundler.ui.notification import show_temp_notification
 
 from filebundler.utils import ignore_patterns, sort_files
@@ -17,14 +19,12 @@ from filebundler.utils import ignore_patterns, sort_files
 logger = logging.getLogger(__name__)
 
 
-class FileBundlerApp:
+class FileBundlerApp(AppProtocol):
     def __init__(self):
         self.project_path = Path().resolve()
         self.file_items: Dict[Path, FileItem] = {}
         self.bundles = BundleManager(project_path=self.project_path)
-        self.selections = SelectionsManager(
-            project_path=self.project_path, file_items=self.file_items
-        )
+        self.selections = SelectionsManager(app=self)
         self.project_settings = ProjectSettings()
 
     @property
@@ -55,10 +55,8 @@ class FileBundlerApp:
         )
 
         # Load saved selections for this project if exists
-        self.selections = SelectionsManager(
-            project_path=self.project_path, file_items=self.file_items
-        )
-        self.selections.load_selections(self.project_path)
+        # logger.info(f"{self.file_items is self.selections.file_items = }")
+        self.selections.load_selections()
 
         # Initialize the bundle manager with the project path
         self.bundles.load_bundles(self.project_path)

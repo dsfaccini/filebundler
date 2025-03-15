@@ -82,7 +82,6 @@ def render_file_tree(app: FileBundlerApp):
             if st.session_state.project_loaded:
                 try:
                     st.session_state.app.refresh()  # this runs st.rerun for us
-                    st.session_state.app.bundles.load_bundles()
                     show_temp_notification("Project refreshed", type="success")
                 except Exception as e:
                     logger.error(f"Error refreshing project: {e}", exc_info=True)

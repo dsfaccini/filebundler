@@ -5,7 +5,7 @@ import logging
 import fnmatch
 
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, List
 from pydantic import BaseModel  # noqa: F401
 
 
@@ -29,11 +29,8 @@ def sort_files(files: List[Path]):
 
 
 def read_file(file_path: Path):
-    if not file_path.exists():
-        logger.warning(f"File does not exist: {file_path}")
-        return f"The file {file_path} does not exist or cannot be accessed."
+    assert file_path.exists(), f"Can't read file {file_path} because it doesn't exist"
 
-    # Read file content
     try:
         return file_path.read_text(encoding="utf-8", errors="replace")
     except UnicodeDecodeError as e:

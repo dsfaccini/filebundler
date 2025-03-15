@@ -29,7 +29,9 @@ def main():
         with st.sidebar:
             (tab1, tab2) = st.tabs(["Project", "Project Settings"])
             with tab1:
-                render_project_selection()
+                render_project_selection(
+                    st.session_state.app, st.session_state.settings_manager
+                )
                 if st.session_state.project_loaded:
                     render_file_tree(st.session_state.app)
 

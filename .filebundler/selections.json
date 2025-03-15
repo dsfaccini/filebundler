@@ -1,33 +1,30 @@
-{
-    "project": "C:/Users/lobsp/projects/file-bundler",
-    "selections": [
-        {
-            "path": ".cursor/rules/prd.md",
-            "project_path": "C:/Users/lobsp/projects/file-bundler"
-        },
-        {
-            "path": ".filebundler/bundles.json",
-            "project_path": "C:/Users/lobsp/projects/file-bundler"
-        },
-        {
-            "path": "filebundler/managers/BundleManager.py",
-            "project_path": "C:/Users/lobsp/projects/file-bundler"
-        },
-        {
-            "path": "filebundler/models/Bundle.py",
-            "project_path": "C:/Users/lobsp/projects/file-bundler"
-        },
-        {
-            "path": "filebundler/models/FileItem.py",
-            "project_path": "C:/Users/lobsp/projects/file-bundler"
-        },
-        {
-            "path": "filebundler/ui/tabs/export_contents.py",
-            "project_path": "C:/Users/lobsp/projects/file-bundler"
-        },
-        {
-            "path": "filebundler/ui/tabs/selected_files.py",
-            "project_path": "C:/Users/lobsp/projects/file-bundler"
-        }
-    ]
-}
+[
+    {
+        "path": ".cursor/rules/prd.md",
+        "project_path": "C:/Users/lobsp/projects/file-bundler"
+    },
+    {
+        "path": ".filebundler/bundles.json",
+        "project_path": "C:/Users/lobsp/projects/file-bundler"
+    },
+    {
+        "path": "filebundler/managers/BundleManager.py",
+        "project_path": "C:/Users/lobsp/projects/file-bundler"
+    },
+    {
+        "path": "filebundler/models/Bundle.py",
+        "project_path": "C:/Users/lobsp/projects/file-bundler"
+    },
+    {
+        "path": "filebundler/models/FileItem.py",
+        "project_path": "C:/Users/lobsp/projects/file-bundler"
+    },
+    {
+        "path": "filebundler/ui/tabs/export_contents.py",
+        "project_path": "C:/Users/lobsp/projects/file-bundler"
+    },
+    {
+        "path": "filebundler/ui/tabs/selected_files.py",
+        "project_path": "C:/Users/lobsp/projects/file-bundler"
+    }
+]
