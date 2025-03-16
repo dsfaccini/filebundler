@@ -1,6 +1,5 @@
-1. [BUG] deleted or renamed files are not removed from bundles
-   1. we shoud fix this by checking that they exist when we load the bundle or we activate it
-   2. we should display a notification so the user knows which files have changed and re-adds them to the bundle
+1. [QOL] Refactor BundlerManager to persist bundles in a "bundles" subdirectory instead of the "bundles.json" file
+   1. bundles will be persisted to disk as ".filebundler/bundles/[bundle-name].json"
 2. [FEATURE] bundles should display the last date they were exported
    1. if the were never exported we don't need to display anything
    2. if the last exported date is earlier than the latest modification date of one of the files in the bundle we should color the displayed bundle yellow and show a tooltip that says "files in this bundle have been modified after it was last exported: {last_modified_date = }
@@ -17,19 +16,15 @@
    2. our LLM checks the prompt and the file structure, as well as the available bundles (not the contents, only the bundle names and the files) and selects the files that it deems relevant to answer the prompt
    3. the "auto bundle" feature clears the current selection before selecting new files (add this as a warning in very visible text above the prompt area)
    4. the user can then review the selected files
-5. [UX] notify about added pattern and empty the "add pattern" input after adding a pattern
-6. [BUG] after adding a bundle, the bundle count is not updated on the "Bundle Manager" tab
+5. [BUG] after adding a bundle, the bundle count is not updated on the "Bundle Manager" tab
    1. also after deleting a bundle this count is also not updated
-7. [ROADMAP] move project selection and filetree to the sidebar
+6. [ROADMAP] move project selection and filetree to the sidebar
    1.  this way the user can hide the sidebar if the want to take a better look at the main content
    2.  we would need to implement tabs on the sidebar, so the user can switch between the project selection and file tree screens
-8.  [ROADMAP] add tabs for project settings and global settings
-    1.  this tabs should be on the main page
-    2.  so the main page would have three tabs: FileBundler (where the selected files, exports and bundles are displayed), Project Settings and Global Settings
-9.  [TEST] we haven't written any test
-10. [TEST] test what happens when we open a new project (after already opening one)
-11. [BUG] sometimes persisted selections are not being loaded or displayed on project load!
-12. [BUG] an error notification flashes when we open a new project, but I don't know where it comes from and it doesn't get logged
+7.  [ROADMAP] add a tab for global settings
+    1.  this tab should be on the main page
+    2.  so the main page would have three tabs: "FileBundler", "About" and "Global Settings"
+8.  [TEST] we haven't written any test
 
 
 # IGNORE FOR NOW (may become relevant later)

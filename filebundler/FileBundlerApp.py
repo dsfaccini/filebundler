@@ -20,8 +20,8 @@ logger = logging.getLogger(__name__)
 
 
 class FileBundlerApp(AppProtocol):
-    def __init__(self):
-        self.project_path = Path().resolve()
+    def __init__(self, project_path: Path):
+        self.project_path = project_path.resolve()
         self.file_items: Dict[Path, FileItem] = {}
         self.bundles = BundleManager(project_path=self.project_path)
         self.selections = SelectionsManager(app=self)

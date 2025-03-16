@@ -15,15 +15,10 @@ logger = logging.getLogger(__name__)
 
 
 def load_project(
-    app: FileBundlerApp,
     settings_manager: SettingsManager,
     project_path: str,
 ):
     """Load a project and its settings"""
-
-    # if app is None:
-    #     show_temp_notification("Please enter a project path", type="error")
-    #     return False
 
     project_path_obj = Path(project_path)
     if not project_path_obj.exists() or not project_path_obj.is_dir():
@@ -36,8 +31,10 @@ def load_project(
         # This ensures ignore patterns are available when loading the file tree
         settings_manager.load_project_settings(project_path_obj)
 
+        app = FileBundlerApp(project_path=project_path_obj)
         # Now load the project with the correct settings
         app.load_project(project_path_obj, settings_manager.project_settings)
+        st.session_state.app = app
         st.session_state.project_loaded = True
 
         # Add to recent projects
@@ -52,7 +49,7 @@ def load_project(
         return False
 
 
-def render_project_selection(app: FileBundlerApp, settings_manager: SettingsManager):
+def render_project_selection(settings_manager: SettingsManager):
     """Render the project selection section"""
     project_path = ""
     with st.expander("Select Project", expanded=True):
@@ -88,7 +85,6 @@ def render_project_selection(app: FileBundlerApp, settings_manager: SettingsMana
 
         if st.button("Open Project"):
             load_project(
-                app,
                 settings_manager,
                 project_path,
             )
