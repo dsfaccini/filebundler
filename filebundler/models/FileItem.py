@@ -1,7 +1,7 @@
 # filebundler/models/FileItem.py
 from pathlib import Path
-from typing import List, Optional
-from pydantic import Field, field_serializer, field_validator
+from typing_extensions import List, Optional, Self
+from pydantic import Field, field_serializer, model_validator
 
 from filebundler.utils import BaseModel, read_file
 
@@ -13,9 +13,10 @@ class FileItem(BaseModel):
     children: List["FileItem"] = Field([], exclude=True)
     selected: bool = Field(False, exclude=True)
 
-    @field_validator("path", mode="before")
-    def validate_path(cls, path):
-        return Path(path).resolve()
+    @model_validator(mode="after")
+    def validate_file_item(self) -> Self:
+        self.path = (self.project_path / self.path).resolve()
+        return self
 
     @field_serializer("path")
     def serialize_path(self, path):
