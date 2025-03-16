@@ -4,7 +4,7 @@ import streamlit as st
 
 from filebundler.state import initialize_session_state
 
-from filebundler.ui.tabs.export_contents import render_export_tab
+from filebundler.ui.tabs.export_contents import render_export_contents_tab
 from filebundler.ui.tabs.selected_files import render_selected_files_tab
 from filebundler.ui.tabs.manage_bundles import render_saved_bundles
 
@@ -29,9 +29,7 @@ def main():
         with st.sidebar:
             (tab1, tab2) = st.tabs(["Project", "Project Settings"])
             with tab1:
-                render_project_selection(
-                    st.session_state.app, st.session_state.settings_manager
-                )
+                render_project_selection(st.session_state.settings_manager)
                 if st.session_state.project_loaded:
                     render_file_tree(st.session_state.app)
 
@@ -40,7 +38,6 @@ def main():
 
         tab1, tab2 = st.tabs(["File Bundler", "About"])
         with tab1:
-            st.subheader("File Bundler")
             st.write(
                 "Bundle project files together for prompting, or estimating and optimizing token and context usage."
             )
@@ -59,7 +56,7 @@ def main():
                     render_selected_files_tab(st.session_state.app)
 
                 with tab2:
-                    render_export_tab(st.session_state.app)
+                    render_export_contents_tab(st.session_state.app)
 
                 with tab3:
                     render_saved_bundles(st.session_state.app.bundles)

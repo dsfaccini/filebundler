@@ -9,11 +9,9 @@ from pydantic import ConfigDict, field_serializer
 
 from filebundler.models.Bundle import Bundle
 from filebundler.models.FileItem import FileItem
+
+from filebundler.utils import json_dump, BaseModel
 from filebundler.ui.notification import show_temp_notification
-from filebundler.utils import (
-    json_dump,
-    BaseModel,
-)
 
 logger = logging.getLogger(__name__)
 
@@ -26,6 +24,7 @@ class BundleManager(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
     project_path: Optional[Path] = None
     # TODO refactor to use a Dict[str, Bundle] instead of a List[Bundle] to avoid duplicate bundles
+    # we can then remove the duplicate check in the 'save_bundle' method
     bundles: List[Bundle] = []
     current_bundle: Optional[Bundle] = None
 
@@ -35,7 +34,7 @@ class BundleManager(BaseModel):
 
     @property
     def nr_of_bundles(self):
-        return len(self.bundles)
+        return len(self.bundle_dict)
 
     @property
     def bundle_dict(self):
@@ -63,6 +62,36 @@ class BundleManager(BaseModel):
 
         return new_bundle
 
+    def _persist_to_bundles_file(self, data: Any):
+        """Persist data to bundles file"""
+        bundles_file = self._get_bundles_file()
+
+        # Save to file
+        with open(bundles_file, "w") as f:
+            json_dump(data, f)
+
+        logger.info(f"Saved {len(data)} bundles to {bundles_file}")
+
+    def save_bundles_to_disk(self):
+        """Save bundles to file"""
+        try:
+            # Convert bundles to dictionary
+            for bundle in self.bundles:
+                for file_item in bundle.file_items:
+                    if not file_item.path.exists():
+                        bundle.file_items.remove(file_item)
+                        show_temp_notification(
+                            f"Removed '{file_item.relative}' from bundle because it was not found.",
+                            type="warning",
+                        )
+            data = [bundle.model_dump() for bundle in self.bundles]
+
+            self._persist_to_bundles_file(data)
+
+        except Exception as e:
+            logger.error(f"Error saving bundles: {e}", exc_info=True)
+            show_temp_notification(f"Error saving bundles: {str(e)}", type="error")
+
     def _find_bundle_by_name(self, bundle_name: str):
         """Find a saved bundle by name"""
         for b in self.bundles:
@@ -70,16 +99,6 @@ class BundleManager(BaseModel):
                 return b
 
         return
-
-    def export_code_from_bundle(self, bundle_name: str):
-        """Create a bundle from a saved bundle without loading it"""
-        bundle = self._find_bundle_by_name(bundle_name)
-
-        if bundle is None:
-            return f"Bundle '{bundle_name}' not found."
-        else:
-            self.current_bundle = bundle
-            return self.current_bundle.code_export
 
     def delete_bundle(self, bundle_name: str):
         """Delete a saved bundle"""
@@ -112,29 +131,6 @@ class BundleManager(BaseModel):
         bundles_file = bundle_dir / "bundles.json"
         return bundles_file
 
-    def _persist_to_bundles_file(self, data: Any):
-        """Persist data to bundles file"""
-        bundles_file = self._get_bundles_file()
-
-        # Save to file
-        with open(bundles_file, "w") as f:
-            json_dump(data, f)
-
-        logger.info(f"Saved {len(data)} bundles to {bundles_file}")
-
-    def save_bundles_to_disk(self):
-        """Save bundles to file"""
-        try:
-            # Convert bundles to dictionary
-            data = [bundle.model_dump() for bundle in self.bundles]
-
-            # Save to file
-            self._persist_to_bundles_file(data)
-
-        except Exception as e:
-            logger.error(f"Error saving bundles: {e}", exc_info=True)
-            show_temp_notification(f"Error saving bundles: {str(e)}", type="error")
-
     def load_bundles(self, project_path: Path):
         """Load bundles from file"""
         self.project_path = project_path
@@ -153,7 +149,7 @@ class BundleManager(BaseModel):
                         if not file_item.path.exists():
                             logger.warning(f"File not found: {file_item.path}")
                             show_temp_notification(
-                                f"Removing {file_item.path} because it was not found",
+                                f"File '{file_item.relative}' was not found",
                                 type="error",
                             )
                             bundle.file_items.remove(file_item)

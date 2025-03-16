@@ -5,6 +5,9 @@ import random
 import streamlit as st
 
 
+# TODO adjust the code so a rerun doesn't erase the notification
+# TODO also adjust the code to stack notifications on top of each other
+# TODO also adjust the code to allow for a close button on the notification
 def show_temp_notification(message: str, type="info", duration=3):
     """
     Show a temporary notification that automatically disappears.

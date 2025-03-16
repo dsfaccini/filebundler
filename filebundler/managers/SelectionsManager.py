@@ -119,7 +119,7 @@ class SelectionsManager:
             else:
                 logger.warning(f"Error restoring selection for {select_file_item.path}")
                 show_temp_notification(
-                    f"Couldn't select {select_file_item.path} because it's not in this project",
+                    f"Couldn't find '{select_file_item.relative}' in this project",
                     type="warning",
                 )
 
