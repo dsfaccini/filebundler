@@ -1,10 +1,10 @@
 # filebundler/ui/manage_bundles/bundle_display.py
 import logging
-import pyperclip
 import streamlit as st
 
 from filebundler.FileBundlerApp import FileBundlerApp
 from filebundler.managers.BundleManager import BundleManager
+from filebundler.services.code_export_service import export_code_from_bundle
 from filebundler.ui.notification import show_temp_notification
 
 logger = logging.getLogger(__name__)
@@ -40,6 +40,7 @@ def activate_bundle(name: str):
 
         # Save selections
         app.selections.save_selections()
+        app.bundles.current_bundle = bundle
 
         st.rerun()
         show_temp_notification(
@@ -51,7 +52,7 @@ def activate_bundle(name: str):
         show_temp_notification(f"Error loading bundle: {str(e)}", type="error")
 
 
-def delete_bundle(name):
+def delete_bundle(bundle_manager: BundleManager, name: str):
     """Callback for deleting a bundle"""
     # BUG DONT FIX
     # st.dialog doesn't close, it works by setting state and rerunning the app
@@ -59,23 +60,11 @@ def delete_bundle(name):
     # if not confirm(f"Delete bundle '{name}'?"):
     #     return
     try:
-        app: FileBundlerApp = st.session_state.app
-        app.bundles.delete_bundle(name)
+        bundle_manager.delete_bundle(name)
         st.rerun()
     except Exception as e:
         logger.error(f"Error deleting bundle: {e}", exc_info=True)
         show_temp_notification(f"Error deleting bundle: {str(e)}", type="error")
-
-
-def export_code_from_bundle(bundle):
-    try:
-        pyperclip.copy(bundle.code_export)
-        show_temp_notification(
-            f"Bundle '{bundle.name}' exported to clipboard", type="success"
-        )
-    except Exception as e:
-        logger.error(f"Clipboard error: {e}", exc_info=True)
-        show_temp_notification(f"Could not copy to clipboard: {str(e)}", type="error")
 
 
 def render_saved_bundles(bundle_manager: BundleManager):
@@ -93,7 +82,6 @@ def render_saved_bundles(bundle_manager: BundleManager):
     .bundle-container {
         border: 1px solid rgba(128, 128, 128, 0.2);
         border-radius: 5px;
-        padding: 10px;
         margin-bottom: 15px;
     }
     
@@ -106,21 +94,19 @@ def render_saved_bundles(bundle_manager: BundleManager):
         unsafe_allow_html=True,
     )
 
-    if not bundle_manager:
-        if bundle_manager.current_bundle:
-            st.write("Clipboard contents:")
-            st.code(bundle_manager.current_bundle.code_export)
-            return
-        else:
-            st.write("No saved bundles.")
-            return
-
     # Display each bundle with border
     for bundle in bundle_manager.bundle_dict.values():
         st.markdown('<div class="bundle-container">', unsafe_allow_html=True)
 
+        bundle_is_active = bundle is bundle_manager.current_bundle
+        checkmark = "✅" if bundle_is_active else None
+
         # Bundle dropdown with files
-        with st.expander(f'Files in "{bundle.name}" ({len(bundle.file_items)} files)'):
+        with st.expander(
+            f'Files in "{bundle.name}" ({len(bundle.file_items)} files)',
+            expanded=bundle_is_active,
+            icon=checkmark,
+        ):
             for file_item in bundle.file_items:
                 st.write(f"- {file_item}")
 
@@ -140,15 +126,19 @@ You must manually save the bundle again if you want to add them.
                 activate_bundle(bundle.name)
         with col2:
             if st.button(
-                "Export Contents", key=f"create_{bundle.name}", use_container_width=True
+                "Copy to Clipboard",
+                key=f"create_{bundle.name}",
+                use_container_width=True,
+                help="Copies the exported contents to clipboard without activating the bundle.",
             ):
                 export_code_from_bundle(bundle)
-                bundle_manager.current_bundle = bundle
                 st.rerun()
         with col3:
             if st.button(
                 "Delete", key=f"delete_{bundle.name}", use_container_width=True
             ):
-                delete_bundle(bundle.name)
+                delete_bundle(bundle_manager, bundle.name)
 
         st.markdown("</div>", unsafe_allow_html=True)
+    if not bundle_manager.bundle_dict:
+        st.warning("No saved bundles to display.")
