@@ -2,8 +2,6 @@
 import logging
 import streamlit as st
 
-from pathlib import Path
-
 from filebundler.FileBundlerApp import FileBundlerApp
 from filebundler.ui.notification import show_temp_notification
 from filebundler.utils.language_formatting import set_language_from_filename
@@ -12,11 +10,48 @@ logger = logging.getLogger(__name__)
 
 
 def render_selected_files_tab(app: FileBundlerApp):
-    """Render the Selected Files tab"""
-    st.subheader(f"Selected Files ({app.selections.nr_of_selected_files})")
-    st.text(
-        "Click on a file to view its content. Click 'x' to remove a file from selection."
-    )
+    ocol1, ocol2 = st.columns([1, 1])
+    with ocol1:
+        st.subheader("Save Selected Files as a Bundle")
+        st.text(
+            "Click on a file to view its content. Click 'x' to remove a file from selection."
+        )
+    with ocol2:
+        # Add bundle name field for saving
+        bundle_name = st.text_input(
+            "Bundle name (lowercase, alphanumeric, with hyphens)",
+            key="export_bundle_name",
+            value=app.bundles.current_bundle.name if app.bundles.current_bundle else "",
+            placeholder="my-bundle-name",
+        )
+
+        if st.button("Save Bundle", use_container_width=True, type="secondary"):
+            try:
+                if not bundle_name:
+                    show_temp_notification(
+                        "Please enter a bundle name to save the bundle.", type="warning"
+                    )
+                    return
+
+                if not app.selections.selected_file_items:
+                    show_temp_notification(
+                        "No files selected. Please select files to bundle.",
+                        type="warning",
+                    )
+                    return
+
+                new_bundle = app.bundles.save_bundle(
+                    bundle_name, app.selections.selected_file_items
+                )
+                show_temp_notification(
+                    f"Bundle '{bundle_name}' saved with {len(new_bundle.file_items)} files.",
+                    type="success",
+                )
+
+                st.rerun()
+            except Exception as e:
+                logger.error(f"Save bundle error: {e}", exc_info=True)
+                show_temp_notification(f"Error saving bundle: {str(e)}", type="error")
 
     # TODO make this section scrollable, set a max height
     if app.selections.selected_file_items:
@@ -35,27 +70,27 @@ def render_selected_files_tab(app: FileBundlerApp):
                     key=f"sel_{file_item.path}",
                     use_container_width=True,
                 ):
-                    st.session_state.app.selections.selected_file = file_item.path
+                    app.selections.selected_file = file_item.path
                     st.rerun()
 
             with col2:
                 if st.button(
                     "❌",
-                    key=f"remove_{file_item.path}",
-                    help=f"Remove {relative_path} from selection",
+                    key=f"remove_{file_item}",
+                    help=f"Remove {file_item} from selection",
                 ):
                     try:
                         file_item.toggle_selected()
                         show_temp_notification(
-                            f"Removed {Path(file_item.path).name} from selection",
+                            f"Removed {file_item.path.name} from selection",
                             type="info",
                         )
                         # If we were viewing this file, clear it
-                        if (
-                            st.session_state.app.selections.selected_file
-                            == file_item.path
-                        ):
-                            st.session_state.app.selections.selected_file = None
+                        if app.selections.selected_file == file_item.path:
+                            app.selections.selected_file = None
+
+                        app.selections.save_selections()
+
                         st.rerun()
                     except Exception as e:
                         logger.error(
@@ -65,22 +100,14 @@ def render_selected_files_tab(app: FileBundlerApp):
                             f"Error removing file: {str(e)}", type="error"
                         )
     else:
-        show_temp_notification(
-            "No files selected. Use the checkboxes in the file tree to select files.",
-            type="info",
+        st.warning(
+            "No files selected. Use the checkboxes in the file tree to select files."
         )
 
     # Show file content if a file is selected
-    if (
-        st.session_state.app.selections.selected_file
-        and st.session_state.app.selections.selected_file_content
-    ):
-        st.subheader(f"File: {st.session_state.app.selections.selected_file.name}")
+    if app.selections.selected_file:
+        st.subheader(f"File: {app.selections.selected_file.name}")
 
-        language = set_language_from_filename(
-            st.session_state.app.selections.selected_file
-        )
+        language = set_language_from_filename(app.selections.selected_file)
 
-        st.code(
-            st.session_state.app.selections.selected_file_content, language=language
-        )
+        st.code(app.selections.selected_file_content, language=language)
