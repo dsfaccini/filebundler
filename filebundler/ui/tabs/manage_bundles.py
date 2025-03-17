@@ -39,9 +39,8 @@ def activate_bundle(name: str):
                 corresponding_file_item.selected = True
                 loaded_count += 1
 
-        # Save selections
         app.selections.save_selections()
-        app.bundles.current_bundle = bundle
+        app.bundles.activate_bundle(bundle)
 
         st.rerun()
         show_temp_notification(

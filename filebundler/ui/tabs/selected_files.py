@@ -40,6 +40,7 @@ def render_selected_files_tab(app: FileBundlerApp):
                 new_bundle = app.bundles.save_bundle(
                     bundle_name, app.selections.selected_file_items
                 )
+
                 show_temp_notification(
                     f"Bundle '{bundle_name}' saved with {len(new_bundle.file_items)} files.",
                     type="success",

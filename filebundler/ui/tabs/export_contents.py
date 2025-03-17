@@ -27,8 +27,14 @@ def render_export_contents_tab(app: FileBundlerApp):
                 type="warning",
             )
             return
+
+        bundle_name = (
+            app.bundles.current_bundle.name
+            if app.bundles.current_bundle
+            else SELECTIONS_BUNDLE_NAME
+        )
         selections_bundle = Bundle(
-            name=SELECTIONS_BUNDLE_NAME,
+            name=bundle_name,
             file_items=app.selections.selected_file_items,
         )
 

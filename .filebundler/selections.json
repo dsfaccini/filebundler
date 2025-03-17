@@ -1,5 +1,13 @@
 [
     {
+        "path": "filebundler/managers/BundleManager.py",
+        "project_path": "C:/Users/lobsp/projects/file-bundler"
+    },
+    {
+        "path": "filebundler/models/Bundle.py",
+        "project_path": "C:/Users/lobsp/projects/file-bundler"
+    },
+    {
         "path": "filebundler/services/code_export_service.py",
         "project_path": "C:/Users/lobsp/projects/file-bundler"
     },

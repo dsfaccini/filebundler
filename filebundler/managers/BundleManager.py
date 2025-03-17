@@ -70,6 +70,7 @@ class BundleManager(BaseModel):
         self.bundles.append(new_bundle)
 
         self.save_bundles_to_disk()
+        self.activate_bundle(new_bundle)
 
         return new_bundle
 
@@ -156,3 +157,8 @@ class BundleManager(BaseModel):
             except Exception as e:
                 logger.error(f"Error loading bundles: {e}", exc_info=True)
                 show_temp_notification(f"Error loading bundles: {str(e)}", type="error")
+
+    def activate_bundle(self, bundle: Bundle):
+        assert bundle in self.bundles, f"Bundle '{bundle.name}' not found in bundles"
+        self.current_bundle = bundle
+        logger.info(f"Activated bundle '{bundle.name}'")

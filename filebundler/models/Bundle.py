@@ -19,7 +19,7 @@ class Bundle(BaseModel):
     @property
     def code_export(self):
         return f"""<?xml version="1.0" encoding="UTF-8"?>
-<FileBundle>
+<FileBundle name="{self.name}">
 {"\n".join(make_file_section(file_item) for file_item in self.file_items if not file_item.is_dir)}
 </FileBundle>"""
 
