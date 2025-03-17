@@ -13,9 +13,6 @@ def render_selected_files_tab(app: FileBundlerApp):
     ocol1, ocol2 = st.columns([1, 1])
     with ocol1:
         st.subheader("Save Selected Files as a Bundle")
-        st.text(
-            "Click on a file to view its content. Click 'x' to remove a file from selection."
-        )
     with ocol2:
         # Add bundle name field for saving
         bundle_name = st.text_input(
@@ -55,6 +52,9 @@ def render_selected_files_tab(app: FileBundlerApp):
 
     # TODO make this section scrollable, set a max height
     if app.selections.selected_file_items:
+        st.text(
+            "Click on a file to view its content. Click 'x' to remove a file from selection."
+        )
         for file_item in app.selections.selected_file_items:
             if file_item.is_dir:
                 continue

@@ -1,25 +1,17 @@
 # filebundler/ui/sidebar/settings_panel.py
-
 import streamlit as st
 
-from typing import List
-
-from filebundler.managers.SettingsManager import SettingsManager
-
 from filebundler.ui.notification import show_temp_notification
+from filebundler.managers.ProjectSettingsManager import ProjectSettingsManager
 
 
-def render_settings_panel(settings_manager: SettingsManager):
-    """Render the settings sidebar panel"""
-
-    st.header("Settings")
-
+def render_settings_panel(psm: ProjectSettingsManager):
     # Only show settings when project is loaded
     if st.session_state.project_loaded:
-        settings_manager.project_settings.max_files = st.number_input(
+        psm.project_settings.max_files = st.number_input(
             "Max files to display",
             min_value=10,
-            value=settings_manager.project_settings.max_files,
+            value=psm.project_settings.max_files,
         )
 
         st.subheader("Ignore Patterns")
@@ -28,19 +20,17 @@ def render_settings_panel(settings_manager: SettingsManager):
         with st.expander("Show/Hide Ignore Patterns", expanded=False):
             updated_patterns = st.text_area(
                 "Edit ignore patterns",
-                "\n".join(settings_manager.project_settings.ignore_patterns),
+                "\n".join(psm.project_settings.ignore_patterns),
             )
 
             if updated_patterns:
-                settings_manager.project_settings.ignore_patterns = (
-                    updated_patterns.split("\n")
-                )
+                psm.project_settings.ignore_patterns = updated_patterns.split("\n")
 
         # Save button for all settings
         if st.button("Save Settings"):
-            settings_manager.save_project_settings()
+            psm.save_project_settings()
 
-            success = settings_manager.save_project_settings()
+            success = psm.save_project_settings()
 
             if success:
                 show_temp_notification("Settings saved", type="success")

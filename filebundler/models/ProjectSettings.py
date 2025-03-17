@@ -1,5 +1,4 @@
 # filebundler/models/ProjectSettings.py
-
 from typing import List
 
 from filebundler.utils import BaseModel
