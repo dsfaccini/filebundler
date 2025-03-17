@@ -1,6 +1,7 @@
 .cursor
 .env 
 *.ipynb
+.mypy_cache/
 
 # Python-generated files
 __pycache__/
