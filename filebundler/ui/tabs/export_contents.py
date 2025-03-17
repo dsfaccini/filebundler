@@ -23,20 +23,20 @@ def render_export_contents_tab(app: FileBundlerApp):
                 "No files selected. Please select files to bundle.",
                 type="warning",
             )
-        else:
-            # copies the contents to clipboard and show notification
-            selections_bundle = export_code_from_selections(
-                app.selections.selected_file_items
-            )
+            return
+        # copies the contents to clipboard and show notification
+        selections_bundle = export_code_from_selections(
+            app.selections.selected_file_items
+        )
 
-            if selections_bundle:
-                st.subheader("Export Preview")
-                preview_expander = st.expander("Expand preview")
+        if selections_bundle:
+            st.subheader("Export Preview")
+            preview_expander = st.expander("Expand preview")
 
-                with preview_expander:
-                    try:
-                        # st.code(selections_bundle.code_export, language="markdown")
-                        st.code(selections_bundle.code_export, language="xml")
-                    except Exception as e:
-                        logger.error(f"Preview error: {e}", exc_info=True)
-                        st.error(f"Error generating preview: {str(e)}")
+            with preview_expander:
+                try:
+                    # st.code(selections_bundle.code_export, language="markdown")
+                    st.code(selections_bundle.code_export, language="xml")
+                except Exception as e:
+                    logger.error(f"Preview error: {e}", exc_info=True)
+                    st.error(f"Error generating preview: {str(e)}")
