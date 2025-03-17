@@ -40,6 +40,17 @@ class BundleManager(BaseModel):
     def bundle_dict(self):
         return {b.name: b for b in self.bundles}
 
+    @property
+    def bundles_file(self):
+        """Get the path to the bundles file"""
+        if not self.project_path:
+            raise ValueError("No project path set, cannot save bundles")
+
+        bundle_dir = self.project_path / ".filebundler"
+        bundle_dir.mkdir(exist_ok=True)
+        bundles_file = bundle_dir / "bundles.json"
+        return bundles_file
+
     def save_bundle(self, bundle_name: str, selected_file_items: List[FileItem]):
         """Save current selection as a named bundle"""
 
@@ -63,14 +74,10 @@ class BundleManager(BaseModel):
         return new_bundle
 
     def _persist_to_bundles_file(self, data: Any):
-        """Persist data to bundles file"""
-        bundles_file = self._get_bundles_file()
-
-        # Save to file
-        with open(bundles_file, "w") as f:
+        with open(self.bundles_file, "w") as f:
             json_dump(data, f)
 
-        logger.info(f"Saved {len(data)} bundles to {bundles_file}")
+        logger.info(f"Saved {len(data)} bundles to {self.bundles_file}")
 
     def save_bundles_to_disk(self):
         """Save bundles to file"""
@@ -121,25 +128,12 @@ class BundleManager(BaseModel):
 
         return f"Bundle '{old_name}' not found."
 
-    def _get_bundles_file(self):
-        """Get the path to the bundles file"""
-        if not self.project_path:
-            raise ValueError("No project path set, cannot save bundles")
-
-        bundle_dir = self.project_path / ".filebundler"
-        bundle_dir.mkdir(exist_ok=True)
-        bundles_file = bundle_dir / "bundles.json"
-        return bundles_file
-
     def load_bundles(self, project_path: Path):
-        """Load bundles from file"""
         self.project_path = project_path
-        bundles_file = self._get_bundles_file()
 
-        if bundles_file.exists():
+        if self.bundles_file.exists():
             try:
-                # Read from file
-                with open(bundles_file, "r") as f:
+                with open(self.bundles_file, "r") as f:
                     data = json.load(f)
 
                 # Convert to Bundle objects
@@ -156,7 +150,9 @@ class BundleManager(BaseModel):
 
                         self.bundles.append(bundle)
                 # NOTE this will not persist the removal, unless the user manually saves the bundle again
-                logger.info(f"Loaded {len(self.bundles)} bundles from {bundles_file}")
+                logger.info(
+                    f"Loaded {len(self.bundles)} bundles from {self.bundles_file}"
+                )
             except Exception as e:
                 logger.error(f"Error loading bundles: {e}", exc_info=True)
                 show_temp_notification(f"Error loading bundles: {str(e)}", type="error")

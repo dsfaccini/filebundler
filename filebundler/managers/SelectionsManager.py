@@ -61,7 +61,8 @@ class SelectionsManager:
             return None
         return read_file(self.selected_file)
 
-    def _get_selections_file(self):
+    @property
+    def selections_file(self):
         """Get the path to the bundles file"""
         if not self.app.project_path:
             raise ValueError("No project path set, cannot save bundles")
@@ -72,25 +73,22 @@ class SelectionsManager:
         return selections_file
 
     def _persist_to_selections_file(self, data: Any):
-        """Persist data to bundles file"""
-        selections_file = self._get_selections_file()
-
-        # Save to file
-        with open(selections_file, "w") as f:
+        with open(self.selections_file, "w") as f:
             json_dump(data, f)
 
-        logger.info(f"Saved {len(data)} selections to {selections_file}")
+        logger.info(f"Saved {len(data)} selections to {self.selections_file}")
 
     def _load_json_data(self, filename: str):
-        selections_file = self._get_selections_file()
-
-        if selections_file.exists():
-            try:
-                with open(selections_file, "r") as f:
-                    return json.load(f)
-            except Exception as e:
-                logger.error(f"Error loading {filename}: {str(e)}", exc_info=True)
-                return None
+        if not self.selections_file.exists():
+            logger.warning(f"{self.selections_file = } does not exist")
+            return
+        try:
+            with open(self.selections_file, "r") as f:
+                return json.load(f)
+        except Exception as e:
+            show_temp_notification(f"Error loading {filename}: {str(e)}", type="error")
+            logger.error(f"Error loading {filename}: {str(e)}", exc_info=True)
+            return None
 
     def save_selections(self):
         """Save selected files to JSON file"""
@@ -104,7 +102,6 @@ class SelectionsManager:
 
         selections_array = self._load_json_data("selections.json")
         if not selections_array:
-            logger.warning(f"selections.json was empty for {self.app.project_path}")
             return
 
         selected_file_items = [
