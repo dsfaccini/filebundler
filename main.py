@@ -43,8 +43,8 @@ def main():
                 else:
                     st.warning("Please open a project to configure settings.")
 
-        tab1, tab2 = st.tabs(["File Bundler", "Global Settings"])
-        with tab1:
+        main_tab1, main_tab2 = st.tabs(["File Bundler", "Global Settings"])
+        with main_tab1:
             st.write(
                 "Bundle project files together for prompting, or estimating and optimizing token and context usage."
             )
@@ -72,7 +72,7 @@ def main():
                 show_temp_notification(
                     "Please open a project to get started", type="info"
                 )
-        with tab2:
+        with main_tab2:
             render_global_settings(st.session_state.global_settings_manager)
 
     except Exception as e:
