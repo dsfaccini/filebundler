@@ -11,9 +11,10 @@ from filebundler.ui.tabs.export_contents import render_export_contents_tab
 from filebundler.ui.tabs.global_settings_panel import render_global_settings
 
 from filebundler.ui.sidebar.file_tree import render_file_tree
-from filebundler.ui.notification import show_temp_notification
-from filebundler.ui.sidebar.project_selection import render_project_selection
 from filebundler.ui.sidebar.settings_panel import render_settings_panel
+from filebundler.ui.sidebar.project_selection import render_project_selection
+
+from filebundler.ui.notification import show_temp_notification
 
 
 logging.basicConfig(
@@ -43,12 +44,11 @@ def main():
                 else:
                     st.warning("Please open a project to configure settings.")
 
+        st.write(
+            "Bundle project files together for prompting, or estimating and optimizing token and context usage."
+        )
         main_tab1, main_tab2 = st.tabs(["File Bundler", "Global Settings"])
         with main_tab1:
-            st.write(
-                "Bundle project files together for prompting, or estimating and optimizing token and context usage."
-            )
-
             # Only show if project is loaded
             if st.session_state.project_loaded:
                 tab1, tab2, tab3 = st.tabs(

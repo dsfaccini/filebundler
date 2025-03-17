@@ -28,8 +28,6 @@ def render_settings_panel(psm: ProjectSettingsManager):
 
         # Save button for all settings
         if st.button("Save Settings"):
-            psm.save_project_settings()
-
             success = psm.save_project_settings()
 
             if success:

@@ -4,8 +4,9 @@ import streamlit as st
 
 from filebundler.FileBundlerApp import FileBundlerApp
 from filebundler.managers.BundleManager import BundleManager
-from filebundler.services.code_export_service import export_code_from_bundle
+
 from filebundler.ui.notification import show_temp_notification
+from filebundler.services.code_export_service import copy_code_from_bundle
 
 logger = logging.getLogger(__name__)
 
@@ -131,8 +132,8 @@ You must manually save the bundle again if you want to add them.
                 use_container_width=True,
                 help="Copies the exported contents to clipboard without activating the bundle.",
             ):
-                export_code_from_bundle(bundle)
-                st.rerun()
+                # copies the contents to clipboard and displays notification
+                copy_code_from_bundle(bundle)
         with col3:
             if st.button(
                 "Delete", key=f"delete_{bundle.name}", use_container_width=True

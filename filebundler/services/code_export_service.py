@@ -3,26 +3,11 @@ import logging
 import pyperclip
 
 from enum import Enum
-from typing import List
-
-from filebundler.constants import SELECTIONS_BUNDLE_NAME
 
 from filebundler.models.Bundle import Bundle
-from filebundler.models.FileItem import FileItem
 from filebundler.ui.notification import show_temp_notification
 
 logger = logging.getLogger(__name__)
-
-
-def export_code_from_bundle(bundle: Bundle):
-    try:
-        pyperclip.copy(bundle.code_export)
-        show_temp_notification(
-            f"Bundle '{bundle.name}' exported to clipboard", type="success"
-        )
-    except Exception as e:
-        logger.error(f"Clipboard error: {e}", exc_info=True)
-        show_temp_notification(f"Could not copy to clipboard: {str(e)}", type="error")
 
 
 class ExecutionEnvironment(str, Enum):
@@ -30,23 +15,20 @@ class ExecutionEnvironment(str, Enum):
     CLI = "cli"
 
 
-def export_code_from_selections(
-    selected_file_items: List[FileItem],
+def copy_code_from_bundle(
+    bundle: Bundle,
     execution_environment: ExecutionEnvironment = ExecutionEnvironment.UI,
 ):
     try:
-        bundle = Bundle(
-            name=SELECTIONS_BUNDLE_NAME,
-            file_items=selected_file_items,
-        )
-
         if ExecutionEnvironment(execution_environment) == ExecutionEnvironment.UI:
             pyperclip.copy(bundle.code_export)
             show_temp_notification(
-                f"Contents copied to clipboard: {len(selected_file_items)} files, {len(bundle.code_export)} characters",
+                f"Contents copied to clipboard: {len(bundle.file_items)} files, {len(bundle.code_export)} characters",
                 type="success",
             )
-        return bundle
     except Exception as e:
-        logger.error(f"Error exporting selections: {e}", exc_info=True)
-        show_temp_notification(f"Error exporting selections: {str(e)}", type="error")
+        logger.error(f"Error exporting contents: {e}", exc_info=True)
+        show_temp_notification(f"Error exporting contents: {str(e)}", type="error")
+
+
+# NOTE we can use this file in the future to export contents directly from the CLI

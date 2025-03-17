@@ -2,9 +2,13 @@
 import logging
 import streamlit as st
 
+from filebundler.constants import SELECTIONS_BUNDLE_NAME
+
+from filebundler.models.Bundle import Bundle
 from filebundler.FileBundlerApp import FileBundlerApp
-from filebundler.services.code_export_service import export_code_from_selections
+
 from filebundler.ui.notification import show_temp_notification
+from filebundler.services.code_export_service import copy_code_from_bundle
 
 logger = logging.getLogger(__name__)
 
@@ -16,7 +20,6 @@ def render_export_contents_tab(app: FileBundlerApp):
 
     st.write(f"{app.selections.nr_of_selected_files} files selected for export.")
 
-    # Create buttons in a row
     if st.button("Show Preview - Copy to Clipboard", use_container_width=True):
         if app.selections.nr_of_selected_files == 0:
             show_temp_notification(
@@ -24,10 +27,13 @@ def render_export_contents_tab(app: FileBundlerApp):
                 type="warning",
             )
             return
-        # copies the contents to clipboard and show notification
-        selections_bundle = export_code_from_selections(
-            app.selections.selected_file_items
+        selections_bundle = Bundle(
+            name=SELECTIONS_BUNDLE_NAME,
+            file_items=app.selections.selected_file_items,
         )
+
+        # copies the contents to clipboard and displays notification
+        copy_code_from_bundle(selections_bundle)
 
         if selections_bundle:
             st.subheader("Export Preview")
