@@ -6,6 +6,10 @@ import streamlit as st
 from pathlib import Path
 
 from filebundler.constants import DISPLAY_NR_OF_RECENT_PROJECTS
+from filebundler.services.project_structure import (
+    generate_project_structure,
+    save_project_structure,
+)
 from filebundler.ui.notification import show_temp_notification
 
 from filebundler.FileBundlerApp import FileBundlerApp
@@ -44,6 +48,11 @@ def load_project(project_path: str):
 
         logger.info(f"Project loaded: {app.project_path}")
         show_temp_notification(f"Project loaded: {app.project_path}", type="success")
+
+        # we auto generate this file for the user
+        # exceptions are caught inside the function
+        project_structure = generate_project_structure(app)
+        save_project_structure(app.project_path, project_structure)
         return True
     except Exception as e:
         logger.error(f"Error loading project: {e}", exc_info=True)
@@ -87,6 +96,6 @@ def render_project_selection(global_settings: GlobalSettings):
             if project_path_input:
                 project_path = project_path_input
 
-        if st.button("Open Project"):
+        if st.button("Open Project") and project_path:
             load_project(project_path)
             st.rerun()

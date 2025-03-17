@@ -110,6 +110,7 @@ def render_file_tree(app: FileBundlerApp):
                 # Handle checkbox change
                 if new_state != child.selected:
                     child.toggle_selected()
+                    app.selections.save_selections()
                     st.rerun()
 
                 if child.is_dir:

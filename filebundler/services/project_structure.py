@@ -3,6 +3,7 @@ import logging
 
 from pathlib import Path
 
+from filebundler.models.FileItem import FileItem
 from filebundler.FileBundlerApp import FileBundlerApp
 
 logger = logging.getLogger(__name__)
@@ -35,7 +36,7 @@ def generate_project_structure(app: FileBundlerApp):
             return "Error: Root directory not found in file items"
 
         # Recursive function to build the directory tree
-        def build_tree(directory_item, prefix=""):
+        def build_tree(directory_item: FileItem, prefix=""):
             result = []
 
             # Sort children: directories first, then files, all alphabetically
