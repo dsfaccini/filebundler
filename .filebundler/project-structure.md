@@ -4,9 +4,14 @@
 file-bundler/
 ├── 📁 .cursor/
 │   └── 📁 rules/
+│       ├── 📄 general.md
 │       └── 📄 prd.md
 ├── 📁 .filebundler/
-│   ├── 📄 bundles.json
+│   ├── 📁 bundles/
+│   │   ├── 📄 app-state.json
+│   │   ├── 📄 bundle-management.json
+│   │   └── 📄 bundles-and-exports.json
+│   ├── 📄 bundles.json.bak
 │   ├── 📄 project-structure.md
 │   ├── 📄 selections.json
 │   └── 📄 settings.json
@@ -21,12 +26,14 @@ file-bundler/
 │   ├── 📁 models/
 │   │   ├── 📄 AppProtocol.py
 │   │   ├── 📄 Bundle.py
+│   │   ├── 📄 BundleMetadata.py
 │   │   ├── 📄 FileItem.py
 │   │   ├── 📄 GlobalSettings.py
 │   │   └── 📄 ProjectSettings.py
 │   ├── 📁 services/
 │   │   ├── 📄 code_export_service.py
-│   │   └── 📄 project_structure.py
+│   │   ├── 📄 project_structure.py
+│   │   └── 📄 token_count.py
 │   ├── 📁 ui/
 │   │   ├── 📁 sidebar/
 │   │   │   ├── 📄 file_tree.py
@@ -42,7 +49,8 @@ file-bundler/
 │   ├── 📁 utils/
 │   │   ├── 📄 __init__.py
 │   │   ├── 📄 filepath_checker.py
-│   │   └── 📄 language_formatting.py
+│   │   ├── 📄 language_formatting.py
+│   │   └── 📄 project_utils.py
 │   ├── 📄 constants.py
 │   ├── 📄 FileBundlerApp.py
 │   └── 📄 state.py

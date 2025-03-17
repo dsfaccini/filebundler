@@ -29,34 +29,33 @@ def render_export_contents_tab(app: FileBundlerApp):
             return
 
         try:
-            bundle_name = (
-                app.bundles.current_bundle.name
+            bundle_to_export = (
+                app.bundles.current_bundle
                 if app.bundles.current_bundle
-                else SELECTIONS_BUNDLE_NAME
+                else Bundle(
+                    name=SELECTIONS_BUNDLE_NAME,
+                    file_items=app.selections.selected_file_items,
+                )
             )
-            selections_bundle = Bundle(
-                name=bundle_name,
-                file_items=app.selections.selected_file_items,
-            )
+
         except Exception as e:
             logger.error(
-                f"Error creating bundle: {e}\n{app.selections.selected_file_items = }",
+                f"Error exporting bundle: {e}\n{app.selections.selected_file_items = }",
                 exc_info=True,
             )
             show_temp_notification(f"Error creating bundle: {str(e)}", type="error")
             return
 
-        # copies the contents to clipboard and displays notification
-        copy_code_from_bundle(selections_bundle)
-
-        if selections_bundle:
+        if bundle_to_export:
+            # copies the contents to clipboard and displays notification
+            copy_code_from_bundle(bundle_to_export)
             st.subheader("Export Preview")
             preview_expander = st.expander("Expand preview")
 
             with preview_expander:
                 try:
                     # st.code(selections_bundle.code_export, language="markdown")
-                    st.code(selections_bundle.code_export, language="xml")
+                    st.code(bundle_to_export.code_export, language="xml")
                 except Exception as e:
                     logger.error(f"Preview error: {e}", exc_info=True)
                     st.error(f"Error generating preview: {str(e)}")

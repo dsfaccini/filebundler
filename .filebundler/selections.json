@@ -4,11 +4,19 @@
         "project_path": "C:/Users/lobsp/projects/file-bundler"
     },
     {
+        "path": ".filebundler/bundles/bundles-and-exports.json",
+        "project_path": "C:/Users/lobsp/projects/file-bundler"
+    },
+    {
         "path": "filebundler/managers/BundleManager.py",
         "project_path": "C:/Users/lobsp/projects/file-bundler"
     },
     {
         "path": "filebundler/models/Bundle.py",
+        "project_path": "C:/Users/lobsp/projects/file-bundler"
+    },
+    {
+        "path": "filebundler/models/BundleMetadata.py",
         "project_path": "C:/Users/lobsp/projects/file-bundler"
     },
     {

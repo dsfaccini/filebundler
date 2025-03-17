@@ -8,3 +8,4 @@ from filebundler.constants import DEFAULT_IGNORE_PATTERNS, DEFAULT_MAX_RENDER_FI
 class ProjectSettings(BaseModel):
     ignore_patterns: List[str] = DEFAULT_IGNORE_PATTERNS
     max_files: int = DEFAULT_MAX_RENDER_FILES
+    files_first: bool = True

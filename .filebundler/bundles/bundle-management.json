@@ -1,0 +1,39 @@
+{
+    "name": "bundle-management",
+    "file_items": [
+        {
+            "path": ".cursor/rules/prd.md",
+            "project_path": "C:/Users/lobsp/projects/file-bundler"
+        },
+        {
+            "path": "filebundler/managers/BundleManager.py",
+            "project_path": "C:/Users/lobsp/projects/file-bundler"
+        },
+        {
+            "path": "filebundler/models/Bundle.py",
+            "project_path": "C:/Users/lobsp/projects/file-bundler"
+        },
+        {
+            "path": "filebundler/models/FileItem.py",
+            "project_path": "C:/Users/lobsp/projects/file-bundler"
+        },
+        {
+            "path": "filebundler/ui/tabs/export_contents.py",
+            "project_path": "C:/Users/lobsp/projects/file-bundler"
+        },
+        {
+            "path": "filebundler/ui/tabs/selected_files.py",
+            "project_path": "C:/Users/lobsp/projects/file-bundler"
+        }
+    ],
+    "metadata": {
+        "created_at": "2025-03-17T22:19:56.557258",
+        "export_stats": {
+            "last_exported": null,
+            "export_count": 0
+        }
+    },
+    "last_modified_date": "2025-03-17T22:14:39.680497",
+    "size_bytes": 22149,
+    "word_count": 1899
+}

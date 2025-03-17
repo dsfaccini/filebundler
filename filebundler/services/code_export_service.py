@@ -23,9 +23,10 @@ def copy_code_from_bundle(
         if ExecutionEnvironment(execution_environment) == ExecutionEnvironment.UI:
             pyperclip.copy(bundle.code_export)
             show_temp_notification(
-                f"Contents copied to clipboard: {len(bundle.file_items)} files, {len(bundle.code_export)} characters",
+                f"Copied bundle '{bundle.name}'({len(bundle.file_items)} files) to clipboard: {bundle.size_bytes} bytes, {bundle.word_count} words",
                 type="success",
             )
+            bundle.metadata.export_stats.record_export()
     except Exception as e:
         logger.error(f"Error exporting contents: {e}", exc_info=True)
         show_temp_notification(f"Error exporting contents: {str(e)}", type="error")

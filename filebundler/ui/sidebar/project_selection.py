@@ -72,7 +72,7 @@ def render_project_selection(global_settings: GlobalSettings):
             )
 
             if project_source == "Select recent project":
-                selected_recent = st.selectbox(
+                selected_recent: str = st.selectbox(
                     "Recent projects:",
                     options=global_settings.recent_projects_str[
                         :DISPLAY_NR_OF_RECENT_PROJECTS

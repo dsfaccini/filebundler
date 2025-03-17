@@ -6,7 +6,9 @@
         ".git/**",
         "**/__pycache__/**",
         ".ruff_cache/**",
-        "uv.lock"
+        "uv.lock",
+        ".mypy_cache/**",
+        ".pytest_cache/**"
     ],
     "max_files": 500
 }

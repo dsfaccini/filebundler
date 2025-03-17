@@ -14,11 +14,12 @@ from filebundler.managers.SelectionsManager import SelectionsManager
 
 from filebundler.ui.notification import show_temp_notification
 
-from filebundler.utils import ignore_patterns, sort_files
+from filebundler.utils.project_utils import ignore_patterns, sort_files
 
 logger = logging.getLogger(__name__)
 
 
+# class ProjectManager
 class FileBundlerApp(AppProtocol):
     def __init__(self, project_path: Path):
         self.project_path = project_path.resolve()
@@ -90,11 +91,14 @@ class FileBundlerApp(AppProtocol):
             # Apply max_files limit with warning
             if len(filtered_filepaths) > project_settings.max_files:
                 st.warning(
-                    f"Directory contains {len(filtered_filepaths)} files, exceeding limit of {project_settings.max_files}. Truncating."
+                    f"Directory contains {len(filtered_filepaths)} files, exceeding limit of {project_settings.max_files}. "
+                    f"Truncating to {project_settings.max_files} files."
                 )
-                filepaths = sort_files(filtered_filepaths)[: project_settings.max_files]
+                filepaths = sort_files(filtered_filepaths, project_settings)[
+                    : project_settings.max_files
+                ]
             else:
-                filepaths = sort_files(filtered_filepaths)
+                filepaths = sort_files(filtered_filepaths, project_settings)
 
             has_visible_content = False
 

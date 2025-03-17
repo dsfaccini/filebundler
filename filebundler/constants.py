@@ -44,6 +44,8 @@ DEFAULT_IGNORE_PATTERNS = [
     "**/.so",
     "**/.bin",
     "**/.dat",
+    ".mypy_cache/**",
+    ".pytest_cache/**",
 ]
 
 DISPLAY_NR_OF_RECENT_PROJECTS = 5

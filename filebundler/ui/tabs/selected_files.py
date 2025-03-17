@@ -2,7 +2,9 @@
 import logging
 import streamlit as st
 
+from filebundler.models.Bundle import Bundle
 from filebundler.FileBundlerApp import FileBundlerApp
+
 from filebundler.ui.notification import show_temp_notification
 from filebundler.utils.language_formatting import set_language_from_filename
 
@@ -37,9 +39,11 @@ def render_selected_files_tab(app: FileBundlerApp):
                     )
                     return
 
-                new_bundle = app.bundles.save_bundle(
-                    bundle_name, app.selections.selected_file_items
+                new_bundle = Bundle(
+                    name=bundle_name, file_items=app.selections.selected_file_items
                 )
+                app.bundles.save_bundle(new_bundle)
+                app.bundles.activate_bundle(new_bundle)
 
                 show_temp_notification(
                     f"Bundle '{bundle_name}' saved with {len(new_bundle.file_items)} files.",

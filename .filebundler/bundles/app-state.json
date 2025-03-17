@@ -1,0 +1,47 @@
+{
+    "name": "app-state",
+    "file_items": [
+        {
+            "path": "filebundler/ui/sidebar/file_tree.py",
+            "project_path": "C:/Users/lobsp/projects/file-bundler"
+        },
+        {
+            "path": "filebundler/ui/sidebar/project_selection.py",
+            "project_path": "C:/Users/lobsp/projects/file-bundler"
+        },
+        {
+            "path": "filebundler/ui/sidebar/settings_panel.py",
+            "project_path": "C:/Users/lobsp/projects/file-bundler"
+        },
+        {
+            "path": "filebundler/ui/tabs/export_contents.py",
+            "project_path": "C:/Users/lobsp/projects/file-bundler"
+        },
+        {
+            "path": "filebundler/ui/tabs/manage_bundles.py",
+            "project_path": "C:/Users/lobsp/projects/file-bundler"
+        },
+        {
+            "path": "filebundler/ui/tabs/selected_files.py",
+            "project_path": "C:/Users/lobsp/projects/file-bundler"
+        },
+        {
+            "path": "filebundler/state.py",
+            "project_path": "C:/Users/lobsp/projects/file-bundler"
+        },
+        {
+            "path": "main.py",
+            "project_path": "C:/Users/lobsp/projects/file-bundler"
+        }
+    ],
+    "metadata": {
+        "created_at": "2025-03-17T22:20:01.530706",
+        "export_stats": {
+            "last_exported": null,
+            "export_count": 0
+        }
+    },
+    "last_modified_date": "2025-03-17T21:44:19.048610",
+    "size_bytes": 28607,
+    "word_count": 2034
+}
