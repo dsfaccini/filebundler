@@ -10,16 +10,24 @@
 ## What is it?
 File Bundler is a web app and CLI utility to bundle project files together and use them for LLM prompting. It helps estimate and optimize token and context usage.
 
-# How do I install it?
-- Install FileBundler per the command above
-- Run it
-
 # Who is FileBundler for?
 If you're used to copying your files into your "chat of choice" and find the output is often better than the edits your AI powered IDE proposes then FileBundler is for you. 
 **Here are some reasons why:**
 1. Segment your projects into topics
 2. Optimize your LLM context usage
 3. Copy fresh context in one click, no uploading files, no "Select a file..." dialog
+
+# How do I use it?
+- Install and run FileBundler per the commands above
+- This should open a browser window automatically
+  - If it doesn't, visit the URL shown on your terminal
+- You'll be prompted to enter the path of your project (this is your local filesystem path)
+  - you can copy the path to your folder and paste it there
+  - <details>we currently don't support a "Select file" dialog but we're open to it if this is a major pain point</details>
+- Once you enter a valid project path you can open the project
+- This will load the filetree on the sidebar and the tabs on the right
+- The tabs will display your currently selected files, allow you to save them in a bundle and export their contents to be pasted on your chat of preference
+- To save a bundle you need to enter a name. The name must be lowercase and include only hyphens ("-") letters and numbers
 
 # Similar tools
 

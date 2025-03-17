@@ -7,7 +7,36 @@
                 "project_path": "C:/Users/lobsp/projects/file-bundler"
             },
             {
-                "path": "inexistent file.md",
+                "path": ".filebundler/bundles.json",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/managers/BundleManager.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/models/Bundle.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/models/FileItem.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/ui/tabs/export_contents.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/ui/tabs/selected_files.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            }
+        ]
+    },
+    {
+        "name": "bundle-management",
+        "file_items": [
+            {
+                "path": ".cursor/rules/prd.md",
                 "project_path": "C:/Users/lobsp/projects/file-bundler"
             },
             {
@@ -27,11 +56,36 @@
                 "project_path": "C:/Users/lobsp/projects/file-bundler"
             },
             {
-                "path": "filebundler/ui/tabs/manage_bundles/display_bundles.py",
+                "path": "filebundler/ui/tabs/export_contents.py",
                 "project_path": "C:/Users/lobsp/projects/file-bundler"
             },
             {
-                "path": "filebundler/ui/tabs/manage_bundles/display_tab.py",
+                "path": "filebundler/ui/tabs/selected_files.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            }
+        ]
+    },
+    {
+        "name": "bundle-management",
+        "file_items": [
+            {
+                "path": ".cursor/rules/prd.md",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": ".filebundler/bundles.json",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/managers/BundleManager.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/models/Bundle.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/models/FileItem.py",
                 "project_path": "C:/Users/lobsp/projects/file-bundler"
             },
             {
@@ -40,6 +94,175 @@
             },
             {
                 "path": "filebundler/ui/tabs/selected_files.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            }
+        ]
+    },
+    {
+        "name": "bundle-management",
+        "file_items": [
+            {
+                "path": ".cursor/rules/prd.md",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": ".filebundler/bundles.json",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/managers/BundleManager.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/models/Bundle.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/models/FileItem.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/ui/tabs/export_contents.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/ui/tabs/selected_files.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            }
+        ]
+    },
+    {
+        "name": "bundle-management",
+        "file_items": [
+            {
+                "path": ".cursor/rules/prd.md",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": ".filebundler/bundles.json",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/managers/BundleManager.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/models/Bundle.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/models/FileItem.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/ui/tabs/export_contents.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/ui/tabs/selected_files.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            }
+        ]
+    },
+    {
+        "name": "bundle-management",
+        "file_items": [
+            {
+                "path": ".cursor/rules/prd.md",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": ".filebundler/bundles.json",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/managers/BundleManager.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/models/Bundle.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/models/FileItem.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/ui/tabs/export_contents.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/ui/tabs/selected_files.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            }
+        ]
+    },
+    {
+        "name": "bundle-management",
+        "file_items": [
+            {
+                "path": ".cursor/rules/prd.md",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": ".filebundler/bundles.json",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/managers/BundleManager.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/models/Bundle.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/models/FileItem.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/ui/tabs/export_contents.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/ui/tabs/selected_files.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            }
+        ]
+    },
+    {
+        "name": "app-state",
+        "file_items": [
+            {
+                "path": "filebundler/ui/sidebar/file_tree.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/ui/sidebar/project_selection.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/ui/sidebar/settings_panel.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/ui/tabs/export_contents.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/ui/tabs/manage_bundles.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/ui/tabs/selected_files.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "filebundler/state.py",
+                "project_path": "C:/Users/lobsp/projects/file-bundler"
+            },
+            {
+                "path": "main.py",
                 "project_path": "C:/Users/lobsp/projects/file-bundler"
             }
         ]

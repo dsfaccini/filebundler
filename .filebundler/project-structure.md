@@ -10,31 +10,35 @@ file-bundler/
 │   ├── 📄 project-structure.md
 │   ├── 📄 selections.json
 │   └── 📄 settings.json
+├── 📁 .streamlit/
+│   └── 📄 config.toml
 ├── 📁 filebundler/
 │   ├── 📁 managers/
 │   │   ├── 📄 BundleManager.py
-│   │   ├── 📄 SelectionsManager.py
-│   │   └── 📄 SettingsManager.py
+│   │   ├── 📄 GlobalSettingsManager.py
+│   │   ├── 📄 ProjectSettingsManager.py
+│   │   └── 📄 SelectionsManager.py
 │   ├── 📁 models/
+│   │   ├── 📄 AppProtocol.py
 │   │   ├── 📄 Bundle.py
 │   │   ├── 📄 FileItem.py
 │   │   ├── 📄 GlobalSettings.py
 │   │   └── 📄 ProjectSettings.py
 │   ├── 📁 services/
+│   │   ├── 📄 code_export_service.py
 │   │   └── 📄 project_structure.py
 │   ├── 📁 ui/
 │   │   ├── 📁 sidebar/
+│   │   │   ├── 📄 file_tree.py
+│   │   │   ├── 📄 project_selection.py
 │   │   │   └── 📄 settings_panel.py
 │   │   ├── 📁 tabs/
-│   │   │   ├── 📁 manage_bundles/
-│   │   │   │   ├── 📄 display_bundles.py
-│   │   │   │   └── 📄 display_tab.py
 │   │   │   ├── 📄 export_contents.py
+│   │   │   ├── 📄 global_settings_panel.py
+│   │   │   ├── 📄 manage_bundles.py
 │   │   │   └── 📄 selected_files.py
 │   │   ├── 📄 confirm.py
-│   │   ├── 📄 file_tree.py
-│   │   ├── 📄 notification.py
-│   │   └── 📄 project_selection.py
+│   │   └── 📄 notification.py
 │   ├── 📁 utils/
 │   │   ├── 📄 __init__.py
 │   │   ├── 📄 filepath_checker.py
@@ -42,9 +46,12 @@ file-bundler/
 │   ├── 📄 constants.py
 │   ├── 📄 FileBundlerApp.py
 │   └── 📄 state.py
+├── 📄 .env
+├── 📄 .env.example
 ├── 📄 .gitignore
 ├── 📄 .python-version
 ├── 📄 main.py
+├── 📄 mypy.ini
 ├── 📄 pyproject.toml
 ├── 📄 README.md
 ├── 📄 test-utils.ipynb
