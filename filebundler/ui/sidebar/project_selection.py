@@ -49,6 +49,7 @@ def load_project(project_path: str):
         logger.info(f"Project loaded: {app.project_path}")
         show_temp_notification(f"Project loaded: {app.project_path}", type="success")
 
+        # TODO lets do this asynchonously, we don't want to slow down the loading process
         # we auto generate this file for the user
         # exceptions are caught inside the function
         project_structure = generate_project_structure(app)

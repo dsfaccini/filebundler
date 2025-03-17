@@ -28,15 +28,23 @@ def render_export_contents_tab(app: FileBundlerApp):
             )
             return
 
-        bundle_name = (
-            app.bundles.current_bundle.name
-            if app.bundles.current_bundle
-            else SELECTIONS_BUNDLE_NAME
-        )
-        selections_bundle = Bundle(
-            name=bundle_name,
-            file_items=app.selections.selected_file_items,
-        )
+        try:
+            bundle_name = (
+                app.bundles.current_bundle.name
+                if app.bundles.current_bundle
+                else SELECTIONS_BUNDLE_NAME
+            )
+            selections_bundle = Bundle(
+                name=bundle_name,
+                file_items=app.selections.selected_file_items,
+            )
+        except Exception as e:
+            logger.error(
+                f"Error creating bundle: {e}\n{app.selections.selected_file_items = }",
+                exc_info=True,
+            )
+            show_temp_notification(f"Error creating bundle: {str(e)}", type="error")
+            return
 
         # copies the contents to clipboard and displays notification
         copy_code_from_bundle(selections_bundle)

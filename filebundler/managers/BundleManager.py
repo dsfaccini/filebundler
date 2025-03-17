@@ -1,10 +1,11 @@
 # filebundler/managers/BundleManager.py
 import re
+import pdb
 import json
 import logging
 
 from pathlib import Path
-from typing import Any, List, Optional
+from typing import List, Optional
 from pydantic import ConfigDict, field_serializer
 
 from filebundler.models.Bundle import Bundle
@@ -74,27 +75,28 @@ class BundleManager(BaseModel):
 
         return new_bundle
 
-    def _persist_to_bundles_file(self, data: Any):
-        with open(self.bundles_file, "w") as f:
-            json_dump(data, f)
-
-        logger.info(f"Saved {len(data)} bundles to {self.bundles_file}")
+    def remove_deleted_files_from_bundle(self, bundle: Bundle):
+        """Remove files that no longer exist from a bundle"""
+        for file_item in bundle.file_items:
+            if not file_item.path.exists():
+                logger.warning(f"File not found: {file_item.path}")
+                show_temp_notification(
+                    f"File '{file_item.relative}' was not found",
+                    type="error",
+                )
+                # NOTE this will not persist the removal, unless the user manually saves the bundle again
+                bundle.file_items.remove(file_item)
 
     def save_bundles_to_disk(self):
         """Save bundles to file"""
         try:
-            # Convert bundles to dictionary
             for bundle in self.bundles:
-                for file_item in bundle.file_items:
-                    if not file_item.path.exists():
-                        bundle.file_items.remove(file_item)
-                        show_temp_notification(
-                            f"Removed '{file_item.relative}' from bundle because it was not found.",
-                            type="warning",
-                        )
+                self.remove_deleted_files_from_bundle(bundle)
+
             data = [bundle.model_dump() for bundle in self.bundles]
 
-            self._persist_to_bundles_file(data)
+            with open(self.bundles_file, "w") as f:
+                json_dump(data, f)
 
         except Exception as e:
             logger.error(f"Error saving bundles: {e}", exc_info=True)
@@ -108,15 +110,17 @@ class BundleManager(BaseModel):
 
         return
 
-    def delete_bundle(self, bundle_name: str):
+    def delete_bundle(self, bundle_to_delete: Bundle):
         """Delete a saved bundle"""
-        for i, bundle in enumerate(self.bundles):
-            if bundle.name == bundle_name:
-                self.bundles.pop(i)
-                logger.info(f"Deleted bundle '{bundle_name}'.")
+        for bundle in self.bundles:
+            if bundle is bundle_to_delete:
+                # pdb.set_trace()
+                self.bundles.remove(bundle)
                 self.save_bundles_to_disk()
+                logger.info(f"Deleted bundle '{bundle_to_delete.name}'.")
+                break
         else:
-            logger.warning(f"No bundle found with {bundle_name = }.")
+            logger.warning(f"No bundle found with {bundle_to_delete.name = }.")
 
     def rename_bundle(self, old_name: str, new_name: str):
         """Rename a saved bundle"""
@@ -137,23 +141,11 @@ class BundleManager(BaseModel):
                 with open(self.bundles_file, "r") as f:
                     data = json.load(f)
 
-                # Convert to Bundle objects
                 for item in data:
                     bundle = Bundle.model_validate(item)
-                    for file_item in bundle.file_items:
-                        if not file_item.path.exists():
-                            logger.warning(f"File not found: {file_item.path}")
-                            show_temp_notification(
-                                f"File '{file_item.relative}' was not found",
-                                type="error",
-                            )
-                            bundle.file_items.remove(file_item)
+                    self.remove_deleted_files_from_bundle(bundle)
+                    self.bundles.append(bundle)
 
-                        self.bundles.append(bundle)
-                # NOTE this will not persist the removal, unless the user manually saves the bundle again
-                logger.info(
-                    f"Loaded {len(self.bundles)} bundles from {self.bundles_file}"
-                )
             except Exception as e:
                 logger.error(f"Error loading bundles: {e}", exc_info=True)
                 show_temp_notification(f"Error loading bundles: {str(e)}", type="error")

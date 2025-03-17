@@ -36,7 +36,7 @@ def render_file_tree(app: FileBundlerApp):
         unsafe_allow_html=True,
     )
 
-    st.subheader(f"Files ({app.nr_of_files})")
+    st.subheader(f"Files ({app.selections.nr_of_selected_files}/{app.nr_of_files})")
 
     col1, col2 = st.columns([1, 1])
 

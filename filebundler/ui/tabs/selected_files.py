@@ -57,9 +57,6 @@ def render_selected_files_tab(app: FileBundlerApp):
             "Click on a file to view its content. Click 'x' to remove a file from selection."
         )
         for file_item in app.selections.selected_file_items:
-            if file_item.is_dir:
-                continue
-
             relative_path = file_item.path.relative_to(app.project_path)
 
             # Create a row with file button and remove button

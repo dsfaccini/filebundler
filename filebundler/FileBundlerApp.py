@@ -29,7 +29,7 @@ class FileBundlerApp(AppProtocol):
 
     @property
     def nr_of_files(self):
-        return len(self.file_items)
+        return len([fi for fi in self.file_items.values() if not fi.is_dir])
 
     def refresh(self):
         self.load_project(self.project_path, self.project_settings)

@@ -51,8 +51,8 @@ class SelectionsManager:
 
     @property
     def selected_file_items(self):
-        """Return the selected file items"""
-        return [v for v in self.app.file_items.values() if v.selected]
+        """Return the selected file items - ONLY FILES"""
+        return [v for v in self.app.file_items.values() if v.selected and not v.is_dir]
 
     @property
     def selected_file_content(self):
@@ -144,7 +144,7 @@ class SelectionsManager:
 
             nr_of_selected_files = self.nr_of_selected_files
 
-            for file_item in self.selected_file_items:
+            for file_item in self.app.file_items.values():
                 file_item.selected = False
 
             self.save_selections()

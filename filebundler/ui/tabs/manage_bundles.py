@@ -52,21 +52,6 @@ def activate_bundle(name: str):
         show_temp_notification(f"Error loading bundle: {str(e)}", type="error")
 
 
-def delete_bundle(bundle_manager: BundleManager, name: str):
-    """Callback for deleting a bundle"""
-    # BUG DONT FIX
-    # st.dialog doesn't close, it works by setting state and rerunning the app
-    # but I don't want to add the complexity so we leave the delete unchecked
-    # if not confirm(f"Delete bundle '{name}'?"):
-    #     return
-    try:
-        bundle_manager.delete_bundle(name)
-        st.rerun()
-    except Exception as e:
-        logger.error(f"Error deleting bundle: {e}", exc_info=True)
-        show_temp_notification(f"Error deleting bundle: {str(e)}", type="error")
-
-
 def render_saved_bundles(bundle_manager: BundleManager):
     """
     Render the list of saved bundles with improved UI and border separation
@@ -142,3 +127,24 @@ You must manually save the bundle again if you want to add them.
         st.markdown("</div>", unsafe_allow_html=True)
     if not bundle_manager.bundle_dict:
         st.warning("No saved bundles to display.")
+
+
+def delete_bundle(bundle_manager: BundleManager, name: str):
+    """Callback for deleting a bundle"""
+    # BUG DONT FIX
+    # st.dialog doesn't close, it works by setting state and rerunning the app
+    # but I don't want to add the complexity so we leave the delete unchecked
+    # if not confirm(f"Delete bundle '{name}'?"):
+    #     return
+    try:
+        bundle = bundle_manager._find_bundle_by_name(name)
+        if not bundle:
+            show_temp_notification(f"Bundle '{name}' not found", type="error")
+            return
+        if bundle is bundle_manager.current_bundle:
+            bundle_manager.current_bundle = None
+        bundle_manager.delete_bundle(bundle)
+        st.rerun()
+    except Exception as e:
+        logger.error(f"Error deleting bundle: {e}", exc_info=True)
+        show_temp_notification(f"Error deleting bundle: {str(e)}", type="error")

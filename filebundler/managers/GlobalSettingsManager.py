@@ -40,10 +40,10 @@ class GlobalSettingsManager:
     def add_recent_project(self, project_path: Path):
         if project_path in self.settings.recent_projects:
             self.settings.recent_projects.remove(project_path)
-
+        else:
+            logger.info(f"Adding recent project to global settings: {project_path}")
         self.settings.recent_projects.insert(0, project_path)
         self.save_settings()
-        logger.info(f"Added recent project to global settings: {project_path}")
 
     def get_recent_projects(self):
         existing = [p for p in self.settings.recent_projects if p.exists()]
