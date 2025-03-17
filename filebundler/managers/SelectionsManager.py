@@ -151,6 +151,8 @@ class SelectionsManager:
                 file_item.selected = False
 
             self.save_selections()
+            self.app.bundles.current_bundle = None
+
             logger.info(f"Unselected all {nr_of_selected_files} files")
             show_temp_notification(
                 f"Unselected all {len(self.app.file_items)} files", type="success"
