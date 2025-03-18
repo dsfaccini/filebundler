@@ -1,46 +1,42 @@
 [
     {
-        "path": "docs/streamlit-testing-synthesized.md",
+        "path": ".filebundler/selections.json",
         "project_path": "C:/Users/lobsp/projects/file-bundler"
     },
     {
-        "path": "filebundler/ui/sidebar/file_tree.py",
+        "path": ".filebundler/settings.json",
         "project_path": "C:/Users/lobsp/projects/file-bundler"
     },
     {
-        "path": "filebundler/ui/sidebar/file_tree_buttons.py",
+        "path": "filebundler/managers/BundleManager.py",
         "project_path": "C:/Users/lobsp/projects/file-bundler"
     },
     {
-        "path": "filebundler/ui/sidebar/project_selection.py",
+        "path": "filebundler/managers/SelectionsManager.py",
         "project_path": "C:/Users/lobsp/projects/file-bundler"
     },
     {
-        "path": "filebundler/ui/sidebar/settings_panel.py",
+        "path": "filebundler/models/Bundle.py",
         "project_path": "C:/Users/lobsp/projects/file-bundler"
     },
     {
-        "path": "filebundler/ui/tabs/export_contents.py",
+        "path": "filebundler/models/BundleMetadata.py",
         "project_path": "C:/Users/lobsp/projects/file-bundler"
     },
     {
-        "path": "filebundler/ui/tabs/global_settings_panel.py",
+        "path": "filebundler/models/FileItem.py",
         "project_path": "C:/Users/lobsp/projects/file-bundler"
     },
     {
-        "path": "filebundler/ui/tabs/manage_bundles.py",
+        "path": "filebundler/constants.py",
         "project_path": "C:/Users/lobsp/projects/file-bundler"
     },
     {
-        "path": "filebundler/ui/tabs/selected_files.py",
+        "path": "filebundler/FileBundlerApp.py",
         "project_path": "C:/Users/lobsp/projects/file-bundler"
     },
     {
-        "path": "filebundler/state.py",
-        "project_path": "C:/Users/lobsp/projects/file-bundler"
-    },
-    {
-        "path": "main.py",
+        "path": ".filebundler/bundles/settings-and-persistence.json",
         "project_path": "C:/Users/lobsp/projects/file-bundler"
     }
 ]

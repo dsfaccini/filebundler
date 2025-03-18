@@ -4,19 +4,25 @@
 file-bundler/
 ├── 📁 .cursor/
 │   └── 📁 rules/
+│       ├── 📄 app-flow.md
+│       ├── 📄 core-features.md
 │       ├── 📄 general.md
-│       └── 📄 prd.md
+│       ├── 📄 overview.md
+│       ├── 📄 prd.md
+│       └── 📄 testing.md
 ├── 📁 .filebundler/
 │   ├── 📁 bundles/
-│   │   ├── 📄 app-state.json
 │   │   ├── 📄 bundle-management.json
-│   │   └── 📄 bundles-and-exports.json
+│   │   ├── 📄 bundles-and-exports.json
+│   │   ├── 📄 testing-ui-and-state.json
+│   │   └── 📄 testing-ui-and-state.txt
 │   ├── 📄 project-structure.md
 │   ├── 📄 selections.json
 │   └── 📄 settings.json
 ├── 📁 .streamlit/
 │   └── 📄 config.toml
 ├── 📁 docs/
+│   ├── 📄 ci-cd.md
 │   └── 📄 streamlit-testing-synthesized.md
 ├── 📁 filebundler/
 │   ├── 📁 managers/

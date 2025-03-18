@@ -2,6 +2,18 @@
     "name": "testing-ui-and-state",
     "file_items": [
         {
+            "path": ".cursor/rules/app-flow.md",
+            "project_path": "C:/Users/lobsp/projects/file-bundler"
+        },
+        {
+            "path": ".cursor/rules/core-features.md",
+            "project_path": "C:/Users/lobsp/projects/file-bundler"
+        },
+        {
+            "path": ".cursor/rules/overview.md",
+            "project_path": "C:/Users/lobsp/projects/file-bundler"
+        },
+        {
             "path": "docs/streamlit-testing-synthesized.md",
             "project_path": "C:/Users/lobsp/projects/file-bundler"
         },
@@ -47,13 +59,13 @@
         }
     ],
     "metadata": {
-        "created_at": "2025-03-18T03:54:02.394277",
+        "created_at": "2025-03-18T05:01:50.420139",
         "export_stats": {
             "last_exported": null,
             "export_count": 0
         }
     },
-    "last_modified_date": "2025-03-18T03:45:20.241352",
-    "size_bytes": 33580,
-    "word_count": 2526
+    "last_modified_date": "2025-03-18T04:51:38.114255",
+    "size_bytes": 40901,
+    "word_count": 3213
 }
