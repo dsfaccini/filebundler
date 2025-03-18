@@ -11,7 +11,6 @@ file-bundler/
 │   │   ├── 📄 app-state.json
 │   │   ├── 📄 bundle-management.json
 │   │   └── 📄 bundles-and-exports.json
-│   ├── 📄 bundles.json.bak
 │   ├── 📄 project-structure.md
 │   ├── 📄 selections.json
 │   └── 📄 settings.json
@@ -37,6 +36,7 @@ file-bundler/
 │   ├── 📁 ui/
 │   │   ├── 📁 sidebar/
 │   │   │   ├── 📄 file_tree.py
+│   │   │   ├── 📄 file_tree_buttons.py
 │   │   │   ├── 📄 project_selection.py
 │   │   │   └── 📄 settings_panel.py
 │   │   ├── 📁 tabs/
