@@ -12,8 +12,9 @@ File Bundler is a web app and CLI utility to bundle project files together and u
 
 # Who is FileBundler for?
 If you're used to copying your files into your "chat of choice" and find the output is often better than the edits your AI powered IDE proposes then FileBundler is for you. 
+
 **Here are some reasons why:**
-1. Segment your projects into topics
+1. Segment your projects into topics (manually or with AI)
 2. Optimize your LLM context usage
 3. Copy fresh context in one click, no uploading files, no "Select a file..." dialog
 
@@ -24,8 +25,7 @@ If you're used to copying your files into your "chat of choice" and find the out
 - You'll be prompted to enter the path of your project (this is your local filesystem path)
   - you can copy the path to your folder and paste it there
   - <details>we currently don't support a "Select file" dialog but we're open to it if this is a major pain point</details>
-- Once you enter a valid project path you can open the project
-- This will load the filetree on the sidebar and the tabs on the right
+- This will load the <span style="color:green">file tree 🌳</span> on the sidebar and the tabs on the right
 - The tabs will display your currently selected files, allow you to save them in a bundle and export their contents to be pasted on your chat of preference
 - To save a bundle you need to enter a name. The name must be lowercase and include only hyphens ("-") letters and numbers
 
@@ -41,6 +41,7 @@ Before I started this tool I researched if there was already an existing tool an
 2. currently not available for Windows
 3. closed source
 4. pricing
+
 For the record it seems like a great tool and I invite you to check it out. It offers lots of other functionality, like diffs and code trees.
 
 ## Result

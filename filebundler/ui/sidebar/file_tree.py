@@ -38,6 +38,21 @@ def render_file_tree(app: FileBundlerApp):
 
     st.subheader(f"Files ({app.selections.nr_of_selected_files}/{app.nr_of_files})")
 
+    # Add search bar
+    search_col1, search_col2 = st.columns([1, 1])
+    with search_col1:
+        search_term = st.text_input("🔍 Search files", key="file_tree_search")
+    with search_col2:
+        if search_term:
+            st.markdown(
+                "<div style='margin-left: auto; margin-top: auto;'>",
+                unsafe_allow_html=True,
+            )
+            if st.button("Clear Search", key="clear_search"):
+                st.session_state.file_tree_search = ""
+                st.rerun()
+            st.markdown("</div>", unsafe_allow_html=True)
+
     col1, col2 = st.columns([1, 1])
 
     with col1:
@@ -91,10 +106,27 @@ def render_file_tree(app: FileBundlerApp):
             else:
                 show_temp_notification("No project loaded", type="error")
 
+    def matches_search(item: FileItem) -> bool:
+        """Check if an item matches the search term"""
+        if not search_term:
+            return True
+        search_lower = search_term.lower()
+        return search_lower in item.name.lower()
+
+    def has_matching_children(item: FileItem) -> bool:
+        """Check if an item or any of its children match the search term"""
+        if matches_search(item):
+            return True
+        return any(has_matching_children(child) for child in item.children)
+
     # Define recursive function to display directories and files
     def display_directory(file_item: FileItem, indent: int = 0):
         try:
             for child in file_item.children:
+                # Skip if neither the item nor its children match the search
+                if not has_matching_children(child):
+                    continue
+
                 checkbox_label = (
                     f"{'&nbsp;' * indent * 4}📁 **{child.name}**"
                     if child.is_dir
