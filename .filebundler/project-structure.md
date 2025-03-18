@@ -16,6 +16,8 @@ file-bundler/
 │   └── 📄 settings.json
 ├── 📁 .streamlit/
 │   └── 📄 config.toml
+├── 📁 docs/
+│   └── 📄 streamlit-testing-synthesized.md
 ├── 📁 filebundler/
 │   ├── 📁 managers/
 │   │   ├── 📄 BundleManager.py

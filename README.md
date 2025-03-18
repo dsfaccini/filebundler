@@ -17,6 +17,7 @@ If you're used to copying your files into your "chat of choice" and find the out
 1. Segment your projects into topics (manually or with AI)
 2. Optimize your LLM context usage
 3. Copy fresh context in one click, no uploading files, no "Select a file..." dialog
+4. It encourages you to use best practices, like [anthropic's use of xml tags](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/use-xml-tags)
 
 # How do I use it?
 - Install and run FileBundler per the commands above
@@ -45,4 +46,10 @@ Before I started this tool I researched if there was already an existing tool an
 For the record it seems like a great tool and I invite you to check it out. It offers lots of other functionality, like diffs and code trees.
 
 ## Result
-Since I didn't find any other tool I decided to build FileBundler. Its main feature is bundling files together into reusable topics to prompt LLMs and review token usage. We currently use word count as a proxy for token usage. Computing token count directly on the app is a planned feature but not yet implemented. You can use a utility like [tokencounter.org](https://tokencounter.org/) for better estimates in the meantime!
+Since I didn't find any other tool I decided to build FileBundler. Its main feature is bundling files together into reusable topics to prompt LLMs and review token usage. We currently use word count as a proxy for token usage. Computing token count directly on the app is a planned feature but not yet implemented. You can use a utility like [tokencounter.org](https://tokencounter.org/) or [openai's tokenizer](https://platform.openai.com/tokenizer) for better estimates in the meantime!
+
+# Useful references
+- [anthropic's prompt library](https://docs.anthropic.com/en/prompt-library)
+- [anthropic's long context tips](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/long-context-tips#example-multi-document-structure)
+
+# Roadmap

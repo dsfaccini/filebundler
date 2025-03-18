@@ -1,0 +1,59 @@
+{
+    "name": "testing-ui-and-state",
+    "file_items": [
+        {
+            "path": "docs/streamlit-testing-synthesized.md",
+            "project_path": "C:/Users/lobsp/projects/file-bundler"
+        },
+        {
+            "path": "filebundler/ui/sidebar/file_tree.py",
+            "project_path": "C:/Users/lobsp/projects/file-bundler"
+        },
+        {
+            "path": "filebundler/ui/sidebar/file_tree_buttons.py",
+            "project_path": "C:/Users/lobsp/projects/file-bundler"
+        },
+        {
+            "path": "filebundler/ui/sidebar/project_selection.py",
+            "project_path": "C:/Users/lobsp/projects/file-bundler"
+        },
+        {
+            "path": "filebundler/ui/sidebar/settings_panel.py",
+            "project_path": "C:/Users/lobsp/projects/file-bundler"
+        },
+        {
+            "path": "filebundler/ui/tabs/export_contents.py",
+            "project_path": "C:/Users/lobsp/projects/file-bundler"
+        },
+        {
+            "path": "filebundler/ui/tabs/global_settings_panel.py",
+            "project_path": "C:/Users/lobsp/projects/file-bundler"
+        },
+        {
+            "path": "filebundler/ui/tabs/manage_bundles.py",
+            "project_path": "C:/Users/lobsp/projects/file-bundler"
+        },
+        {
+            "path": "filebundler/ui/tabs/selected_files.py",
+            "project_path": "C:/Users/lobsp/projects/file-bundler"
+        },
+        {
+            "path": "filebundler/state.py",
+            "project_path": "C:/Users/lobsp/projects/file-bundler"
+        },
+        {
+            "path": "main.py",
+            "project_path": "C:/Users/lobsp/projects/file-bundler"
+        }
+    ],
+    "metadata": {
+        "created_at": "2025-03-18T03:54:02.394277",
+        "export_stats": {
+            "last_exported": null,
+            "export_count": 0
+        }
+    },
+    "last_modified_date": "2025-03-18T03:45:20.241352",
+    "size_bytes": 33580,
+    "word_count": 2526
+}

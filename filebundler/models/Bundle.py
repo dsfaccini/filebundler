@@ -8,11 +8,9 @@ from typing import List, Optional
 from pydantic import field_validator, Field, computed_field
 
 from filebundler.models.FileItem import FileItem
-from filebundler.models.BundleMetadata import (
-    BundleMetadata,
-    format_datetime,
-    format_file_size,
-)
+from filebundler.models.BundleMetadata import BundleMetadata
+from filebundler.models.BundleMetadata import format_datetime, format_file_size
+
 from filebundler.services.token_count import compute_word_count
 from filebundler.ui.notification import show_temp_notification
 from filebundler.utils import BaseModel, read_file
@@ -92,7 +90,7 @@ class Bundle(BaseModel):
             logger.warning(warninig_msg)
             show_temp_notification(warninig_msg, type="warning")
 
-    # FUTURE TODO, not now: create XML with a library so it handles special characters and such
+    # proper xml formatting is not necessary bc llms aren't strict xml parsers
     @property
     def code_export(self):
         filtered_items = (fi for fi in self.file_items if not fi.is_dir)
@@ -102,11 +100,10 @@ class Bundle(BaseModel):
 </documents>"""
 
 
-# based on https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/long-context-tips#example-multi-document-structure
+# REFERENCES
 # https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/use-xml-tags
+# https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/long-context-tips#example-multi-document-structure
 def make_file_section(file_item: FileItem, index: int):
-    # NOTE we could add error handling
-
     return f"""    <document index="{index}">
         <source>
             {file_item}

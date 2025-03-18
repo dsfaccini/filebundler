@@ -1,26 +1,22 @@
 [
     {
-        "path": ".cursor/rules/prd.md",
+        "path": "docs/streamlit-testing-synthesized.md",
         "project_path": "C:/Users/lobsp/projects/file-bundler"
     },
     {
-        "path": ".filebundler/bundles/bundles-and-exports.json",
+        "path": "filebundler/ui/sidebar/file_tree.py",
         "project_path": "C:/Users/lobsp/projects/file-bundler"
     },
     {
-        "path": "filebundler/managers/BundleManager.py",
+        "path": "filebundler/ui/sidebar/file_tree_buttons.py",
         "project_path": "C:/Users/lobsp/projects/file-bundler"
     },
     {
-        "path": "filebundler/models/Bundle.py",
+        "path": "filebundler/ui/sidebar/project_selection.py",
         "project_path": "C:/Users/lobsp/projects/file-bundler"
     },
     {
-        "path": "filebundler/models/BundleMetadata.py",
-        "project_path": "C:/Users/lobsp/projects/file-bundler"
-    },
-    {
-        "path": "filebundler/services/code_export_service.py",
+        "path": "filebundler/ui/sidebar/settings_panel.py",
         "project_path": "C:/Users/lobsp/projects/file-bundler"
     },
     {
@@ -28,11 +24,23 @@
         "project_path": "C:/Users/lobsp/projects/file-bundler"
     },
     {
+        "path": "filebundler/ui/tabs/global_settings_panel.py",
+        "project_path": "C:/Users/lobsp/projects/file-bundler"
+    },
+    {
         "path": "filebundler/ui/tabs/manage_bundles.py",
         "project_path": "C:/Users/lobsp/projects/file-bundler"
     },
     {
-        "path": "TODO.md",
+        "path": "filebundler/ui/tabs/selected_files.py",
+        "project_path": "C:/Users/lobsp/projects/file-bundler"
+    },
+    {
+        "path": "filebundler/state.py",
+        "project_path": "C:/Users/lobsp/projects/file-bundler"
+    },
+    {
+        "path": "main.py",
         "project_path": "C:/Users/lobsp/projects/file-bundler"
     }
 ]
