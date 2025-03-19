@@ -1,14 +1,10 @@
 [
     {
-        "path": ".filebundler/selections.json",
-        "project_path": "C:/Users/lobsp/projects/file-bundler"
-    },
-    {
-        "path": ".filebundler/settings.json",
-        "project_path": "C:/Users/lobsp/projects/file-bundler"
-    },
-    {
         "path": "filebundler/managers/BundleManager.py",
+        "project_path": "C:/Users/lobsp/projects/file-bundler"
+    },
+    {
+        "path": "filebundler/managers/GlobalSettingsManager.py",
         "project_path": "C:/Users/lobsp/projects/file-bundler"
     },
     {
@@ -24,11 +20,43 @@
         "project_path": "C:/Users/lobsp/projects/file-bundler"
     },
     {
-        "path": "filebundler/models/FileItem.py",
+        "path": "filebundler/services/code_export_service.py",
         "project_path": "C:/Users/lobsp/projects/file-bundler"
     },
     {
-        "path": "filebundler/constants.py",
+        "path": "filebundler/services/project_structure.py",
+        "project_path": "C:/Users/lobsp/projects/file-bundler"
+    },
+    {
+        "path": "filebundler/ui/sidebar/file_tree.py",
+        "project_path": "C:/Users/lobsp/projects/file-bundler"
+    },
+    {
+        "path": "filebundler/ui/sidebar/file_tree_buttons.py",
+        "project_path": "C:/Users/lobsp/projects/file-bundler"
+    },
+    {
+        "path": "filebundler/ui/sidebar/project_selection.py",
+        "project_path": "C:/Users/lobsp/projects/file-bundler"
+    },
+    {
+        "path": "filebundler/ui/tabs/export_contents.py",
+        "project_path": "C:/Users/lobsp/projects/file-bundler"
+    },
+    {
+        "path": "filebundler/ui/tabs/manage_bundles.py",
+        "project_path": "C:/Users/lobsp/projects/file-bundler"
+    },
+    {
+        "path": "filebundler/ui/tabs/selected_files.py",
+        "project_path": "C:/Users/lobsp/projects/file-bundler"
+    },
+    {
+        "path": "filebundler/utils/__init__.py",
+        "project_path": "C:/Users/lobsp/projects/file-bundler"
+    },
+    {
+        "path": "filebundler/utils/filepath_checker.py",
         "project_path": "C:/Users/lobsp/projects/file-bundler"
     },
     {
@@ -36,7 +64,7 @@
         "project_path": "C:/Users/lobsp/projects/file-bundler"
     },
     {
-        "path": ".filebundler/bundles/settings-and-persistence.json",
+        "path": "main.py",
         "project_path": "C:/Users/lobsp/projects/file-bundler"
     }
 ]

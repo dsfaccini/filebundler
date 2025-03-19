@@ -1,55 +1,55 @@
 {
-    "name": "settings-and-persistence",
-    "file_items": [
-        {
-            "path": ".filebundler/selections.json",
-            "project_path": "C:/Users/lobsp/projects/file-bundler"
-        },
-        {
-            "path": ".filebundler/settings.json",
-            "project_path": "C:/Users/lobsp/projects/file-bundler"
-        },
-        {
-            "path": "filebundler/managers/BundleManager.py",
-            "project_path": "C:/Users/lobsp/projects/file-bundler"
-        },
-        {
-            "path": "filebundler/managers/SelectionsManager.py",
-            "project_path": "C:/Users/lobsp/projects/file-bundler"
-        },
-        {
-            "path": "filebundler/models/Bundle.py",
-            "project_path": "C:/Users/lobsp/projects/file-bundler"
-        },
-        {
-            "path": "filebundler/models/BundleMetadata.py",
-            "project_path": "C:/Users/lobsp/projects/file-bundler"
-        },
-        {
-            "path": "filebundler/models/FileItem.py",
-            "project_path": "C:/Users/lobsp/projects/file-bundler"
-        },
-        {
-            "path": "filebundler/constants.py",
-            "project_path": "C:/Users/lobsp/projects/file-bundler"
-        },
-        {
-            "path": "filebundler/FileBundlerApp.py",
-            "project_path": "C:/Users/lobsp/projects/file-bundler"
-        },
-        {
-            "path": ".filebundler/bundles/settings-and-persistence.json",
-            "project_path": "C:/Users/lobsp/projects/file-bundler"
-        }
-    ],
-    "metadata": {
-        "created_at": "2025-03-18T05:04:30.964509",
-        "export_stats": {
-            "last_exported": null,
-            "export_count": 0
-        }
+  "name": "settings-and-persistence",
+  "file_items": [
+    {
+      "path": ".filebundler/selections.json",
+      "project_path": "C:/Users/lobsp/projects/file-bundler"
     },
-    "last_modified_date": "2025-03-18T05:04:26.758084",
-    "size_bytes": 29214,
-    "word_count": 2111
+    {
+      "path": ".filebundler/settings.json",
+      "project_path": "C:/Users/lobsp/projects/file-bundler"
+    },
+    {
+      "path": "filebundler/managers/BundleManager.py",
+      "project_path": "C:/Users/lobsp/projects/file-bundler"
+    },
+    {
+      "path": "filebundler/managers/SelectionsManager.py",
+      "project_path": "C:/Users/lobsp/projects/file-bundler"
+    },
+    {
+      "path": "filebundler/models/Bundle.py",
+      "project_path": "C:/Users/lobsp/projects/file-bundler"
+    },
+    {
+      "path": "filebundler/models/BundleMetadata.py",
+      "project_path": "C:/Users/lobsp/projects/file-bundler"
+    },
+    {
+      "path": "filebundler/models/FileItem.py",
+      "project_path": "C:/Users/lobsp/projects/file-bundler"
+    },
+    {
+      "path": "filebundler/constants.py",
+      "project_path": "C:/Users/lobsp/projects/file-bundler"
+    },
+    {
+      "path": "filebundler/FileBundlerApp.py",
+      "project_path": "C:/Users/lobsp/projects/file-bundler"
+    },
+    {
+      "path": ".filebundler/bundles/settings-and-persistence.json",
+      "project_path": "C:/Users/lobsp/projects/file-bundler"
+    }
+  ],
+  "metadata": {
+    "created_at": "2025-03-18T05:04:30.964509",
+    "export_stats": {
+      "last_exported": null,
+      "export_count": 0
+    }
+  },
+  "last_modified_date": "2025-03-18T05:04:26.758084",
+  "size_bytes": 29214,
+  "token_count": 2111
 }

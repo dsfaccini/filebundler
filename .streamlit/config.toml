@@ -8,4 +8,4 @@ base = "dark"
 toolbarMode = "minimal"
 
 [server]
-headless = false
+headless = true

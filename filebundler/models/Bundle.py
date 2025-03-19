@@ -11,9 +11,10 @@ from filebundler.models.FileItem import FileItem
 from filebundler.models.BundleMetadata import BundleMetadata
 from filebundler.models.BundleMetadata import format_datetime, format_file_size
 
-from filebundler.services.token_count import compute_word_count
-from filebundler.ui.notification import show_temp_notification
 from filebundler.utils import BaseModel, read_file
+from filebundler.services.token_count import count_tokens
+
+from filebundler.ui.notification import show_temp_notification
 
 logger = logging.getLogger(__name__)
 
@@ -62,9 +63,9 @@ class Bundle(BaseModel):
 
     @computed_field  # type: ignore[prop-decorator]
     @property
-    def word_count(self) -> int:
-        """Get the total word count of all files in the bundle"""
-        return sum(compute_word_count(read_file(fi.path)) for fi in self.file_items)
+    def token_count(self) -> int:
+        """Get the total token count of all files in the bundle"""
+        return sum(count_tokens(read_file(fi.path)) for fi in self.file_items)
 
     @property
     def is_stale(self) -> bool:

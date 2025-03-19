@@ -4,6 +4,7 @@
 file-bundler/
 ├── 📁 .cursor/
 │   └── 📁 rules/
+│       ├── 📄 app-flow-user.md
 │       ├── 📄 app-flow.md
 │       ├── 📄 core-features.md
 │       ├── 📄 general.md
@@ -14,8 +15,9 @@ file-bundler/
 │   ├── 📁 bundles/
 │   │   ├── 📄 bundle-management.json
 │   │   ├── 📄 bundles-and-exports.json
-│   │   ├── 📄 testing-ui-and-state.json
-│   │   └── 📄 testing-ui-and-state.txt
+│   │   ├── 📄 files-with-logger.json
+│   │   ├── 📄 settings-and-persistence.json
+│   │   └── 📄 testing-ui-and-state.json
 │   ├── 📄 project-structure.md
 │   ├── 📄 selections.json
 │   └── 📄 settings.json
@@ -23,7 +25,8 @@ file-bundler/
 │   └── 📄 config.toml
 ├── 📁 docs/
 │   ├── 📄 ci-cd.md
-│   └── 📄 streamlit-testing-synthesized.md
+│   ├── 📄 streamlit-testing-synthesized.md
+│   └── 📄 test-suite.md
 ├── 📁 filebundler/
 │   ├── 📁 managers/
 │   │   ├── 📄 BundleManager.py
@@ -70,6 +73,7 @@ file-bundler/
 ├── 📄 mypy.ini
 ├── 📄 pyproject.toml
 ├── 📄 README.md
+├── 📄 start-server.bat
 ├── 📄 test-utils.ipynb
 └── 📄 TODO.md
 ```

@@ -46,7 +46,7 @@ Before I started this tool I researched if there was already an existing tool an
 For the record it seems like a great tool and I invite you to check it out. It offers lots of other functionality, like diffs and code trees.
 
 ## Result
-Since I didn't find any other tool I decided to build FileBundler. Its main feature is bundling files together into reusable topics to prompt LLMs and review token usage. We currently use word count as a proxy for token usage. Computing token count directly on the app is a planned feature but not yet implemented. You can use a utility like [tokencounter.org](https://tokencounter.org/) or [openai's tokenizer](https://platform.openai.com/tokenizer) for better estimates in the meantime!
+Since I didn't find any other tool I decided to build FileBundler. Its main feature is bundling files together into reusable topics to prompt LLMs and review token usage. We currently use tiktoken with the [cl100k_base](https://github.com/openai/tiktoken) model to estimate token count, but you can may a utility like [tokencounter.org](https://tokencounter.org/) to estimate token usage for other models or [openai's tokenizer](https://platform.openai.com/tokenizer) to compare estimates.
 
 # Useful references
 - [anthropic's prompt library](https://docs.anthropic.com/en/prompt-library)
