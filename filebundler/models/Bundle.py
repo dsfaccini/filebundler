@@ -105,15 +105,19 @@ class Bundle(BaseModel):
                 logger.warning(warninig_msg)
                 show_temp_notification(warninig_msg, type="warning")
 
-    @property
-    def code_export(self):
+    def export_code(self, further_documents: List[FileItem] = []) -> str:
         with logfire.span(
             "generating code_export for bundle {name}", name=self.name, _level="debug"
         ):
-            filtered_items = (fi for fi in self.file_items if not fi.is_dir)
+            all_items = set(self.file_items + further_documents)
+            filtered_items = [fi for fi in all_items if not fi.is_dir]
+            filtered_items_str = "\n".join(
+                make_file_section(file_item, i)
+                for i, file_item in enumerate(filtered_items)
+            )
             return f"""<?xml version="1.0" encoding="UTF-8"?>
 <documents bundle-name="{self.name}">
-{"\n".join(make_file_section(file_item, i) for i, file_item in enumerate(filtered_items))}
+{filtered_items_str}
 </documents>"""
 
 

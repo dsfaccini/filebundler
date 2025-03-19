@@ -1,10 +1,7 @@
 # FileBundler
 
 ```bash
-# TODO
-# install using uv
-# run using uv
-# uvx filebundler?
+uvx filebundler
 ```
 
 ## What is it?
@@ -20,15 +17,42 @@ If you're used to copying your files into your "chat of choice" and find the out
 4. It encourages you to use best practices, like [anthropic's use of xml tags](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/use-xml-tags)
 
 # How do I use it?
-- Install and run FileBundler per the commands above
-- This should open a browser window automatically
-  - If it doesn't, visit the URL shown on your terminal
-- You'll be prompted to enter the path of your project (this is your local filesystem path)
+- install and run FileBundler per the command at the start of this README
+- visit the URL shown on your terminal
+- you'll be prompted to enter the path of your project (this is your local filesystem path)
   - you can copy the path to your folder and paste it there
-  - <details>we currently don't support a "Select file" dialog but we're open to it if this is a major pain point</details>
+  - <details><summary>why no file selection window</summary>we currently don't support a "Select file" dialog but we're open to it if this is a major pain point</details>
 - This will load the <span style="color:green">file tree 🌳</span> on the sidebar and the tabs on the right
 - The tabs will display your currently selected files, allow you to save them in a bundle and export their contents to be pasted on your chat of preference
 - To save a bundle you need to enter a name. The name must be lowercase and include only hyphens ("-") letters and numbers
+
+## Performance and debugging
+If your application **doesn't start or freezes** you can check the logs in your terminal.
+
+If your application **hangs** on certain actions, you can debug using logfire. For this you'll need to stop FileBundler, set your logfire token and re-run the app.
+
+You can set your logfire token like this
+<details>
+<summary>Unix/macOS</summary>
+
+```bash
+export LOGFIRE_TOKEN=your_token_here
+```
+</details>
+
+<details>
+<summary>Windows</summary>
+
+```powershell
+# using cmd
+set LOGFIRE_TOKEN=your_token_here
+
+# or in PowerShell
+$env:LOGFIRE_TOKEN = "your_token_here"
+```
+</details>
+
+For any other issues you may open an issue in the [filebundler repo](https://github.com/dsfaccini/filebundler).
 
 # Similar tools
 
@@ -46,10 +70,15 @@ Before I started this tool I researched if there was already an existing tool an
 For the record it seems like a great tool and I invite you to check it out. It offers lots of other functionality, like diffs and code trees.
 
 ## Result
-Since I didn't find any other tool I decided to build FileBundler. Its main feature is bundling files together into reusable topics to prompt LLMs and review token usage. We currently use tiktoken with the [cl100k_base](https://github.com/openai/tiktoken) model to estimate token count, but you can may a utility like [tokencounter.org](https://tokencounter.org/) to estimate token usage for other models or [openai's tokenizer](https://platform.openai.com/tokenizer) to compare estimates.
+Since I didn't find any other tool I decided to build FileBundler. 
+
+Its main feature is bundling files together into reusable topics to prompt LLMs and review token usage. 
+
+We currently use tiktoken with the [cl100k_base](https://github.com/openai/tiktoken) model to estimate token count, but you can may a utility like [tokencounter.org](https://tokencounter.org/) to estimate token usage for other models or [openai's tokenizer](https://platform.openai.com/tokenizer) to compare estimates.
 
 # Useful references
 - [anthropic's prompt library](https://docs.anthropic.com/en/prompt-library)
 - [anthropic's long context tips](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/long-context-tips#example-multi-document-structure)
 
 # Roadmap
+TODO.md

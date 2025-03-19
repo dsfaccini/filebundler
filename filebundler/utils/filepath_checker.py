@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 def validate_first_line(filepath: Path):
-    """Validate the first line of a file"""
+    """Checks that the first line of a file is a comment with the relative file path"""
     with open(filepath, "r", encoding="utf-8") as f:
         first_line = f.readline().strip()
 
@@ -26,7 +26,7 @@ def validate_first_line(filepath: Path):
 
 
 def validate_files(directory: Path):
-    """Validate all files in a directory"""
+    """Validates all python files in a directory"""
     invalid_files = []
     valid_files = []
 
@@ -48,10 +48,6 @@ if __name__ == "__main__":
 
     directory_path = Path(args.directory)
     valid_files, invalid_files = validate_files(directory_path)
-
-    # if valid_files:
-    #     print("# Valid Files")
-    #     print("\n".join([f"# {f}" for f in valid_files]))
 
     if invalid_files:
         print("# Invalid Files")

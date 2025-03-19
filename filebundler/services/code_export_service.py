@@ -21,7 +21,7 @@ def copy_code_from_bundle(
 ):
     try:
         if ExecutionEnvironment(execution_environment) == ExecutionEnvironment.UI:
-            pyperclip.copy(bundle.code_export)
+            pyperclip.copy(bundle.export_code())
             show_temp_notification(
                 f"Copied bundle '{bundle.name}'({len(bundle.file_items)} files) to clipboard: {bundle.size_bytes} bytes, {bundle.token_count} tokens",
                 type="success",

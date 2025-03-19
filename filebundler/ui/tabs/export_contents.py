@@ -54,8 +54,7 @@ def render_export_contents_tab(app: FileBundlerApp):
 
             with preview_expander:
                 try:
-                    # st.code(selections_bundle.code_export, language="markdown")
-                    st.code(bundle_to_export.code_export, language="xml")
+                    st.code(bundle_to_export.export_code(), language="xml")
                 except Exception as e:
                     logger.error(f"Preview error: {e}", exc_info=True)
                     st.error(f"Error generating preview: {str(e)}")

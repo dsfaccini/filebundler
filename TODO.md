@@ -2,17 +2,26 @@
    1. make the util so that we can dynamically choose the model
    2. use an enum to allow for model selection
    3. you can store this utility under filebundler/lib/llm/...
-2. [ROADMAP] create a new tab after "Manage Bundles" called "Auto-Bundle"
-   1. it has a chat where the user can write a prompt he wants to use on a different LLM to help him with his project
-   2. our LLM checks the prompt and the file structure, as well as the available bundles (not the contents, only the bundle names and the files) and selects the files that it deems relevant to answer the prompt
-   3. the "auto bundle" feature clears the current selection before selecting new files (add this as a warning in very visible text above the prompt area)
-   4. the user can then review the selected files
+   4. for now the utility only needs to send one message, later we will make a utility that allows for conversation and agent interaction
+2. [ROADMAP] create a new tab after "Manage Bundles" called "Auto-Bundle" (filebundler/ui/tabs/auto_bundler.py)
+   2. it has a text-area (chat) where the user can write a prompt he wants to use on an LLM to help him with his project and a submit button that sends the body to the LLM using out llm util from the last TODO
+   3. when the user opens the tab, the application automatically generates the project structure and auto selects the file, it also auto-selects all bundle files
+      1. we display a notification for 5 seconds so the user knows about this
+   4. the currently selected files can be viewed in an expander with the title "Selected files {nr_of_selected_files}
+   5. the user can deselect files
+   7. when the user submits, we generate the export and append the the prompt. the body sent to the LLM finally has the following structure:
+      1. the export  consists of the selected files, which in turn include the project structure file (freshly generated) and the available bundle files (not the contents of the bundles, only the bundle names and the files)
+      2. the user prompt appended at the end
+   8. the llm returns an object like {"name": "{some-bundle-name}", "files": ["file1", "dir2/file2"]}
+   9. the app automatically saves this bundle as "llm-auto-{rest-of-name}"
+   10. finally lets include a field in our ProjectSetting model called "auto_bundle_settings" (make a model for this too)
+       1.  the AutoBundleSettings has the fields "auto_refresh_project_structure" (bool=True) and "auto_include_bundle_files" (bool=True)
+       2.  for backwards compatibility the ProjectSetting.auto_bundle_settings is optional and its default value is None
 3. [TEST] we haven't written any test
 4. [PACKAGE] package as a library so people can install it and run it
    1. we need to add a license before packaging! apache 2.0 I guess?
    2. setup github actions AND SOMETHING TO MANAGE THE RELEASE VERSION!
       1. we'll start with 0.9
-   3. BE SURE TO ALLOW THE USER TO DISABLE THE AUTO OPENING BROWSER when they run it
 5. [DOCS] add pictures to README
 6. [DOCS] make a video
 
