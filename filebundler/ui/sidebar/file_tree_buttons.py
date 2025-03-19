@@ -26,10 +26,7 @@ def render_file_tree_buttons(app: FileBundlerApp):
             "Export Structure", key="export_structure", use_container_width=True
         ):
             try:
-                # Generate project structure markdown
-                structure_md = generate_project_structure(app)
-
-                output_file = save_project_structure(app.project_path, structure_md)
+                output_file = save_project_structure(app.project_path)
 
                 show_temp_notification(
                     f"Project structure exported to {output_file.relative_to(app.project_path)}",

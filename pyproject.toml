@@ -11,6 +11,8 @@ dependencies = [
     "pydantic-settings>=2.8.1",
     "tiktoken>=0.9.0",
     "logfire>=3.9.0",
+    "pydantic-ai-slim[anthropic]>=0.0.42",
+    "pydantic-ai[logfire]>=0.0.42",
 ]
 
 [dependency-groups]

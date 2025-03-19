@@ -69,7 +69,7 @@ def render_selected_files_tab(app: FileBundlerApp):
             with col1:
                 if st.button(
                     f"📄 {relative_path}",
-                    key=f"sel_{file_item.path}",
+                    key=f"selections_tab_{file_item.relative}",
                     use_container_width=True,
                 ):
                     app.selections.selected_file = file_item.path

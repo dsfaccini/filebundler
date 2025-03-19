@@ -7,6 +7,7 @@ from filebundler.constants import LOG_LEVEL
 from filebundler.state import initialize_session_state
 
 from filebundler.ui.tabs.manage_bundles import render_saved_bundles
+from filebundler.ui.tabs.auto_bundler import render_auto_bundler_tab
 from filebundler.ui.tabs.selected_files import render_selected_files_tab
 from filebundler.ui.tabs.export_contents import render_export_contents_tab
 from filebundler.ui.tabs.global_settings_panel import render_global_settings
@@ -53,11 +54,12 @@ def main():
         with main_tab1:
             # Only show if project is loaded
             if st.session_state.project_loaded:
-                tab1, tab2, tab3 = st.tabs(
+                tab1, tab2, tab3, tab4 = st.tabs(
                     [
                         f"Selected Files ({st.session_state.app.selections.nr_of_selected_files})",
                         "Export Contents",
                         f"Manage Bundles ({st.session_state.app.bundles.nr_of_bundles})",
+                        "Auto-Bundle",
                     ]
                 )
 
@@ -69,6 +71,9 @@ def main():
 
                 with tab3:
                     render_saved_bundles(st.session_state.app.bundles)
+
+                with tab4:
+                    render_auto_bundler_tab(st.session_state.app)
             else:
                 # If no project loaded
                 show_temp_notification(

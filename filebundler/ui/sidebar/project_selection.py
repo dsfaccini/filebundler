@@ -52,8 +52,7 @@ def load_project(project_path: str):
         # TODO lets do this asynchonously, we don't want to slow down the loading process
         # we auto generate this file for the user
         # exceptions are caught inside the function
-        project_structure = generate_project_structure(app)
-        save_project_structure(app.project_path, project_structure)
+        save_project_structure(app.project_path)
         return True
     except Exception as e:
         logger.error(f"Error loading project: {e}", exc_info=True)

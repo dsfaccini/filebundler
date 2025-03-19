@@ -17,8 +17,6 @@ def render_file_tree(app: FileBundlerApp):
     Args:
         app: FileBundlerApp instance
     """
-    # BUG this markdown is too wide, it also affects the File Selection tab
-    # TODO apply a border only to the file tree
     st.markdown(
         """
     <style>

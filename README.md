@@ -26,6 +26,13 @@ If you're used to copying your files into your "chat of choice" and find the out
 - The tabs will display your currently selected files, allow you to save them in a bundle and export their contents to be pasted on your chat of preference
 - To save a bundle you need to enter a name. The name must be lowercase and include only hyphens ("-") letters and numbers
 
+# AI Features
+
+## Auto-Bundle
+TODO description -> what is it
+TODO setup -> export ANTHROPIC_API_KEY='your-api-key'
+TODO steps -> how do I use it
+
 ## Performance and debugging
 If your application **doesn't start or freezes** you can check the logs in your terminal.
 

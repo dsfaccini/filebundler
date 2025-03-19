@@ -86,7 +86,7 @@ def generate_project_structure(app: FileBundlerApp):
         return f"Error generating project structure: {str(e)}"
 
 
-def save_project_structure(project_path: Path, structure_content: str) -> Path:
+def save_project_structure(project_path: Path) -> Path:
     """
     Save the project structure to a file
 
@@ -104,6 +104,9 @@ def save_project_structure(project_path: Path, structure_content: str) -> Path:
 
         # Create the output file
         output_file = output_dir / "project-structure.md"
+
+        # Generate the structure content
+        structure_content = generate_project_structure(project_path)
 
         # Write the content
         output_file.write_text(structure_content, encoding="utf-8")
