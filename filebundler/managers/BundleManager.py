@@ -1,5 +1,6 @@
 # filebundler/managers/BundleManager.py
 import logging
+import logfire
 
 from pathlib import Path
 from typing import Dict, Optional
@@ -138,21 +139,29 @@ class BundleManager(BaseModel):
         self.bundles_dict = {}  # Clear existing bundles
 
         try:
-            if not self.bundles_dir.exists():
-                return  # No bundles directory yet
+            with logfire.span(
+                "loading bundles for project {project}", project=project_path.name
+            ):
+                if not self.bundles_dir.exists():
+                    return  # No bundles directory yet
 
-            # Load each bundle file
-            for bundle_file in self.bundles_dir.glob("*.json"):
-                try:
-                    bundle = load_model_from_file(Bundle, bundle_file)
-                    bundle.prune()
-                    self.bundles_dict[bundle.name] = bundle
-                    logger.info(f"Loaded bundle '{bundle.name}' from {bundle_file}")
+                # Load each bundle file
+                for bundle_file in self.bundles_dir.glob("*.json"):
+                    try:
+                        with logfire.span(
+                            "loading bundle from {file}", file=bundle_file.name
+                        ):
+                            bundle = load_model_from_file(Bundle, bundle_file)
+                            bundle.prune()
+                            self.bundles_dict[bundle.name] = bundle
+                            logger.info(
+                                f"Loaded bundle '{bundle.name}' from {bundle_file}"
+                            )
 
-                except Exception as e:
-                    error_msg = f"Error loading bundle from {bundle_file}: {str(e)}"
-                    logger.error(error_msg, exc_info=True)
-                    show_temp_notification(error_msg, type="error")
+                    except Exception as e:
+                        error_msg = f"Error loading bundle from {bundle_file}: {str(e)}"
+                        logger.error(error_msg, exc_info=True)
+                        show_temp_notification(error_msg, type="error")
 
         except Exception as e:
             logger.error(f"Error loading bundles: {e}", exc_info=True)
@@ -162,5 +171,6 @@ class BundleManager(BaseModel):
         assert self._find_bundle_by_name(bundle.name), (
             f"Bundle '{bundle.name}' not found in bundles"
         )
-        self.current_bundle = bundle
-        logger.info(f"Activated bundle '{bundle.name}'")
+        with logfire.span("activating bundle {name}", name=bundle.name):
+            self.current_bundle = bundle
+            logger.info(f"Activated bundle '{bundle.name}'")

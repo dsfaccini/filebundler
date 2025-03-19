@@ -1,6 +1,7 @@
 # filebundler/managers/SelectionsManager.py
 import json
 import logging
+import logfire
 
 from pathlib import Path
 from dataclasses import dataclass
@@ -92,68 +93,77 @@ class SelectionsManager:
 
     def save_selections(self):
         """Save selected files to JSON file"""
-        data = [file_item.model_dump() for file_item in self.selected_file_items]
-
-        self._persist_to_selections_file(data)
+        with logfire.span(
+            "saving selections for project {project}", project=self.project_path.name
+        ):
+            data = [file_item.model_dump() for file_item in self.selected_file_items]
+            self._persist_to_selections_file(data)
 
     def load_selections(self):
         """Load selected files from JSON file"""
-        logger.info(f"Loading selections for {self.app.project_path}")
+        with logfire.span(
+            "loading selections for project {project}", project=self.project_path.name
+        ):
+            logger.info(f"Loading selections for {self.app.project_path}")
 
-        selections_array = self._load_json_data("selections.json")
-        if not selections_array:
-            return
+            selections_array = self._load_json_data("selections.json")
+            if not selections_array:
+                return
 
-        selected_file_items = [
-            FileItem.model_validate(item) for item in selections_array
-        ]
+            selected_file_items = [
+                FileItem.model_validate(item) for item in selections_array
+            ]
 
-        # Set selections
-        for select_file_item in selected_file_items:
-            file_item = self.app.file_items.get(select_file_item.path)
-            if file_item:
-                file_item.selected = True
-            else:
-                logger.warning(f"Error restoring selection for {select_file_item.path}")
-                show_temp_notification(
-                    f"Couldn't find '{select_file_item.relative}' in this project",
-                    type="warning",
-                )
+            # Set selections
+            for select_file_item in selected_file_items:
+                file_item = self.app.file_items.get(select_file_item.path)
+                if file_item:
+                    file_item.selected = True
+                else:
+                    logger.warning(
+                        f"Error restoring selection for {select_file_item.path}"
+                    )
+                    show_temp_notification(
+                        f"Couldn't find '{select_file_item.relative}' in this project",
+                        type="warning",
+                    )
 
     def select_all_files(self):
         """Select all files in the project"""
+        with logfire.span(
+            "selecting all files for project {project}", project=self.project_path.name
+        ):
+            for file_item in self.app.file_items.values():
+                # TODO we need to handle the cases when a dir is marked as selected, it should actually just mark its children
+                if not file_item.is_dir:
+                    file_item.selected = True
 
-        for file_item in self.app.file_items.values():
-            # TODO we need to handle the cases when a dir is marked as selected, it should actually just mark its children
-            if not file_item.is_dir:
-                file_item.selected = True
+            self.save_selections()
 
-        self.save_selections()
-
-        logger.info(f"Selected all {self.nr_of_selected_files} files")
-        show_temp_notification(
-            f"Selected all {self.nr_of_selected_files} files", type="success"
-        )
+            logger.info(f"Selected all {self.nr_of_selected_files} files")
+            show_temp_notification(
+                f"Selected all {self.nr_of_selected_files} files", type="success"
+            )
 
     def clear_all_selections(self):
         """Clear all selected files"""
         try:
-            # for path, file_item in self.app.file_items.items():
-            #     if not file_item.is_dir:
-            #         file_item.selected = False
+            with logfire.span(
+                "clearing all selections for project {project}",
+                project=self.project_path.name,
+            ):
+                nr_of_selected_files = self.nr_of_selected_files
 
-            nr_of_selected_files = self.nr_of_selected_files
+                for file_item in self.app.file_items.values():
+                    file_item.selected = False
 
-            for file_item in self.app.file_items.values():
-                file_item.selected = False
+                self.save_selections()
+                self.app.bundles.current_bundle = None
 
-            self.save_selections()
-            self.app.bundles.current_bundle = None
-
-            logger.info(f"Unselected all {nr_of_selected_files} files")
-            show_temp_notification(
-                f"Unselected all {len(self.app.file_items)} files", type="success"
-            )
+                logger.info(f"Unselected all {nr_of_selected_files} files")
+                show_temp_notification(
+                    f"Unselected all {len(self.app.file_items)} files", type="success"
+                )
         except Exception as e:
             logger.error(f"Error unselecting all files: {e}", exc_info=True)
             show_temp_notification(

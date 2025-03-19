@@ -21,6 +21,8 @@ file-bundler/
 │   ├── 📄 project-structure.md
 │   ├── 📄 selections.json
 │   └── 📄 settings.json
+├── 📁 .logfire/
+│   └── 📄 .gitignore
 ├── 📁 .streamlit/
 │   └── 📄 config.toml
 ├── 📁 docs/

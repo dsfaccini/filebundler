@@ -1,5 +1,6 @@
 # main.py
 import logging
+import logfire
 import streamlit as st
 
 from filebundler.constants import LOG_LEVEL
@@ -16,6 +17,7 @@ from filebundler.ui.sidebar.project_selection import render_project_selection
 
 from filebundler.ui.notification import show_temp_notification
 
+logfire.configure(send_to_logfire="if-token-present")
 
 logging.basicConfig(
     level=LOG_LEVEL, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"

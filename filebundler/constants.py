@@ -46,6 +46,7 @@ DEFAULT_IGNORE_PATTERNS = [
     "**/.dat",
     ".mypy_cache/**",
     ".pytest_cache/**",
+    "*credentials.json",
 ]
 
 DISPLAY_NR_OF_RECENT_PROJECTS = 5

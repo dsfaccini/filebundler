@@ -1,5 +1,6 @@
 # filebundler/FileBundlerApp.py
 import logging
+import logfire
 import streamlit as st
 
 from typing import Dict
@@ -78,70 +79,74 @@ class FileBundlerApp(AppProtocol):
             bool: True if directory has visible content, False otherwise
         """
         try:
-            # Filter items efficiently using relative paths
-            filtered_filepaths = [
-                filepath
-                for filepath in list(dir_path.iterdir())
-                if not ignore_patterns(
-                    filepath.relative_to(self.project_path),
-                    project_settings.ignore_patterns,
-                )
-            ]
-
-            # Apply max_files limit with warning
-            if len(filtered_filepaths) > project_settings.max_files:
-                st.warning(
-                    f"Directory contains {len(filtered_filepaths)} files, exceeding limit of {project_settings.max_files}. "
-                    f"Truncating to {project_settings.max_files} files."
-                )
-                filepaths = sort_files(filtered_filepaths, project_settings)[
-                    : project_settings.max_files
-                ]
-            else:
-                filepaths = sort_files(filtered_filepaths, project_settings)
-
-            has_visible_content = False
-
-            # Process filepaths in a single pass
-            for filepath in filepaths:
-                try:
-                    # Create FileItem once and reuse
-                    file_item = FileItem(
-                        path=filepath,
-                        project_path=self.project_path,
-                        parent=parent_item,
-                        children=[],
-                        selected=False,
+            with logfire.span(
+                "loading directory {dir_path}",
+                dir_path=dir_path.relative_to(self.project_path),
+            ):
+                # Filter items efficiently using relative paths
+                filtered_filepaths = [
+                    filepath
+                    for filepath in list(dir_path.iterdir())
+                    if not ignore_patterns(
+                        filepath.relative_to(self.project_path),
+                        project_settings.ignore_patterns,
                     )
+                ]
 
-                    if filepath.is_dir():
-                        # Recursively process subdirectory
-                        subdirectory_has_content = self.load_directory_recursive(
-                            filepath,
-                            file_item,
-                            project_settings,
+                # Apply max_files limit with warning
+                if len(filtered_filepaths) > project_settings.max_files:
+                    st.warning(
+                        f"Directory contains {len(filtered_filepaths)} files, exceeding limit of {project_settings.max_files}. "
+                        f"Truncating to {project_settings.max_files} files."
+                    )
+                    filepaths = sort_files(filtered_filepaths, project_settings)[
+                        : project_settings.max_files
+                    ]
+                else:
+                    filepaths = sort_files(filtered_filepaths, project_settings)
+
+                has_visible_content = False
+
+                # Process filepaths in a single pass
+                for filepath in filepaths:
+                    try:
+                        # Create FileItem once and reuse
+                        file_item = FileItem(
+                            path=filepath,
+                            project_path=self.project_path,
+                            parent=parent_item,
+                            children=[],
+                            selected=False,
                         )
-                        if subdirectory_has_content:
+
+                        if filepath.is_dir():
+                            # Recursively process subdirectory
+                            subdirectory_has_content = self.load_directory_recursive(
+                                filepath,
+                                file_item,
+                                project_settings,
+                            )
+                            if subdirectory_has_content:
+                                self.file_items[filepath] = file_item
+                                parent_item.children.append(file_item)
+                                has_visible_content = True
+                        else:  # File
                             self.file_items[filepath] = file_item
                             parent_item.children.append(file_item)
                             has_visible_content = True
-                    else:  # File
-                        self.file_items[filepath] = file_item
-                        parent_item.children.append(file_item)
-                        has_visible_content = True
 
-                except (PermissionError, OSError):
-                    show_temp_notification(
-                        f"Error accessing {filepath.relative_to(self.project_path)}",
-                        type="error",
-                    )
-                    continue
+                    except (PermissionError, OSError):
+                        show_temp_notification(
+                            f"Error accessing {filepath.relative_to(self.project_path)}",
+                            type="error",
+                        )
+                        continue
 
-            # Clean up empty directories (optional, based on your needs)
-            if not has_visible_content and dir_path in self.file_items:
-                del self.file_items[dir_path]
+                # Clean up empty directories (optional, based on your needs)
+                if not has_visible_content and dir_path in self.file_items:
+                    del self.file_items[dir_path]
 
-            return has_visible_content
+                return has_visible_content
 
         except Exception as e:
             st.error(f"Error loading directory {dir_path}: {str(e)}")

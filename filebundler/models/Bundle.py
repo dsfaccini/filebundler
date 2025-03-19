@@ -1,6 +1,7 @@
 # filebundler/models/Bundle.py
 import re
 import logging
+import logfire
 
 from datetime import datetime
 from typing import List, Optional
@@ -39,9 +40,15 @@ class Bundle(BaseModel):
     @property
     def last_modified_date(self) -> Optional[datetime]:
         """Get the most recent modification date of any file in the bundle"""
-        return max(
-            datetime.fromtimestamp(fi.path.stat().st_mtime) for fi in self.file_items
-        )
+        with logfire.span(
+            "computing last_modified_date for bundle {name}",
+            name=self.name,
+            _level="debug",
+        ):
+            return max(
+                datetime.fromtimestamp(fi.path.stat().st_mtime)
+                for fi in self.file_items
+            )
 
     @property
     def last_modified_date_str(self) -> str:
@@ -55,7 +62,10 @@ class Bundle(BaseModel):
     @property
     def size_bytes(self) -> int:
         """Get the total size in bytes of all files in the bundle"""
-        return sum(fi.path.stat().st_size for fi in self.file_items)
+        with logfire.span(
+            "computing size_bytes for bundle {name}", name=self.name, _level="debug"
+        ):
+            return sum(fi.path.stat().st_size for fi in self.file_items)
 
     @property
     def size_str(self) -> str:
@@ -65,7 +75,10 @@ class Bundle(BaseModel):
     @property
     def token_count(self) -> int:
         """Get the total token count of all files in the bundle"""
-        return sum(count_tokens(read_file(fi.path)) for fi in self.file_items)
+        with logfire.span(
+            "computing token_count for bundle {name}", name=self.name, _level="debug"
+        ):
+            return sum(count_tokens(read_file(fi.path)) for fi in self.file_items)
 
     @property
     def is_stale(self) -> bool:
@@ -80,22 +93,25 @@ class Bundle(BaseModel):
 
     def prune(self):
         """Remove files that no longer exist from a bundle"""
-        original_count = len(self.file_items)
-        self.file_items = [fi for fi in self.file_items if fi.path.exists()]
+        with logfire.span("pruning bundle {name}", name=self.name):
+            original_count = len(self.file_items)
+            self.file_items = [fi for fi in self.file_items if fi.path.exists()]
 
-        removed_count = original_count - len(self.file_items)
-        if removed_count > 0:
-            warninig_msg = (
-                f"Removed {removed_count} missing files from bundle '{self.name}'"
-            )
-            logger.warning(warninig_msg)
-            show_temp_notification(warninig_msg, type="warning")
+            removed_count = original_count - len(self.file_items)
+            if removed_count > 0:
+                warninig_msg = (
+                    f"Removed {removed_count} missing files from bundle '{self.name}'"
+                )
+                logger.warning(warninig_msg)
+                show_temp_notification(warninig_msg, type="warning")
 
-    # proper xml formatting is not necessary bc llms aren't strict xml parsers
     @property
     def code_export(self):
-        filtered_items = (fi for fi in self.file_items if not fi.is_dir)
-        return f"""<?xml version="1.0" encoding="UTF-8"?>
+        with logfire.span(
+            "generating code_export for bundle {name}", name=self.name, _level="debug"
+        ):
+            filtered_items = (fi for fi in self.file_items if not fi.is_dir)
+            return f"""<?xml version="1.0" encoding="UTF-8"?>
 <documents bundle-name="{self.name}">
 {"\n".join(make_file_section(file_item, i) for i, file_item in enumerate(filtered_items))}
 </documents>"""
