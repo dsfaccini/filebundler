@@ -91,4 +91,4 @@ We currently use tiktoken with the [cl100k_base](https://github.com/openai/tikto
 TODO.md
 
 # LICENSE
-We use GPLv3. Read it here [in this repository](./LICENSE) 
+We use GPLv3. Read it [here](./LICENSE) 

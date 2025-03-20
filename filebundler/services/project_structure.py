@@ -10,7 +10,7 @@ from filebundler.FileBundlerApp import FileBundlerApp
 logger = logging.getLogger(__name__)
 
 
-def generate_project_structure(app: FileBundlerApp):
+def _generate_project_structure(app: FileBundlerApp):
     """
     Generate a markdown representation of the project structure
 
@@ -106,7 +106,7 @@ def save_project_structure(app: FileBundlerApp) -> Path:
         output_file = output_dir / "project-structure.md"
 
         # Generate the structure content
-        structure_content = generate_project_structure(app)
+        structure_content = _generate_project_structure(app)
 
         # Write the content
         output_file.write_text(structure_content, encoding="utf-8")

@@ -55,7 +55,6 @@ def render_selected_files_tab(app: FileBundlerApp):
                 logger.error(f"Save bundle error: {e}", exc_info=True)
                 show_temp_notification(f"Error saving bundle: {str(e)}", type="error")
 
-    # TODO make this section scrollable, set a max height
     if app.selections.selected_file_items:
         st.text(
             "Click on a file to view its content. Click 'x' to remove a file from selection."

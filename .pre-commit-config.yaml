@@ -7,3 +7,4 @@ repos:
         language: system
         files: pyproject.toml
         pass_filenames: false
+        skip: "-nobump"
