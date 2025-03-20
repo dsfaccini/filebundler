@@ -1,4 +1,3 @@
-# .pre-commit-config.yaml
 repos:
   - repo: local
     hooks:
