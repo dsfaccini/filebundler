@@ -118,6 +118,8 @@ class SelectionsManager:
             for select_file_item in selected_file_items:
                 select_file_item.selected = True
 
+            logger.info(f"Loaded selections: {self.selected_file_items = }")
+
     def select_all_files(self):
         """Select all files in the project"""
         with logfire.span(

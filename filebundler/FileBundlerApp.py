@@ -3,7 +3,7 @@ import logging
 import logfire
 import streamlit as st
 
-from typing import Dict
+from typing import Dict, List
 from pathlib import Path
 
 from filebundler.models.FileItem import FileItem
@@ -15,7 +15,7 @@ from filebundler.managers.SelectionsManager import SelectionsManager
 
 from filebundler.ui.notification import show_temp_notification
 
-from filebundler.utils.project_utils import ignore_patterns, sort_files
+from filebundler.utils.project_utils import invalid_path, sort_files
 
 logger = logging.getLogger(__name__)
 
@@ -57,7 +57,6 @@ class FileBundlerApp(AppProtocol):
         )
 
         # Load saved selections for this project if exists
-        # logger.info(f"{self.file_items is self.selections.file_items = }")
         self.selections.load_selections()
 
         # Initialize the bundle manager with the project path
@@ -82,16 +81,13 @@ class FileBundlerApp(AppProtocol):
             with logfire.span(
                 "loading directory {dir_path}",
                 dir_path=dir_path.relative_to(self.project_path),
+                _level="debug",
             ):
-                # Filter items efficiently using relative paths
-                filtered_filepaths = [
-                    filepath
-                    for filepath in list(dir_path.iterdir())
-                    if not ignore_patterns(
-                        filepath.relative_to(self.project_path),
-                        project_settings.ignore_patterns,
-                    )
-                ]
+                filtered_filepaths: List[Path] = []
+                for filepath in dir_path.iterdir():
+                    rel_path = filepath.relative_to(self.project_path)
+                    if not invalid_path(rel_path, project_settings.ignore_patterns):
+                        filtered_filepaths.append(filepath)
 
                 # Apply max_files limit with warning
                 if len(filtered_filepaths) > project_settings.max_files:
@@ -99,16 +95,16 @@ class FileBundlerApp(AppProtocol):
                         f"Directory contains {len(filtered_filepaths)} files, exceeding limit of {project_settings.max_files}. "
                         f"Truncating to {project_settings.max_files} files."
                     )
-                    filepaths = sort_files(filtered_filepaths, project_settings)[
+                    sorted_filepaths = sort_files(filtered_filepaths, project_settings)[
                         : project_settings.max_files
                     ]
                 else:
-                    filepaths = sort_files(filtered_filepaths, project_settings)
+                    sorted_filepaths = sort_files(filtered_filepaths, project_settings)
 
                 has_visible_content = False
 
                 # Process filepaths in a single pass
-                for filepath in filepaths:
+                for filepath in sorted_filepaths:
                     try:
                         # Create FileItem once and reuse
                         file_item = FileItem(
@@ -151,3 +147,24 @@ class FileBundlerApp(AppProtocol):
         except Exception as e:
             st.error(f"Error loading directory {dir_path}: {str(e)}")
             return False
+
+    def paths_to_file_items(self, paths: List[Path]):
+        file_items: List[FileItem] = []
+        for file_path in paths:
+            file_item = self.file_items.get(file_path.resolve())
+            if file_item:
+                file_items.append(file_item)
+            else:
+                logfire.warning(
+                    f"the following file doesn't exist in the app: {file_path.resolve()}"
+                )
+                show_temp_notification(
+                    f"The following file doesn't exist in the app: {file_path.resolve()}. "
+                    f"""Reasons why you may be seeing this notification: 
+    - because an LLM response included a file that was not in the app
+    - because the file was removed and the app has not been refreshed
+    - because a bundle that loaded contained a file that was deleted""",
+                    type="error",
+                )
+                continue
+        return file_items

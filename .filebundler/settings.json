@@ -1,15 +1,42 @@
 {
     "ignore_patterns": [
         "venv/**",
+        "venv",
         ".venv/**",
+        ".venv",
         "node_modules/**",
-        ".git/**",
-        "**/__pycache__/**",
-        ".ruff_cache/**",
-        "uv.lock",
+        "node_modules",
         ".mypy_cache/**",
         ".pytest_cache/**",
-        "*credentials.json"
+        ".git/**",
+        ".git",
+        ".ruff_cache",
+        ".ruff_cache/**",
+        "*/__pycache__",
+        "*/.ipynb_checkpoints",
+        "**/.vscode/**",
+        "package-lock.json",
+        "*credentials.json",
+        ".DS_Store",
+        "*.lock",
+        "*.jpg",
+        "*.jpeg",
+        "*.png",
+        "*.gif",
+        "*.pdf",
+        "*.zip",
+        "*.exe",
+        "*.dll",
+        "*.pyc",
+        "*.so",
+        "*.bin",
+        "*.dat"
     ],
-    "max_files": 500
+    "max_files": 500,
+    "files_first": true,
+    "auto_bundle_settings": {
+        "auto_refresh_project_structure": true,
+        "auto_include_bundle_files": false,
+        "user_prompt": "Given the TODOs in the project, select the files that are relevant to the tasks."
+    }
 }

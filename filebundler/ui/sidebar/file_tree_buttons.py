@@ -4,7 +4,6 @@ import streamlit as st
 
 from filebundler.FileBundlerApp import FileBundlerApp
 from filebundler.services.project_structure import (
-    generate_project_structure,
     save_project_structure,
 )
 from filebundler.ui.notification import show_temp_notification
@@ -26,7 +25,7 @@ def render_file_tree_buttons(app: FileBundlerApp):
             "Export Structure", key="export_structure", use_container_width=True
         ):
             try:
-                output_file = save_project_structure(app.project_path)
+                output_file = save_project_structure(app)
 
                 show_temp_notification(
                     f"Project structure exported to {output_file.relative_to(app.project_path)}",

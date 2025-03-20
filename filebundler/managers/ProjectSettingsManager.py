@@ -6,6 +6,8 @@ from pathlib import Path
 from filebundler.utils import json_dump, read_file
 from filebundler.models.ProjectSettings import ProjectSettings
 
+logger = logging.getLogger(__name__)
+
 
 class ProjectSettingsManager:
     def __init__(self, project_path: Path):
@@ -24,7 +26,7 @@ class ProjectSettingsManager:
             json_text = read_file(self.settings_file)
             self.project_settings = ProjectSettings.model_validate_json(json_text)
         except Exception as e:
-            logging.error(
+            logger.error(
                 f"Error loading project settings from {self.settings_file}: {str(e)}"
             )
 
@@ -34,7 +36,7 @@ class ProjectSettingsManager:
         try:
             with open(self.settings_file, "w") as f:
                 json_dump(self.project_settings.model_dump(), f)
-
+            logger.info(f"Project settings saved to {self.settings_file}")
             return True
         except Exception as e:
             print(f"Error saving project settings: {str(e)}")

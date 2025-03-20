@@ -16,8 +16,9 @@ def sort_files(files: List[Path], ps: ProjectSettings):
     )
 
 
-def ignore_patterns(relative_path: Path, ignore_patterns: List[str]):
+def invalid_path(relative_path: Path, ignore_patterns: List[str]):
     """Check if file matches any ignore patterns"""
-    return any(
-        fnmatch.fnmatch(str(relative_path), pattern) for pattern in ignore_patterns
-    )
+    for pattern in ignore_patterns:
+        if fnmatch.fnmatch(relative_path.as_posix(), pattern):
+            return True
+    return False

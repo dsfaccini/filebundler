@@ -6,11 +6,9 @@ import streamlit as st
 from pathlib import Path
 
 from filebundler.constants import DISPLAY_NR_OF_RECENT_PROJECTS
-from filebundler.services.project_structure import (
-    generate_project_structure,
-    save_project_structure,
-)
+
 from filebundler.ui.notification import show_temp_notification
+from filebundler.services.project_structure import save_project_structure
 
 from filebundler.FileBundlerApp import FileBundlerApp
 from filebundler.models.GlobalSettings import GlobalSettings
@@ -52,7 +50,7 @@ def load_project(project_path: str):
         # TODO lets do this asynchonously, we don't want to slow down the loading process
         # we auto generate this file for the user
         # exceptions are caught inside the function
-        save_project_structure(app.project_path)
+        save_project_structure(app)
         return True
     except Exception as e:
         logger.error(f"Error loading project: {e}", exc_info=True)

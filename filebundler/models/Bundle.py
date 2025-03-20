@@ -99,11 +99,11 @@ class Bundle(BaseModel):
 
             removed_count = original_count - len(self.file_items)
             if removed_count > 0:
-                warninig_msg = (
+                warning_msg = (
                     f"Removed {removed_count} missing files from bundle '{self.name}'"
                 )
-                logger.warning(warninig_msg)
-                show_temp_notification(warninig_msg, type="warning")
+                logger.warning(warning_msg)
+                show_temp_notification(warning_msg, type="warning")
 
     def export_code(self, further_documents: List[FileItem] = []) -> str:
         with logfire.span(

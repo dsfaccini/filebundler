@@ -24,6 +24,7 @@ class BundleManager(BaseModel):
     """
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
+
     project_path: Optional[Path] = None
     bundles_dict: Dict[str, Bundle] = {}
     current_bundle: Optional[Bundle] = None

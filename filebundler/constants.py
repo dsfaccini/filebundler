@@ -25,39 +25,54 @@ class EnvironmentSettings(BaseSettings):
 
 env_settings = EnvironmentSettings()
 if env_settings.is_dev:
-    os.environ["ANTHROPIC_API_KEY"] = env_settings.anthropic_api_key
+    os.environ["ANTHROPIC_API_KEY"] = env_settings.anthropic_api_key  # type: ignore
 
 LOG_LEVEL = logging._nameToLevel[env_settings.log_level.upper()]
 
 DEFAULT_MAX_RENDER_FILES = 500
 
 DEFAULT_IGNORE_PATTERNS = [
+    # root dir folders
     "venv/**",
+    "venv",
     ".venv/**",
+    ".venv",
     "node_modules/**",
-    ".git/**",
-    "**/__pycache__/**",
-    "package-lock.json",
-    "yarn.lock",
-    ".DS_Store",
-    "**/.ipynb_checkpoints/**",
-    "**/.vscode/**",
-    "**/.jpg",
-    "**/.jpeg",
-    "**/.png",
-    "**/.gif",
-    "**/.pdf",
-    "**/.zip",
-    "**/.exe",
-    "**/.dll",
-    "**/.pyc",
-    "**/.so",
-    "**/.bin",
-    "**/.dat",
+    "node_modules",
     ".mypy_cache/**",
+    ".mypy_cache",
     ".pytest_cache/**",
+    ".pytest_cache",
+    ".git/**",
+    ".git",
+    ".ruff_cache/**",
+    ".ruff_cache",
+    ".vscode/**",
+    ".vscode",
+    # recursive folders
+    "*/__pycache__",
+    "*/.ipynb_checkpoints",
+    # files
+    ".env",
+    ".DS_Store",
     "*credentials.json",
+    "package-lock.json",
+    # extensions
+    "*.lock",
+    "*.jpg",
+    "*.jpeg",
+    "*.png",
+    "*.gif",
+    "*.pdf",
+    "*.zip",
+    "*.exe",
+    "*.dll",
+    "*.pyc",
+    "*.so",
+    "*.bin",
+    "*.dat",
 ]
+
 
 DISPLAY_NR_OF_RECENT_PROJECTS = 5
 SELECTIONS_BUNDLE_NAME = "default-bundle"

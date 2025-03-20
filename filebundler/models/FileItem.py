@@ -10,8 +10,18 @@ class FileItem(BaseModel):
     path: Path
     project_path: Path
     parent: Optional["FileItem"] = Field(None, exclude=True)
-    children: List["FileItem"] = Field([], exclude=True)
+    children: List["FileItem"] = Field([], exclude=True, repr=False)
     selected: bool = Field(False, exclude=True)
+
+    # NOTE: activate to debug unexpected selections or deselections
+    # def __setattr__(self, name, value):
+    #     import logging
+    #     if name == "selected":
+    #         logging.warning(
+    #             f"Reassigning 'selected' to {value} for FileItem: {self.path}",
+    #             stack_info=True,
+    #         )
+    #     super().__setattr__(name, value)
 
     @model_validator(mode="after")
     def validate_file_item(self) -> Self:
@@ -56,6 +66,9 @@ class FileItem(BaseModel):
                 self.parent.selected = all(
                     [child.selected for child in self.parent.children]
                 )
+
+    def __hash__(self):
+        return hash(self.path.resolve().as_posix())
 
     def __str__(self):
         return self.relative.as_posix()
