@@ -1,0 +1,10 @@
+# .pre-commit-config.yaml
+repos:
+  - repo: local
+    hooks:
+      - id: increase-version
+        name: Increase version
+        entry: python scripts/increase_version.py patch
+        language: system
+        files: pyproject.toml
+        pass_filenames: false

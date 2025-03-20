@@ -1,6 +1,6 @@
 [project]
 name = "file-bundler"
-version = "0.1.0"
+version = "0.9.1"
 description = "File Bundler is an app to bundle project files together and use them for LLM prompting. It helps estimate and optimize token and context usage."
 readme = "README.md"
 requires-python = ">=3.12"
@@ -14,10 +14,28 @@ dependencies = [
     "pydantic-ai-slim[anthropic]>=0.0.42",
     "pydantic-ai[logfire]>=0.0.42",
 ]
+authors = [
+    { name = "DavidSF", email = "david@filebundler.com" }
+]
+license = "GPL-3.0-or-later"
+repository = "https://github.com/dsfaccini/filebundler"
+
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Utilities",
+]
 
 [dependency-groups]
 dev = [
     "mypy>=1.15.0",
     "ruff>=0.9.10",
     "pytest>=8.3.5",
+    "pre-commit>=4.2.0",
 ]
+
+# [build-system]

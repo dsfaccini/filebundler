@@ -20,6 +20,9 @@ file-bundler/
 │   ├── 📄 project-structure.md
 │   ├── 📄 selections.json
 │   └── 📄 settings.json
+├── 📁 .github/
+│   └── 📁 workflows/
+│       └── 📄 python-publish.yml
 ├── 📁 .logfire/
 │   └── 📄 .gitignore
 ├── 📁 .streamlit/
@@ -95,5 +98,6 @@ file-bundler/
 ├── 📄 pyproject.toml
 ├── 📄 README.md
 ├── 📄 test-utils.ipynb
+├── 📄 TODO-further-out.md
 └── 📄 TODO.md
 ```
