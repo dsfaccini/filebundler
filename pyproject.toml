@@ -1,6 +1,6 @@
 [project]
-name = "file-bundler"
-version = "0.9.3"
+name = "filebundler"
+version = "0.9.5"
 description = "File Bundler is an app to bundle project files together and use them for LLM prompting. It helps estimate and optimize token and context usage."
 readme = "README.md"
 requires-python = ">=3.12"
@@ -38,6 +38,10 @@ dev = [
     "pre-commit>=4.2.0",
 ]
 
+[project.urls]
+Homepage = "https://github.com/dsfaccini/filebundler"
+Issues = "https://github.com/dsfaccini/filebundler/issues"
+
 # Script that runs when you type "filebundler" or "uvx filebundler"
 [project.scripts]
 filebundler = "filebundler.main:main"
@@ -48,3 +52,15 @@ filebundler = "filebundler.app:run"
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["filebundler/filebundler"]
+
+# ValueError: Unable to determine which files to ship inside the wheel using the following heuristics: https://hatch.pypa.io/latest/plugins/builder/wheel/#default-file-selection
+# 
+# The most likely cause of this is that there is no directory that matches the name of your project (file_bundler).
+# 
+# At least one file selection option must be defined in the `tool.hatch.build.targets.wheel` table, see: https://hatch.pypa.io/latest/config/build/
+# 
+# As an example, if you intend to ship a directory named `foo` that resides within a `src` directory located at the root of your project, you can define the following:
+# 

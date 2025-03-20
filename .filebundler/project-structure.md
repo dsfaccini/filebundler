@@ -1,7 +1,7 @@
-# Project Structure: file-bundler
+# Project Structure: filebundler
 ## Directory Structure
 ```
-file-bundler/
+filebundler/
 ├── 📁 .cursor/
 │   └── 📁 rules/
 │       ├── 📄 app-flow-user.md

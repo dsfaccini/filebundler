@@ -3,43 +3,43 @@
   "file_items": [
     {
       "path": ".filebundler/selections.json",
-      "project_path": "C:/Users/lobsp/projects/file-bundler"
+      "project_path": "C:/Users/lobsp/projects/filebundler"
     },
     {
       "path": ".filebundler/settings.json",
-      "project_path": "C:/Users/lobsp/projects/file-bundler"
+      "project_path": "C:/Users/lobsp/projects/filebundler"
     },
     {
       "path": "filebundler/managers/BundleManager.py",
-      "project_path": "C:/Users/lobsp/projects/file-bundler"
+      "project_path": "C:/Users/lobsp/projects/filebundler"
     },
     {
       "path": "filebundler/managers/SelectionsManager.py",
-      "project_path": "C:/Users/lobsp/projects/file-bundler"
+      "project_path": "C:/Users/lobsp/projects/filebundler"
     },
     {
       "path": "filebundler/models/Bundle.py",
-      "project_path": "C:/Users/lobsp/projects/file-bundler"
+      "project_path": "C:/Users/lobsp/projects/filebundler"
     },
     {
       "path": "filebundler/models/BundleMetadata.py",
-      "project_path": "C:/Users/lobsp/projects/file-bundler"
+      "project_path": "C:/Users/lobsp/projects/filebundler"
     },
     {
       "path": "filebundler/models/FileItem.py",
-      "project_path": "C:/Users/lobsp/projects/file-bundler"
+      "project_path": "C:/Users/lobsp/projects/filebundler"
     },
     {
       "path": "filebundler/constants.py",
-      "project_path": "C:/Users/lobsp/projects/file-bundler"
+      "project_path": "C:/Users/lobsp/projects/filebundler"
     },
     {
       "path": "filebundler/FileBundlerApp.py",
-      "project_path": "C:/Users/lobsp/projects/file-bundler"
+      "project_path": "C:/Users/lobsp/projects/filebundler"
     },
     {
       "path": ".filebundler/bundles/settings-and-persistence.json",
-      "project_path": "C:/Users/lobsp/projects/file-bundler"
+      "project_path": "C:/Users/lobsp/projects/filebundler"
     }
   ],
   "metadata": {

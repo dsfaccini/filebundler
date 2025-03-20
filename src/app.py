@@ -1,10 +1,11 @@
-# filebundler/app.py
+# app.py
 import sys
 import logging
 import logfire
 import streamlit as st
 
 from filebundler import constants
+
 from filebundler.state import initialize_session_state
 
 from filebundler.ui.tabs.debug import render_debug_tab
@@ -36,7 +37,7 @@ def cleanup():
     # NOTE we can add any cleanup code hereif we need it (close file handles, save state, etc.)
 
 
-def run():
+def main():
     """The actual Streamlit application logic"""
     try:
         st.set_page_config(page_title="File Bundler", layout="wide")
@@ -77,6 +78,7 @@ def run():
                 )
 
                 with tab1:
+                    logging.info("Rendering selected files tab")
                     render_selected_files_tab(st.session_state.app)
 
                 with tab2:

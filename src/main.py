@@ -1,11 +1,11 @@
-# filebundler/main.py
+# main.py
 import os
 import sys
 import signal
 import atexit
 import logging
 
-from filebundler.app import run, cleanup
+import app
 
 logger = logging.getLogger(__name__)
 
@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 def signal_handler(sig, frame):
     """Handle keyboard interrupt and other termination signals"""
     logger.info(f"Received signal {sig}, shutting down...")
-    cleanup()
+    app.cleanup()
     sys.exit(0)
 
 
@@ -23,8 +23,8 @@ def main():
     signal.signal(signal.SIGINT, signal_handler)  # Ctrl+C
     signal.signal(signal.SIGTERM, signal_handler)  # Terminal closing
 
-    # Register cleanup to be called on normal exit
-    atexit.register(cleanup)
+    # Register app.cleanup to be called on normal exit
+    atexit.register(app.cleanup)
 
     # When called as an installed package, we need to run Streamlit with this file
     import streamlit.web.cli as stcli
@@ -41,7 +41,7 @@ def main():
     except KeyboardInterrupt:
         # Handle Ctrl+C at the top level
         logger.info("Keyboard interrupt received, exiting...")
-        cleanup()
+        app.cleanup()
         sys.exit(0)
 
 
@@ -49,9 +49,9 @@ if __name__ == "__main__":
     # Register signal handlers here too for development mode
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
-    atexit.register(cleanup)
+    atexit.register(app.cleanup)
 
     try:
-        run()
+        app.main()
     except KeyboardInterrupt:
         sys.exit(0)
