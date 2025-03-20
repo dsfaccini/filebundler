@@ -9,7 +9,6 @@ from typing import Any, Optional, List
 
 from pydantic import ConfigDict, field_serializer
 
-from filebundler.models.FileItem import FileItem
 from filebundler.models.AppProtocol import AppProtocol
 
 from filebundler.utils import json_dump, read_file, BaseModel
@@ -96,7 +95,7 @@ class SelectionsManager:
         with logfire.span(
             "saving selections for project {project}", project=self.project_path.name
         ):
-            data = [file_item.model_dump() for file_item in self.selected_file_items]
+            data = [file_item.path.as_posix() for file_item in self.selected_file_items]
             self._persist_to_selections_file(data)
 
     def load_selections(self):
@@ -108,25 +107,16 @@ class SelectionsManager:
 
             selections_array = self._load_json_data("selections.json")
             if not selections_array:
+                logger.warning("There were no selections to load")
                 return
 
-            selected_file_items = [
-                FileItem.model_validate(item) for item in selections_array
-            ]
+            selected_file_items = self.app.paths_to_file_items(
+                [Path(p).resolve() for p in selections_array]
+            )
 
             # Set selections
             for select_file_item in selected_file_items:
-                file_item = self.app.file_items.get(select_file_item.path)
-                if file_item:
-                    file_item.selected = True
-                else:
-                    logger.warning(
-                        f"Error restoring selection for {select_file_item.path}"
-                    )
-                    show_temp_notification(
-                        f"Couldn't find '{select_file_item.relative}' in this project",
-                        type="warning",
-                    )
+                select_file_item.selected = True
 
     def select_all_files(self):
         """Select all files in the project"""
