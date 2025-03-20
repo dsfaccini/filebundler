@@ -2,6 +2,7 @@
 .env 
 *.ipynb
 .mypy_cache/
+TODO-further-out.md
 
 # Python-generated files
 __pycache__/

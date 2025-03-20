@@ -13,7 +13,6 @@ file-bundler/
 │       └── 📄 testing.md
 ├── 📁 .filebundler/
 │   ├── 📁 bundles/
-│   │   ├── 📄 auto-bundle-and-bug-fixes.json
 │   │   ├── 📄 bundle-management.json
 │   │   ├── 📄 bundles-and-exports.json
 │   │   ├── 📄 settings-and-persistence.json
@@ -66,6 +65,7 @@ file-bundler/
 │   │   │   ├── 📁 auto_bundler/
 │   │   │   │   ├── 📄 before_submit.py
 │   │   │   │   └── 📄 render_auto_bundler.py
+│   │   │   ├── 📄 debug.py
 │   │   │   ├── 📄 export_contents.py
 │   │   │   ├── 📄 global_settings_panel.py
 │   │   │   ├── 📄 manage_bundles.py
@@ -89,6 +89,7 @@ file-bundler/
 ├── 📄 .env.example
 ├── 📄 .gitignore
 ├── 📄 .python-version
+├── 📄 LICENSE
 ├── 📄 main.py
 ├── 📄 mypy.ini
 ├── 📄 pyproject.toml

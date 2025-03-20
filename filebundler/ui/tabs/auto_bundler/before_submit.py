@@ -2,6 +2,7 @@
 import logfire
 import streamlit as st
 
+from filebundler import constants
 from filebundler.models.Bundle import Bundle
 from filebundler.FileBundlerApp import FileBundlerApp
 from filebundler.managers.ProjectSettingsManager import ProjectSettingsManager
@@ -95,7 +96,9 @@ def render_auto_bundler_before_submit_tab(
     model_type = st.selectbox(
         "Select LLM model",
         options=ANTHROPIC_MODEL_NAMES,
-        index=2,  # Default to Claude 3.5 Haiku
+        index=2
+        if constants.env_settings.is_dev
+        else 1,  # Default to Haiku 3.5 in dev, Sonnet 3.5 in prod
         key="auto_bundler_model_type",
     )
 

@@ -1,13 +1,9 @@
-1. [QOL] modify the show_notification.. utility so it stacks notifications. currently, new notifications get displayed on top of not-yet vansihed notification. when two notifications get trigger at very near times, the older notification cannot be read.
-   1. fix by stacking them! we can have an absolute container on the right side of the page and insert notification elements that vanish. new notifications start at the bottom, so the latest notifications get pushed to the top. 
-2. [TEST] we haven't written any test
-3. [PACKAGE] package as a library so people can install it and run it
-   1. we need to add a license before packaging! apache 2.0 I guess?
-   2. setup github actions AND SOMETHING TO MANAGE THE RELEASE VERSION!
+1. [TEST] we haven't written any test
+2. [PACKAGE] package as a library so people can install it and run it
+   1. setup github actions AND SOMETHING TO MANAGE THE RELEASE VERSION!
       1. we'll start with 0.9
-4. [DOCS] add pictures to README
-5. [DOCS] make a video
-
+3. [DOCS] add pictures to README
+4. [DOCS] make a video
 
 # IGNORE FOR NOW (may become relevant later)
 1. display file name in the file tree as they are
@@ -19,3 +15,6 @@
    2. but I'm not sure how to best implement the re-ordering in the UI 
    3. drag and drop would be great be appearently this is only possible with a (not very widely used) library
    4. we may be better off making a component ourselves
+5. [QOL] refactor state modifications into a "state" folder to better track keys
+   1. unnecessary for the moment as we're not using that many keys
+   2. as an example, the state logic for auto-bundling is entirely contained in the two files under ui/tabs/auto_bundler

@@ -6,6 +6,7 @@ import streamlit as st
 from filebundler import constants
 from filebundler.state import initialize_session_state
 
+from filebundler.ui.tabs.debug import render_debug_tab
 from filebundler.ui.tabs.manage_bundles import render_saved_bundles
 from filebundler.ui.tabs.selected_files import render_selected_files_tab
 from filebundler.ui.tabs.export_contents import render_export_contents_tab
@@ -89,10 +90,7 @@ def main():
 
         if constants.env_settings.is_dev and st.session_state.app:
             with debug_tab:
-                with st.echo():
-                    st.session_state.app.selections.selected_file_items
-                    st.session_state.app.bundles.current_bundle
-
+                render_debug_tab()
     except Exception as e:
         logger.error(f"Application error: {e}", exc_info=True)
         st.error(f"An error occurred: {str(e)}")
