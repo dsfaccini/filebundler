@@ -1,61 +1,15 @@
 # filebundler/lib/llm/auto_bundle.py
-from pathlib import Path
-from typing import Optional, List
+import logfire
 
-from pydantic import Field
+from filebundler.models.Bundle import Bundle
+from filebundler.models.llm.AutoBundleResponse import AutoBundleResponse
 
-from filebundler.utils import BaseModel
+from filebundler.ui.notification import show_temp_notification
+
+from filebundler.lib.llm.claude import anthropic_synchronous_prompt
 
 # from typing import Literal
-# from filebundler.models.Bundle import Bundle
 # from filebundler.FileBundlerApp import FileBundlerApp
-
-
-class _AutoBundleResponseFiles(BaseModel):
-    """Files categorized by relevance. Keys are 'very_likely_useful' and 'probably_useful', values are lists of file paths."""
-
-    very_likely_useful: List[Path] = Field(
-        description="Files that are very likely to be useful. In relative paths."
-    )
-    probably_useful: List[Path] = Field(
-        description="Files that are probably useful. In relative paths."
-    )
-
-
-class AutoBundleResponse(BaseModel):
-    """Response structure from the LLM for auto-bundling."""
-
-    name: str = Field(description="Name for the auto-generated bundle")
-    files: _AutoBundleResponseFiles = Field(
-        description="Files categorized by relevance. Keys are 'very_likely_useful' and 'probably_useful', values are lists of file paths."
-    )
-    message: Optional[str] = Field(
-        default=None,
-        description="Optional message with advice or explanation from the LLM",
-    )
-
-    def to_bundle():
-        # def to_bundle(
-        #     self, app: FileBundlerApp, likelihood: Literal["likely", "all"] = "likely"
-        # ) -> Bundle:
-        #     file_items = [
-        #         app.file_items.get(file_path)
-        #         for file_path in self.files.very_likely_useful
-        #         if file_path in app.file_items
-        #     ]
-        #     if likelihood == "all":
-        #         file_items.extend(
-        #             [
-        #                 app.file_items.get(file_path)
-        #                 for file_path in self.files.probably_useful
-        #                 if file_path in app.file_items
-        #             ]
-        #         )
-        #     return Bundle(
-        #         name=self.name,
-        #         file_items=file_items,
-        #     )
-        pass
 
 
 def get_system_prompt() -> str:
@@ -69,3 +23,19 @@ def get_system_prompt() -> str:
         "The user will provide you with information about their project, like the file structure of their project, bundles that they may already have created, and possibly files and their contents that they deem relevant to their task. "
         "You must answer in the JSON format that we provide you with. In this JSON format you may or may not include a message as advise to the user."
     )
+
+
+def request_auto_bundle(temp_bundle: Bundle, user_prompt: str, model_type: str):
+    try:
+        full_prompt = f"""{temp_bundle.export_code()}\n\n{user_prompt}"""
+
+        return anthropic_synchronous_prompt(
+            model_type=model_type,
+            system_prompt=get_system_prompt(),
+            user_prompt=full_prompt,
+            result_type=AutoBundleResponse,
+        )
+
+    except Exception as e:
+        logfire.error(f"Error in auto-bundle process: {e}", _exc_info=True)
+        show_temp_notification(f"Error: {str(e)}", type="error")

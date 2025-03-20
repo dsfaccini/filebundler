@@ -1,0 +1,27 @@
+{
+    "name": "auto-bundle-and-bug-fixes",
+    "file_items": [
+        {
+            "path": ".filebundler/project-structure.md",
+            "project_path": "C:/Users/lobsp/projects/file-bundler"
+        },
+        {
+            "path": "filebundler/ui/tabs/auto_bundler/render_auto_bundler.py",
+            "project_path": "C:/Users/lobsp/projects/file-bundler"
+        },
+        {
+            "path": "TODO.md",
+            "project_path": "C:/Users/lobsp/projects/file-bundler"
+        }
+    ],
+    "metadata": {
+        "created_at": "2025-03-20T02:29:57.050185",
+        "export_stats": {
+            "last_exported": null,
+            "export_count": 0
+        }
+    },
+    "last_modified_date": "2025-03-20T02:25:44.563940",
+    "size_bytes": 9408,
+    "token_count": 2341
+}

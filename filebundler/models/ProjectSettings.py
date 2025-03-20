@@ -9,7 +9,8 @@ class AutoBundleSettings(BaseModel):
     """Settings for the Auto-Bundle feature."""
 
     auto_refresh_project_structure: bool = True
-    auto_include_bundle_files: bool = True
+    auto_include_bundle_files: bool = False
+    user_prompt: str = "Given the TODOs in the project, select the files that are relevant to the tasks."
 
 
 class ProjectSettings(BaseModel):
@@ -17,3 +18,6 @@ class ProjectSettings(BaseModel):
     max_files: int = DEFAULT_MAX_RENDER_FILES
     files_first: bool = True
     auto_bundle_settings: AutoBundleSettings = AutoBundleSettings()
+
+
+__all__ = ["ProjectSettings"]

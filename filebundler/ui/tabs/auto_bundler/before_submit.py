@@ -2,12 +2,10 @@
 import logfire
 import streamlit as st
 
+from filebundler.models.Bundle import Bundle
 from filebundler.FileBundlerApp import FileBundlerApp
-from filebundler.lib.llm.auto_bundle import request_auto_bundle
 from filebundler.managers.ProjectSettingsManager import ProjectSettingsManager
 
-from filebundler.lib.llm.claude import ANTHROPIC_MODEL_NAMES
-from filebundler.models.Bundle import Bundle
 from filebundler.services.project_structure import save_project_structure
 
 from filebundler.ui.notification import show_temp_notification
@@ -15,13 +13,17 @@ from filebundler.ui.components.selectable_file_items import (
     render_selectable_file_items_list,
 )
 
+from filebundler.lib.llm.claude import ANTHROPIC_MODEL_NAMES
+from filebundler.lib.llm.auto_bundle import request_auto_bundle
+
 
 def render_auto_bundler_before_submit_tab(
     app: FileBundlerApp, psm: ProjectSettingsManager
 ):
+    spinner = st.spinner("Preparing files and sending to LLM...")
+
     # Auto-select files when the tab is opened
     if not st.session_state.get("auto_bundle_initialized", False):
-        rerender = False
         with logfire.span("initializing auto-bundle tab"):
             msgs = []
             try:
@@ -60,24 +62,22 @@ def render_auto_bundler_before_submit_tab(
                 show_temp_notification(f"Error initializing: {str(e)}", type="error")
                 return
 
-        if rerender:
-            st.rerun()
-
-    # Display selected files in an expander
-    selected_files_count = app.selections.nr_of_selected_files
-    if selected_files_count == 0:
+    if app.selections.nr_of_selected_files == 0:
         st.info(
             "Select at least one file for the LLM. "
             "For example the project-structure.md or your TODO.md files."
         )
         return
 
-    with st.expander(f"Selected files ({selected_files_count})", expanded=False):
+    with st.expander(
+        f"Selected files ({app.selections.nr_of_selected_files})", expanded=False
+    ):
         render_selectable_file_items_list(
             app,
             key_prefix="auto_bundler",
             from_items=app.selections.selected_file_items,
         )
+
     # Text area for user prompt
     user_prompt = st.text_area(
         "Enter your prompt for the LLM",
@@ -99,15 +99,28 @@ def render_auto_bundler_before_submit_tab(
         key="auto_bundler_model_type",
     )
 
+    disable_button = (
+        app.selections.nr_of_selected_files == 0
+        or not user_prompt
+        # this is no use because the user can re-click before this happens...
+        or st.session_state.get("submitting_to_llm", None) is not None
+        or st.session_state.get("auto_bundle_response", None) is not None
+    )
+    # Submit button
     if st.button(
         "Submit to LLM",
-        disabled=selected_files_count == 0 or not user_prompt,
+        disabled=disable_button,
         key="auto_bundler_submit_to_llm",
     ):
         if not user_prompt or not model_type:
             st.error("The app state is broken - missing user_prompt or model_type")
             return
-        with st.spinner("Preparing files and sending to LLM..."):
+        st.session_state["submitting_to_llm"] = True
+        # BUG not a bug per say, the spinner is shown below the button
+        # the button thus remains clickable
+        # which is a problem bc the user can click multiple times if they are impatient
+        # we need a fix so the user can't click multiple times
+        with spinner:
             temp_bundle = Bundle(
                 name="temp-auto-bundle",
                 file_items=app.selections.selected_file_items,
@@ -119,4 +132,5 @@ def render_auto_bundler_before_submit_tab(
                 st.error("Error getting auto-bundle response")
                 return
             st.session_state["auto_bundle_response"] = auto_bundle_response
+            st.session_state["submitting_to_llm"] = True
             st.rerun()

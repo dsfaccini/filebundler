@@ -15,8 +15,8 @@ import filebundler.lib.llm.utils as llm_utils
 # NOTE sadly we need to maintain these manually
 ANTHROPIC_MODEL_NAMES = [
     "claude-3-7-sonnet-latest",
-    "claude-3-5-haiku-latest",
     "claude-3-5-sonnet-latest",
+    "claude-3-5-haiku-latest",
     "claude-3-opus-latest",
 ]
 
@@ -36,23 +36,21 @@ def anthropic_synchronous_prompt(
         model_type: The LLM model to use
         system_prompt: The system prompt text
         user_prompt: The user's prompt text
+        result_type: The type of the result to return
 
     Returns:
         Structured response from the LLM
     """
     api_key = llm_utils.get_api_key(llm_utils.ProviderApiKey.ANTHROPIC)
-    with logfire.span(
-        "prompting LLM for auto-bundle", model=model_type.value, _level="info"
-    ):
+    with logfire.span("prompting LLM for auto-bundle", model=model_type, _level="info"):
         model = AnthropicModel(
-            # ModelType(model_type).value #  we don't validte here bc the options come from the selectbox
+            # ModelType(model_type).value #  we don't validate here bc the options come from the selectbox
             model_type,
             provider=AnthropicProvider(api_key=api_key),
         )
+        # NOTE on instrument https://ai.pydantic.dev/logfire/#using-logfire
         agent = Agent(
-            model,
-            result_type=result_type,
-            system_prompt=system_prompt,
+            model, result_type=result_type, system_prompt=system_prompt, instrument=True
         )
 
         try:
