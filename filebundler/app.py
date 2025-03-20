@@ -1,4 +1,4 @@
-# main.py
+# filebundler/app.py
 import logging
 import logfire
 import streamlit as st

@@ -1,6 +1,7 @@
 # increase_version_regex.py
 import re
 import argparse
+import subprocess
 
 
 def increase_version_regex(pyproject_path: str, part: str) -> None:
@@ -51,3 +52,4 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     increase_version_regex(args.pyproject, args.part)
+    subprocess.run(["git", "add", "pyproject.toml"], check=True)
