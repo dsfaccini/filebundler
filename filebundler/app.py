@@ -1,4 +1,5 @@
 # filebundler/app.py
+import sys
 import logging
 import logfire
 import streamlit as st
@@ -19,6 +20,7 @@ from filebundler.ui.sidebar.project_selection import render_project_selection
 
 from filebundler.ui.notification import show_temp_notification
 
+# NOTE we do this here because this is the entry point for the Streamlit app
 logfire.configure(send_to_logfire="if-token-present")
 
 logging.basicConfig(
@@ -28,7 +30,14 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-def main():
+def cleanup():
+    """Perform any necessary cleanup operations before exit"""
+    logger.info("FileBundler shutting down gracefully...")
+    # NOTE we can add any cleanup code hereif we need it (close file handles, save state, etc.)
+
+
+def run():
+    """The actual Streamlit application logic"""
     try:
         st.set_page_config(page_title="File Bundler", layout="wide")
 
@@ -91,10 +100,11 @@ def main():
         if constants.env_settings.is_dev and st.session_state.app:
             with debug_tab:
                 render_debug_tab()
+    except KeyboardInterrupt:
+        # This might not always be reached due to how Streamlit works
+        logger.info("Keyboard interrupt detected")
+        cleanup()
+        sys.exit(0)
     except Exception as e:
         logger.error(f"Application error: {e}", exc_info=True)
         st.error(f"An error occurred: {str(e)}")
-
-
-if __name__ == "__main__":
-    main()

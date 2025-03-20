@@ -1,6 +1,6 @@
 [project]
 name = "file-bundler"
-version = "0.9.5"
+version = "0.9.3"
 description = "File Bundler is an app to bundle project files together and use them for LLM prompting. It helps estimate and optimize token and context usage."
 readme = "README.md"
 requires-python = ">=3.12"
@@ -40,13 +40,11 @@ dev = [
 
 # Script that runs when you type "filebundler" or "uvx filebundler"
 [project.scripts]
-filebundler = "filebundler.app:main"
+filebundler = "filebundler.main:main"
 
-# Entry point for streamlit discovery (less commonly used)
 [project.entry-points."streamlit.app"]
-filebundler = "filebundler.app"
+filebundler = "filebundler.app:run"
 
-# Build system configuration
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
