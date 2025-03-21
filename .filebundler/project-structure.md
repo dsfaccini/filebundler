@@ -28,10 +28,6 @@ filebundler/
 │   └── 📄 .gitignore
 ├── 📁 .streamlit/
 │   └── 📄 config.toml
-├── 📁 dist/
-│   ├── 📄 .gitignore
-│   ├── 📄 filebundler-0.9.8-py3-none-any.whl
-│   └── 📄 filebundler-0.9.8.tar.gz
 ├── 📁 docs/
 │   ├── 📄 ci-cd.md
 │   ├── 📄 state-logic.md
@@ -41,8 +37,7 @@ filebundler/
 │   ├── 📁 lib/
 │   │   └── 📁 llm/
 │   │       ├── 📄 auto_bundle.py
-│   │       ├── 📄 claude.py
-│   │       └── 📄 utils.py
+│   │       └── 📄 claude.py
 │   ├── 📁 managers/
 │   │   ├── 📄 BundleManager.py
 │   │   ├── 📄 GlobalSettingsManager.py

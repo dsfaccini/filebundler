@@ -29,6 +29,10 @@ class AutoBundleResponse(BaseModel):
         default=None,
         description="Optional message with advice or explanation from the LLM",
     )
+    code: Optional[str] = Field(
+        default=None,
+        description="Optional code",
+    )
 
 
 __all__ = ["AutoBundleResponse"]

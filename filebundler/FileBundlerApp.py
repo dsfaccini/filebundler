@@ -17,6 +17,7 @@ from filebundler.ui.notification import show_temp_notification
 
 from filebundler.utils.project_utils import invalid_path, sort_files
 
+lf = logfire.with_settings(console_log=False)
 logger = logging.getLogger(__name__)
 
 
@@ -78,7 +79,7 @@ class FileBundlerApp(AppProtocol):
             bool: True if directory has visible content, False otherwise
         """
         try:
-            with logfire.span(
+            with lf.span(
                 "loading directory {dir_path}",
                 dir_path=dir_path.relative_to(self.project_path),
                 _level="debug",
@@ -155,16 +156,16 @@ class FileBundlerApp(AppProtocol):
             if file_item:
                 file_items.append(file_item)
             else:
-                logfire.warning(
+                logger.warning(
                     f"the following file doesn't exist in the app: {file_path.resolve()}"
                 )
-                show_temp_notification(
-                    f"The following file doesn't exist in the app: {file_path.resolve()}. "
-                    f"""Reasons why you may be seeing this notification: 
-    - because an LLM response included a file that was not in the app
-    - because the file was removed and the app has not been refreshed
-    - because a bundle that loaded contained a file that was deleted""",
-                    type="error",
-                )
+                #             show_temp_notification(
+                #                 f"The following file doesn't exist in the app: {file_path.resolve()}. "
+                #                 f"""Reasons why you may be seeing this notification:
+                # - because an LLM response included a file that was not in the app
+                # - because the file was removed and the app has not been refreshed
+                # - because a bundle that loaded contained a file that was deleted""",
+                #                 type="error",
+                #             )
                 continue
         return file_items

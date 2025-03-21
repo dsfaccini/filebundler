@@ -1,13 +1,11 @@
 # main.py
+import logging
 import os
 import sys
 import atexit
-import logging
 import argparse
 
 from filebundler import app
-
-logger = logging.getLogger(__name__)
 
 
 def main():
@@ -19,7 +17,23 @@ def main():
     # Parse command-line arguments
     parser = argparse.ArgumentParser(description="File Bundler App")
     parser.add_argument("--headless", action="store_true", help="Run in headless mode")
+    parser.add_argument(
+        "--log-level",
+        default="info",
+        choices=["debug", "info", "warning", "error", "critical"],
+        help="Set the logging level (default: info)",
+    )
     args = parser.parse_args()
+
+    if args.log_level:
+        os.environ["LOG_LEVEL"] = args.log_level
+
+    if "ANTHROPIC_API_KEY" not in os.environ:
+        logging.warning(
+            "\033[93mAnthropic API key not found in environment variables. "
+            "Some features may not work as expected. "
+            "(Color might not be supported in all terminals)\033[0m"
+        )
 
     # When called as an installed package, we need to run Streamlit with this file
     import streamlit.web.cli as stcli
@@ -32,7 +46,6 @@ def main():
         st_args = ["streamlit", "run", current_file, "--global.developmentMode=false"]
         if args.headless:
             st_args.append("--server.headless=true")
-            logger.info("Running in headless mode")
 
         sys.argv = st_args
 
@@ -40,7 +53,7 @@ def main():
         sys.exit(stcli.main())
     except KeyboardInterrupt:
         # Handle Ctrl+C at the top level
-        logger.info("Keyboard interrupt received, exiting...")
+        logging.info("Keyboard interrupt received, exiting...")
         app.cleanup()
         sys.exit(0)
 

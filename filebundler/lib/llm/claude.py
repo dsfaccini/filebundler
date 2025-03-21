@@ -9,7 +9,7 @@ from pydantic_ai.models.anthropic import AnthropicModelName
 from pydantic_ai.providers.anthropic import AnthropicProvider
 
 from filebundler.utils import BaseModel
-import filebundler.lib.llm.utils as llm_utils
+from filebundler.constants import get_env_settings
 
 
 # NOTE sadly we need to maintain these manually
@@ -41,12 +41,12 @@ def anthropic_synchronous_prompt(
     Returns:
         Structured response from the LLM
     """
-    api_key = llm_utils.get_api_key(llm_utils.ProviderApiKey.ANTHROPIC)
+    env_settings = get_env_settings()
     with logfire.span("prompting LLM for auto-bundle", model=model_type, _level="info"):
         model = AnthropicModel(
             # ModelType(model_type).value #  we don't validate here bc the options come from the selectbox
             model_type,
-            provider=AnthropicProvider(api_key=api_key),
+            provider=AnthropicProvider(api_key=env_settings.anthropic_api_key),
         )
         # NOTE on instrument https://ai.pydantic.dev/logfire/#using-logfire
         agent = Agent(

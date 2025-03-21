@@ -1,5 +1,5 @@
 # filebundler/ui/tabs/auto_bundler.py
-import logfire
+from typing import Optional
 import streamlit as st
 
 from filebundler.models.Bundle import Bundle
@@ -20,7 +20,7 @@ from filebundler.ui.tabs.auto_bundler.before_submit import (
 
 def render_auto_bundler_tab(app: FileBundlerApp, psm: ProjectSettingsManager):
     """Render the Auto-Bundle tab."""
-    auto_bundle_response: AutoBundleResponse = st.session_state.get(
+    auto_bundle_response: Optional[AutoBundleResponse] = st.session_state.get(
         "auto_bundle_response", None
     )
     if auto_bundle_response is None:
@@ -37,8 +37,8 @@ def render_auto_bundler_tab(app: FileBundlerApp, psm: ProjectSettingsManager):
                 st.session_state["submitting_to_llm"] = False
                 st.rerun()
         # LLM suggestions
-        with st.expander("LLM Message:", expanded=True):
-            if auto_bundle_response.message:
+        if auto_bundle_response.message:
+            with st.expander("LLM Message:", expanded=True):
                 st.markdown(
                     """
 <style>
@@ -51,6 +51,10 @@ def render_auto_bundler_tab(app: FileBundlerApp, psm: ProjectSettingsManager):
                 )
                 st.markdown(f"""```\n{auto_bundle_response.message}\n```""")
                 # st.markdown("""</code>""", unsafe_allow_html=True)
+
+        if auto_bundle_response.code:
+            with st.expander("Code:", expanded=True):
+                st.markdown(f"""```\n{auto_bundle_response.code}\n```""")
         with st.expander("Very Likely Useful Files:", expanded=True):
             render_selectable_file_items_list(
                 app,

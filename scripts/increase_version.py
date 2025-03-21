@@ -1,4 +1,4 @@
-# increase_version_regex.py
+# increase_version.py
 import re
 import argparse
 import subprocess

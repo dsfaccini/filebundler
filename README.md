@@ -1,7 +1,9 @@
 # FileBundler
 
 ```bash
-uvx filebundler
+uvx filebundler #  -> will automatically open a browser window!
+uvx filebundler --headless #  -> no auto open
+uvx filebundler --log-level debug #  or one of [debug|info|warning|error|critical]
 ```
 
 ## What is it?
@@ -26,12 +28,19 @@ If you're used to copying your files into your "chat of choice" and find the out
 - The tabs will display your currently selected files, allow you to save them in a bundle and export their contents to be pasted on your chat of preference
 - To save a bundle you need to enter a name. The name must be lowercase and include only hyphens ("-") letters and numbers
 
-# AI Features
+# Features
+
+## Project Structure
+The app automatically exports your project structure to a file called `project-structure.md` in the `.filebundler` folder. In the `Project Settings` tab on the sidebar you can add or remove glob patterns to ignore certain files or folders from the project structure. These patterns are taken into account for the whole app (i.e. the file tree, the auto-bundler and the project structure export).
 
 ## Auto-Bundle
-TODO description -> what is it
-TODO setup -> export ANTHROPIC_API_KEY='your-api-key'
-TODO steps -> how do I use it
+The auto-bundler is a feature that uses an LLM to suggest you bundles relevant to your query. The auto-bundler automatically selects your exported project structure (which you can unselect if you want to).
+
+The auto-bundler will use your prompt and current selections to suggest bundles. The LLM will return a list of likely and probable files that are relevant to your query, and a message and/or code if you asked for it.
+
+A workflow example would be for you to provide the LLM with your TODO list (TODO.md) and ask it to provide you with the files that are related to the first n tasks. You could also ask it to sort your tasks into different categories and then re-prompt it to provide bundles for each category.
+
+Right now the auto-bundler uses Anthropic as a provider. If the app doesn't find an `ANTHROPIC_API_KEY` in your environment variables it will display an input field to enter it manually. All latest models from Anthropic are supported. (as of today 21 Mar 2025). As this is an open source project, more providers and models will be added if there's a need for them.
 
 ## Performance and debugging
 If your application **doesn't start or freezes** you can check the logs in your terminal.

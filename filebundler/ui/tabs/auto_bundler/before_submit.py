@@ -1,8 +1,9 @@
 # filebundler/ui/tabs/auto_bundler/before_submit.py
+import os
 import logfire
 import streamlit as st
 
-from filebundler import constants
+from filebundler.constants import get_env_settings
 from filebundler.models.Bundle import Bundle
 from filebundler.FileBundlerApp import FileBundlerApp
 from filebundler.managers.ProjectSettingsManager import ProjectSettingsManager
@@ -16,6 +17,9 @@ from filebundler.ui.components.selectable_file_items import (
 
 from filebundler.lib.llm.claude import ANTHROPIC_MODEL_NAMES
 from filebundler.lib.llm.auto_bundle import request_auto_bundle
+
+
+env_settings = get_env_settings()
 
 
 def render_auto_bundler_before_submit_tab(
@@ -97,14 +101,27 @@ def render_auto_bundler_before_submit_tab(
         "Select LLM model",
         options=ANTHROPIC_MODEL_NAMES,
         index=2
-        if constants.env_settings.is_dev
+        if env_settings.is_dev
         else 1,  # Default to Haiku 3.5 in dev, Sonnet 3.5 in prod
         key="auto_bundler_model_type",
     )
 
+    # Anthropic API Key Input
+    anthropic_api_key = env_settings.anthropic_api_key
+    if not anthropic_api_key:
+        anthropic_api_key = st.text_input(
+            "Enter your Anthropic API Key",
+            type="password",
+            key="anthropic_api_key_input",
+        )
+        if anthropic_api_key:
+            os.environ["ANTHROPIC_API_KEY"] = anthropic_api_key
+            env_settings.anthropic_api_key = anthropic_api_key
+
     disable_button = (
         app.selections.nr_of_selected_files == 0
         or not user_prompt
+        or not anthropic_api_key
         # this is no use because the user can re-click before this happens...
         or st.session_state.get("submitting_to_llm", None) is not None
         or st.session_state.get("auto_bundle_response", None) is not None

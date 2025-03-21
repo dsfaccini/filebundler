@@ -1,6 +1,5 @@
 # filebundler/constants.py
 import os
-import logging
 
 from typing import Literal, Optional
 from pydantic import field_validator
@@ -23,11 +22,13 @@ class EnvironmentSettings(BaseSettings):
         return self.env == "dev"
 
 
-env_settings = EnvironmentSettings()
-if env_settings.is_dev:
-    os.environ["ANTHROPIC_API_KEY"] = env_settings.anthropic_api_key  # type: ignore
+def get_env_settings():
+    env_settings = EnvironmentSettings()
+    if env_settings.is_dev and env_settings.anthropic_api_key:
+        os.environ["ANTHROPIC_API_KEY"] = env_settings.anthropic_api_key
 
-LOG_LEVEL = logging._nameToLevel[env_settings.log_level.upper()]
+    return env_settings
+
 
 DEFAULT_MAX_RENDER_FILES = 500
 

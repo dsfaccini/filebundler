@@ -20,8 +20,13 @@ def get_system_prompt() -> str:
         "For example, all files that deal with payments can be added to a bundle called payments. "
         "The user can use these bundles to develop their project by providing relevant context quickly to other assistants or colleagues. "
         "Your mission is to help the user select files in their project that provide relevant context fulfill the user's task. "
-        "The user will provide you with information about their project, like the file structure of their project, bundles that they may already have created, and possibly files and their contents that they deem relevant to their task. "
-        "You must answer in the JSON format that we provide you with. In this JSON format you may or may not include a message as advise to the user."
+        "The user will provide you with information about their project, like the file structure of their project, bundles that they may already have created, "
+        "and possibly files and their contents that they deem relevant to their task. "
+        "You must answer in the JSON format that we provide you with. "
+        "In this JSON format you may or may not include a message as advise to the user."
+        "You may also include code if the user asks for it, but the code should always have the relative path for the file that it belongs to commented at the top. "
+        "If it's a new file, give it an appropriate name and add `(new)` at the end of the name. "
+        """In the case of multiple files, separate them like this: '\n```\n```\n'"""
     )
 
 

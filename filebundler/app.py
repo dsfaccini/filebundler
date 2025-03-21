@@ -23,11 +23,14 @@ from filebundler.ui.notification import show_temp_notification
 
 # NOTE we do this here because this is the entry point for the Streamlit app
 logfire.configure(send_to_logfire="if-token-present")
+env_settings = constants.get_env_settings()
+LOG_LEVEL = logging._nameToLevel[env_settings.log_level.upper()]
 
 logging.basicConfig(
-    level=constants.LOG_LEVEL,
+    level=LOG_LEVEL,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
+
 logger = logging.getLogger(__name__)
 
 
@@ -99,7 +102,7 @@ def main():
         with main_tab2:
             render_global_settings(st.session_state.global_settings_manager)
 
-        if constants.env_settings.is_dev and st.session_state.app:
+        if env_settings.is_dev and st.session_state.app:
             with debug_tab:
                 render_debug_tab()
     except KeyboardInterrupt:
