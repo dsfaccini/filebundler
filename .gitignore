@@ -3,6 +3,7 @@
 *.ipynb
 .mypy_cache/
 TODO-further-out.md
+.ruff_cache/
 
 # Python-generated files
 __pycache__/

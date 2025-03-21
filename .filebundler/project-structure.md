@@ -13,6 +13,7 @@ filebundler/
 │       └── 📄 testing.md
 ├── 📁 .filebundler/
 │   ├── 📁 bundles/
+│   │   ├── 📄 build-package.json
 │   │   ├── 📄 bundle-management.json
 │   │   ├── 📄 bundles-and-exports.json
 │   │   ├── 📄 settings-and-persistence.json
@@ -27,6 +28,10 @@ filebundler/
 │   └── 📄 .gitignore
 ├── 📁 .streamlit/
 │   └── 📄 config.toml
+├── 📁 dist/
+│   ├── 📄 .gitignore
+│   ├── 📄 filebundler-0.9.8-py3-none-any.whl
+│   └── 📄 filebundler-0.9.8.tar.gz
 ├── 📁 docs/
 │   ├── 📄 ci-cd.md
 │   ├── 📄 state-logic.md
@@ -80,10 +85,14 @@ filebundler/
 │   │   ├── 📄 filepath_checker.py
 │   │   ├── 📄 language_formatting.py
 │   │   └── 📄 project_utils.py
+│   ├── 📄 __init__.py
+│   ├── 📄 app.py
 │   ├── 📄 constants.py
 │   ├── 📄 FileBundlerApp.py
+│   ├── 📄 main.py
 │   └── 📄 state.py
 ├── 📁 scripts/
+│   ├── 📄 increase_version.py
 │   └── 📄 start-server.bat
 ├── 📁 tests/
 │   └── 📁 llm/
@@ -91,13 +100,14 @@ filebundler/
 ├── 📄 .env
 ├── 📄 .env.example
 ├── 📄 .gitignore
+├── 📄 .pre-commit-config.yaml
 ├── 📄 .python-version
 ├── 📄 LICENSE
-├── 📄 main.py
 ├── 📄 mypy.ini
 ├── 📄 pyproject.toml
 ├── 📄 README.md
 ├── 📄 test-utils.ipynb
 ├── 📄 TODO-further-out.md
+├── 📄 TODO-less-relevant.md
 └── 📄 TODO.md
 ```

@@ -14,6 +14,39 @@ def render_settings_panel(psm: ProjectSettingsManager):
             value=psm.project_settings.max_files,
         )
 
+        # Add sorting controls
+        st.subheader("File Sorting")
+        psm.project_settings.sort_files_first = st.checkbox(
+            "Show files before folders",
+            value=psm.project_settings.sort_files_first,
+            help="When enabled, files will be displayed before folders in the file tree",
+        )
+
+        # sort_direction = st.radio(
+        #     "Sort Direction",
+        #     options=["asc", "desc"],
+        #     index=0 if psm.project_settings.alphabetical_sort == "asc" else 1,
+        #     horizontal=True,
+        #     help="Choose ascending (A-Z) or descending (Z-A) sort order",
+        # )
+        # psm.project_settings.alphabetical_sort = sort_direction
+
+        # Auto Bundle Settings
+        st.subheader("Auto Bundle Settings")
+        auto_settings = psm.project_settings.auto_bundle_settings
+
+        auto_settings.auto_refresh_project_structure = st.checkbox(
+            "Auto-refresh project structure",
+            value=auto_settings.auto_refresh_project_structure,
+            help="Automatically refresh the project structure when files change",
+        )
+
+        auto_settings.auto_include_bundle_files = st.checkbox(
+            "Auto-include bundle files",
+            value=auto_settings.auto_include_bundle_files,
+            help="Automatically include relevant files in the bundle",
+        )
+
         st.subheader("Ignore Patterns")
         st.write("Files matching these patterns will be ignored (glob syntax)")
 

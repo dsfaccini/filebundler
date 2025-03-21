@@ -110,3 +110,7 @@ def main():
     except Exception as e:
         logger.error(f"Application error: {e}", exc_info=True)
         st.error(f"An error occurred: {str(e)}")
+
+
+if __name__ == "__main__":
+    main()

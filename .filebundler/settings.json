@@ -33,7 +33,7 @@
         "*.dat"
     ],
     "max_files": 500,
-    "files_first": true,
+    "sort_files_first": true,
     "auto_bundle_settings": {
         "auto_refresh_project_structure": true,
         "auto_include_bundle_files": false,

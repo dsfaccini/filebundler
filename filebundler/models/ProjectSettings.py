@@ -1,5 +1,5 @@
 # filebundler/models/ProjectSettings.py
-from typing import List
+from typing import List, Literal
 
 from filebundler.utils import BaseModel
 from filebundler.constants import DEFAULT_IGNORE_PATTERNS, DEFAULT_MAX_RENDER_FILES
@@ -16,7 +16,8 @@ class AutoBundleSettings(BaseModel):
 class ProjectSettings(BaseModel):
     ignore_patterns: List[str] = DEFAULT_IGNORE_PATTERNS
     max_files: int = DEFAULT_MAX_RENDER_FILES
-    files_first: bool = True
+    sort_files_first: bool = True
+    # alphabetical_sort: Literal["asc", "desc"] = "asc"
     auto_bundle_settings: AutoBundleSettings = AutoBundleSettings()
 
 
