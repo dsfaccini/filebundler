@@ -16,12 +16,19 @@ def main():
 
     # Parse command-line arguments
     parser = argparse.ArgumentParser(description="File Bundler App")
+
     parser.add_argument("--headless", action="store_true", help="Run in headless mode")
     parser.add_argument(
         "--log-level",
         default="info",
         choices=["debug", "info", "warning", "error", "critical"],
         help="Set the logging level (default: info)",
+    )
+    parser.add_argument(
+        "--theme",
+        default="dark",
+        choices=["light", "dark"],
+        help="Set the Streamlit theme (light or dark)",
     )
     args = parser.parse_args()
 
@@ -46,6 +53,8 @@ def main():
         st_args = ["streamlit", "run", current_file, "--global.developmentMode=false"]
         if args.headless:
             st_args.append("--server.headless=true")
+        if args.theme:
+            st_args.append(f"--theme.base={args.theme}")
 
         sys.argv = st_args
 

@@ -64,12 +64,16 @@ def _generate_project_structure(app: FileBundlerApp):
 
                         if child.is_dir:
                             # It's a directory
-                            result.append(f"{prefix}{curr_prefix}📁 {child.name}/")
+                            result.append(
+                                f"{prefix}{curr_prefix}📁 {child.name}/ ({child.tokens} tokens)"
+                            )
                             subtree = build_tree(child, prefix + next_prefix)
                             result.extend(subtree)
                         else:
                             # It's a file
-                            result.append(f"{prefix}{curr_prefix}📄 {child.name}")
+                            result.append(
+                                f"{prefix}{curr_prefix}📄 {child.name} ({child.tokens} tokens)"
+                            )
 
                     return result
 

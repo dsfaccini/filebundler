@@ -13,7 +13,6 @@ filebundler/
 │       └── 📄 testing.md
 ├── 📁 .filebundler/
 │   ├── 📁 bundles/
-│   │   ├── 📄 build-package.json
 │   │   ├── 📄 bundle-management.json
 │   │   ├── 📄 bundles-and-exports.json
 │   │   ├── 📄 settings-and-persistence.json

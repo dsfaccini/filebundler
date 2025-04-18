@@ -13,7 +13,6 @@ from filebundler.models.BundleMetadata import BundleMetadata
 from filebundler.models.BundleMetadata import format_datetime, format_file_size
 
 from filebundler.utils import BaseModel, read_file
-from filebundler.services.token_count import count_tokens
 
 from filebundler.ui.notification import show_temp_notification
 
@@ -73,12 +72,12 @@ class Bundle(BaseModel):
 
     @computed_field  # type: ignore[prop-decorator]
     @property
-    def token_count(self) -> int:
+    def tokens(self) -> int:
         """Get the total token count of all files in the bundle"""
         with logfire.span(
             "computing token_count for bundle {name}", name=self.name, _level="debug"
         ):
-            return sum(count_tokens(read_file(fi.path)) for fi in self.file_items)
+            return sum(fi.tokens for fi in self.file_items)
 
     @property
     def is_stale(self) -> bool:

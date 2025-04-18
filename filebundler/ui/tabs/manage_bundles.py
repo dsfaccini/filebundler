@@ -59,7 +59,7 @@ def render_bundle_metadata(bundle: Bundle):
     st.write("**Bundle Details:**")
     st.write(f"Created: {bundle.metadata.created_at_str}")
     st.write(f"Size: {bundle.size_str}")
-    st.write(f"Token count: {bundle.token_count}")
+    st.write(f"Token count: {bundle.tokens}")
 
     # Show last modification date if available
     if bundle.last_modified_date:
@@ -123,7 +123,7 @@ def render_saved_bundles(bundle_manager: BundleManager):
 
         bundle_is_active = bundle is bundle_manager.current_bundle
         checkmark = "✅" if bundle_is_active else None
-        title = f'Files in "{bundle.name}" ({len(bundle.file_items)} files | {bundle.token_count} tokens | {bundle.size_str})'
+        title = f'Files in "{bundle.name}" ({len(bundle.file_items)} files | {bundle.tokens} tokens | {bundle.size_str})'
 
         # Bundle dropdown with files
         with st.expander(

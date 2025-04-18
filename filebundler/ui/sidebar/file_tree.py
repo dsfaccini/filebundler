@@ -69,9 +69,9 @@ def render_file_tree(app: FileBundlerApp):
                     continue
 
                 checkbox_label = (
-                    f"{'&nbsp;' * indent * 4}📁 **{child.name}**"
+                    f"{'&nbsp;' * indent * 4}📁 **{child.name}** ({child.tokens})"
                     if child.is_dir
-                    else f"{'&nbsp;' * indent * 4} {child.name}"
+                    else f"{'&nbsp;' * indent * 4} {child.name} ({child.tokens})"
                 )
                 new_state = st.checkbox(
                     checkbox_label,

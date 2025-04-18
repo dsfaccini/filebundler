@@ -10,7 +10,7 @@ uvx filebundler --log-level debug #  or one of [debug|info|warning|error|critica
 File Bundler is a web app and CLI utility to bundle project files together and use them for LLM prompting. It helps estimate and optimize token and context usage.
 
 # Who is FileBundler for?
-If you're used to copying your files into your "chat of choice" and find the output is often better than the edits your AI powered IDE proposes then FileBundler is for you. 
+If you're used to copying your files into your "chat of choice" and find the output is often better than the edits your AI powered IDE proposes then FileBundler is for you.
 
 **Here are some reasons why:**
 1. Segment your projects into topics (manually or with AI)
@@ -29,9 +29,13 @@ If you're used to copying your files into your "chat of choice" and find the out
 - To save a bundle you need to enter a name. The name must be lowercase and include only hyphens ("-") letters and numbers
 
 # Features
+Besides creating bundles FileBundler has additional features
 
 ## Project Structure
 The app automatically exports your project structure to a file called `project-structure.md` in the `.filebundler` folder. In the `Project Settings` tab on the sidebar you can add or remove glob patterns to ignore certain files or folders from the project structure. These patterns are taken into account for the whole app (i.e. the file tree, the auto-bundler and the project structure export).
+
+# Estimate token usage
+We currently use tiktoken with the [o200k_base](https://github.com/openai/tiktoken) model to estimate token count, but you can may a utility like [tokencounter.org](https://tokencounter.org/) to estimate token usage for other models or [openai's tokenizer](https://platform.openai.com/tokenizer) to compare estimates.
 
 ## Auto-Bundle
 The auto-bundler is a feature that uses an LLM to suggest you bundles relevant to your query. The auto-bundler automatically selects your exported project structure (which you can unselect if you want to).
@@ -42,7 +46,11 @@ A workflow example would be for you to provide the LLM with your TODO list (TODO
 
 Right now the auto-bundler uses Anthropic as a provider. If the app doesn't find an `ANTHROPIC_API_KEY` in your environment variables it will display an input field to enter it manually. All latest models from Anthropic are supported. (as of today 21 Mar 2025). As this is an open source project, more providers and models will be added if there's a need for them.
 
-## Performance and debugging
+# Roadmap
+[TODO.md](https://raw.githubusercontent.com/dsfaccini/filebundler/refs/heads/master/TODO.md)
+We plan on adding other features, like codebase indexing
+
+# Performance and debugging
 If your application **doesn't start or freezes** you can check the logs in your terminal.
 
 If your application **hangs** on certain actions, you can debug using logfire. For this you'll need to stop FileBundler, set your logfire token and re-run the app.
@@ -72,7 +80,7 @@ For any other issues you may open an issue in the [filebundler repo](https://git
 
 # Similar tools
 
-## Cursor
+## [Cursor](https://www.cursor.com/)
 Currently, you can add project rules to your project and include globs for files related to those rules. This is kind of a reverse file bundler, since cursor uses the files in the glob to determine what rules you send to the LLM.
 You can as well make a selection of files to be included in a chat, but you don't have an overview of how much context has been used. To clear the context you can start a new chat, but the selection you made for the previous chat won't be persisted (as of today), so you need to reselect your files.
 
@@ -85,19 +93,15 @@ Before I started this tool I researched if there was already an existing tool an
 
 For the record it seems like a great tool and I invite you to check it out. It offers lots of other functionality, like diffs and code trees.
 
-## Result
-Since I didn't find any other tool I decided to build FileBundler. 
+## [Claude Code](https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview)
+Like cursor but on the CLI. With the introduction of [commands](https://x.com/_catwu/status/1900593730538864643) you can save markdown files with your prompts and issue them as commands to claude code. This is a bit different than bundling project files into topics, but shares the concept of persisting workflows that you repeat as settings.
 
-Its main feature is bundling files together into reusable topics to prompt LLMs and review token usage. 
-
-We currently use tiktoken with the [cl100k_base](https://github.com/openai/tiktoken) model to estimate token count, but you can may a utility like [tokencounter.org](https://tokencounter.org/) to estimate token usage for other models or [openai's tokenizer](https://platform.openai.com/tokenizer) to compare estimates.
+## aider
+TODO
 
 # Useful references
 - [anthropic's prompt library](https://docs.anthropic.com/en/prompt-library)
 - [anthropic's long context tips](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/long-context-tips#example-multi-document-structure)
 
-# Roadmap
-TODO.md
-
 # LICENSE
-We use GPLv3. Read it [here](./LICENSE) 
+We use GPLv3. Read it [here](https://raw.githubusercontent.com/dsfaccini/filebundler/refs/heads/master/LICENSE)

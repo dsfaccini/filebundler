@@ -19,6 +19,25 @@ class ProjectSettingsManager:
 
     def load_project_settings(self):
         if not self.settings_file.exists():
+            project_gitignore_path = self.project_path / ".gitignore"
+            try:
+                if project_gitignore_path:
+                    gitignore_content = read_file(project_gitignore_path)
+                    if gitignore_content:
+                        # Extract ignore patterns from the .gitignore file
+                        ignore_patterns = [
+                            line.strip()
+                            for line in gitignore_content.splitlines()
+                            if line.strip()
+                        ]
+                        self.project_settings.ignore_patterns.extend(ignore_patterns)
+                        self.project_settings.ignore_patterns = list(
+                            set(self.project_settings.ignore_patterns)
+                        )
+            except Exception as e:
+                logger.warning(
+                    f"Error reading .gitignore file: {str(e)}. Using default ignore patterns."
+                )
             self.save_project_settings()
             return self.project_settings
 

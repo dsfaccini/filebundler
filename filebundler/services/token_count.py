@@ -8,13 +8,13 @@ def compute_word_count(text: str):
     return len(text.split())
 
 
-def count_tokens(text: str, model="cl100k_base"):
+def count_tokens(text: str, model="o200k_base"):
     """
     Count the number of tokens in the text using tiktoken.
 
     Args:
         text (str): The text to count tokens for
-        model (str): The tokenizer model to use (default: cl100k_base for GPT-4)
+        model (str): The tokenizer model to use (default: o200k_base for GPT-4)
 
     Returns:
         int: Number of tokens in the text

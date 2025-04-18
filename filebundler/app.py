@@ -66,7 +66,11 @@ def main():
             "Bundle project files together for prompting, or estimating and optimizing token and context usage."
         )
         main_tab1, main_tab2, debug_tab = st.tabs(
-            ["File Bundler", "Global Settings", "Debug"]
+            [
+                "File Bundler",
+                "Global Settings",
+                "Debug" if env_settings.is_dev else "About",
+            ]
         )
         with main_tab1:
             # Only show if project is loaded

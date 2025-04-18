@@ -3,6 +3,7 @@ from pathlib import Path
 from typing_extensions import List, Optional, Self
 from pydantic import Field, field_serializer, model_validator
 
+from filebundler.services.token_count import count_tokens
 from filebundler.utils import BaseModel, read_file
 
 
@@ -52,6 +53,13 @@ class FileItem(BaseModel):
     def content(self):
         if self.path.is_file():
             return read_file(self.path)
+
+    @property
+    def tokens(self):
+        if self.path.is_file():
+            return count_tokens(self.content)  # type: ignore
+        else:
+            return sum(fi.tokens for fi in self.children)
 
     def toggle_selected(self):
         self.selected = not self.selected
