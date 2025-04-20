@@ -50,9 +50,9 @@ def render_file_tree_buttons(app: FileBundlerApp):
         if st.button(
             "Refresh Project", key="refresh_project", use_container_width=True
         ):
-            if st.session_state.project_loaded:
+            if st.session_state.app:
                 try:
-                    st.session_state.app.refresh()  # this runs st.rerun for us
+                    st.session_state.app.refresh()
                     show_temp_notification("Project refreshed", type="success")
                 except Exception as e:
                     logger.error(f"Error refreshing project: {e}", exc_info=True)

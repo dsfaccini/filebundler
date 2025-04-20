@@ -90,6 +90,7 @@ def _generate_project_structure(app: FileBundlerApp):
         return f"Error generating project structure: {str(e)}"
 
 
+# TODO make asynchronous
 def save_project_structure(app: FileBundlerApp) -> Path:
     """
     Save the project structure to a file

@@ -53,12 +53,12 @@ def main():
                 render_project_selection(
                     st.session_state.global_settings_manager.settings
                 )
-                if st.session_state.project_loaded:
+                if st.session_state.app:
                     render_file_tree(st.session_state.app)
 
             with tab2:
-                if st.session_state.project_loaded:
-                    render_settings_panel(st.session_state.project_settings_manager)
+                if st.session_state.app:
+                    render_settings_panel(st.session_state.app)
                 else:
                     st.warning("Please open a project to configure settings.")
 
@@ -74,7 +74,7 @@ def main():
         )
         with main_tab1:
             # Only show if project is loaded
-            if st.session_state.project_loaded:
+            if st.session_state.app:
                 tab1, tab2, tab3, tab4 = st.tabs(
                     [
                         f"Selected Files ({st.session_state.app.selections.nr_of_selected_files})",
@@ -95,9 +95,7 @@ def main():
                     render_saved_bundles(st.session_state.app.bundles)
 
                 with tab4:
-                    render_auto_bundler_tab(
-                        st.session_state.app, st.session_state.project_settings_manager
-                    )
+                    render_auto_bundler_tab(st.session_state.app)
             else:
                 # If no project loaded
                 show_temp_notification(

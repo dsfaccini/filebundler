@@ -1,30 +1,29 @@
 # filebundler/ui/tabs/auto_bundler.py
-from typing import Optional
 import streamlit as st
+from typing import Optional
+
+from filebundler.FileBundlerApp import FileBundlerApp
 
 from filebundler.models.Bundle import Bundle
-from filebundler.FileBundlerApp import FileBundlerApp
-from filebundler.managers.ProjectSettingsManager import ProjectSettingsManager
-
 from filebundler.models.llm.AutoBundleResponse import AutoBundleResponse
+
 from filebundler.ui.notification import show_temp_notification
 from filebundler.ui.components.selectable_file_items import (
     render_selectable_file_items_list,
 )
-
 
 from filebundler.ui.tabs.auto_bundler.before_submit import (
     render_auto_bundler_before_submit_tab,
 )
 
 
-def render_auto_bundler_tab(app: FileBundlerApp, psm: ProjectSettingsManager):
+def render_auto_bundler_tab(app: FileBundlerApp):
     """Render the Auto-Bundle tab."""
     auto_bundle_response: Optional[AutoBundleResponse] = st.session_state.get(
         "auto_bundle_response", None
     )
     if auto_bundle_response is None:
-        render_auto_bundler_before_submit_tab(app, psm)
+        render_auto_bundler_before_submit_tab(app)
     else:
         # LLM suggestions header
         headercol1, headercol2 = st.columns([1, 1])
@@ -86,7 +85,7 @@ def render_auto_bundler_tab(app: FileBundlerApp, psm: ProjectSettingsManager):
                     name=new_bundle_name,
                     file_items=app.selections.selected_file_items,
                 )
-                app.bundles.save_bundle(new_bundle)
+                app.bundles.save_one_bundle(new_bundle)
                 show_temp_notification(
                     f"Bundle saved: {new_bundle.name}", type="success"
                 )

@@ -12,13 +12,12 @@ from filebundler.services.project_structure import save_project_structure
 
 from filebundler.FileBundlerApp import FileBundlerApp
 from filebundler.models.GlobalSettings import GlobalSettings
-from filebundler.managers.ProjectSettingsManager import ProjectSettingsManager
 
 
 logger = logging.getLogger(__name__)
 
 
-def load_project(project_path: str):
+def open_selected_project(project_path: str):
     """Load a project and its settings"""
 
     project_path_obj = Path(project_path)
@@ -30,16 +29,8 @@ def load_project(project_path: str):
     try:
         # Load project settings BEFORE loading the project
         # This ensures ignore patterns are available when loading the file tree
-        psm = ProjectSettingsManager(project_path_obj)
-        psm.load_project_settings()
-        st.session_state.project_settings_manager = psm
-
         app = FileBundlerApp(project_path=project_path_obj)
-
-        # Now load the project with the correct settings
-        app.load_project(project_path_obj, psm.project_settings)
         st.session_state.app = app
-        st.session_state.project_loaded = True
 
         # Add to recent projects
         st.session_state.global_settings_manager.add_recent_project(app.project_path)
@@ -47,9 +38,6 @@ def load_project(project_path: str):
         logger.info(f"Project loaded: {app.project_path}")
         show_temp_notification(f"Project loaded: {app.project_path}", type="success")
 
-        # TODO lets do this asynchonously, we don't want to slow down the loading process
-        # we auto generate this file for the user
-        # exceptions are caught inside the function
         save_project_structure(app)
         return True
     except Exception as e:
@@ -61,7 +49,7 @@ def load_project(project_path: str):
 def render_project_selection(global_settings: GlobalSettings):
     """Render the project selection section"""
     project_path = ""
-    with st.expander("Select Project", expanded=not st.session_state.project_loaded):
+    with st.expander("Select Project", expanded=not st.session_state.app):
         if global_settings.recent_projects:
             project_source = st.radio(
                 "Choose project source:",
@@ -95,5 +83,5 @@ def render_project_selection(global_settings: GlobalSettings):
                 project_path = project_path_input
 
         if st.button("Open Project") and project_path:
-            load_project(project_path)
+            open_selected_project(project_path)
             st.rerun()

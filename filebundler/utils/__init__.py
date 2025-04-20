@@ -28,6 +28,14 @@ def json_dump(data: Any, f: io.TextIOWrapper):
     json.dump(data, f, indent=4)
 
 
+def json_load(f: io.TextIOWrapper) -> Any:
+    try:
+        return json.load(f)
+    except json.JSONDecodeError as e:
+        logger.error(f"JSONDecodeError: {e}")
+        return None
+
+
 def read_file(file_path: Path):
     assert file_path.exists(), f"Can't read file {file_path} because it doesn't exist"
 

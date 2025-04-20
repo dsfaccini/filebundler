@@ -3,15 +3,15 @@ import logging
 import logfire
 import streamlit as st
 
-from typing import Dict, List
 from pathlib import Path
+from typing import Dict, List
 
 from filebundler.models.FileItem import FileItem
 from filebundler.models.AppProtocol import AppProtocol
-from filebundler.models.ProjectSettings import ProjectSettings
 
 from filebundler.managers.BundleManager import BundleManager
 from filebundler.managers.SelectionsManager import SelectionsManager
+from filebundler.managers.ProjectSettingsManager import ProjectSettingsManager
 
 from filebundler.ui.notification import show_temp_notification
 
@@ -25,22 +25,8 @@ logger = logging.getLogger(__name__)
 class FileBundlerApp(AppProtocol):
     def __init__(self, project_path: Path):
         self.project_path = project_path.resolve()
+        self.psm = ProjectSettingsManager(self.project_path)
         self.file_items: Dict[Path, FileItem] = {}
-        self.bundles = BundleManager(project_path=self.project_path)
-        self.selections = SelectionsManager(app=self)
-        self.project_settings = ProjectSettings()
-
-    @property
-    def nr_of_files(self):
-        return len([fi for fi in self.file_items.values() if not fi.is_dir])
-
-    def refresh(self):
-        self.load_project(self.project_path, self.project_settings)
-
-    def load_project(self, project_path: Path, project_settings: ProjectSettings):
-        """Load a project directory"""
-        self.project_path = Path(project_path).resolve()
-        self.project_settings = project_settings
 
         # Load the directory structure
         root_item = FileItem(
@@ -54,18 +40,31 @@ class FileBundlerApp(AppProtocol):
         self.load_directory_recursive(
             self.project_path,
             root_item,
-            self.project_settings,
         )
 
-        # Load saved selections for this project if exists
-        self.selections.load_selections()
+        self.bundles = BundleManager(app=self)
+        self.selections = SelectionsManager(app=self)
 
-        # Initialize the bundle manager with the project path
-        self.bundles.load_bundles(self.project_path)
+        logger.info(
+            f"FileBundlerApp initialized with project path: {self.project_path}"
+        )
 
-    def load_directory_recursive(
-        self, dir_path: Path, parent_item: FileItem, project_settings: ProjectSettings
-    ):
+    def refresh(self):
+        """
+        Refresh the project by reloading the directory structure and selections.
+        """
+        self.__init__(self.project_path)
+        st.rerun()
+
+    @property
+    def nr_of_files(self):
+        return len([fi for fi in self.file_items.values() if not fi.is_dir])
+
+    def clear_all_selections(self):
+        self.selections.clear_all_selections()
+        self.bundles.current_bundle = None
+
+    def load_directory_recursive(self, dir_path: Path, parent_item: FileItem):
         """
         Recursively load directory structure into a parent/child hierarchy.
 
@@ -87,20 +86,24 @@ class FileBundlerApp(AppProtocol):
                 filtered_filepaths: List[Path] = []
                 for filepath in dir_path.iterdir():
                     rel_path = filepath.relative_to(self.project_path)
-                    if not invalid_path(rel_path, project_settings.ignore_patterns):
+                    if not invalid_path(
+                        rel_path, self.psm.project_settings.ignore_patterns
+                    ):
                         filtered_filepaths.append(filepath)
 
                 # Apply max_files limit with warning
-                if len(filtered_filepaths) > project_settings.max_files:
+                if len(filtered_filepaths) > self.psm.project_settings.max_files:
                     st.warning(
-                        f"Directory contains {len(filtered_filepaths)} files, exceeding limit of {project_settings.max_files}. "
-                        f"Truncating to {project_settings.max_files} files."
+                        f"Directory contains {len(filtered_filepaths)} files, exceeding limit of {self.psm.project_settings.max_files}. "
+                        f"Truncating to {self.psm.project_settings.max_files} files."
                     )
-                    sorted_filepaths = sort_files(filtered_filepaths, project_settings)[
-                        : project_settings.max_files
-                    ]
+                    sorted_filepaths = sort_files(
+                        filtered_filepaths, self.psm.project_settings
+                    )[: self.psm.project_settings.max_files]
                 else:
-                    sorted_filepaths = sort_files(filtered_filepaths, project_settings)
+                    sorted_filepaths = sort_files(
+                        filtered_filepaths, self.psm.project_settings
+                    )
 
                 has_visible_content = False
 
@@ -121,7 +124,6 @@ class FileBundlerApp(AppProtocol):
                             subdirectory_has_content = self.load_directory_recursive(
                                 filepath,
                                 file_item,
-                                project_settings,
                             )
                             if subdirectory_has_content:
                                 self.file_items[filepath] = file_item

@@ -1,39 +1,29 @@
 # filebundler/ui/sidebar/settings_panel.py
 import streamlit as st
 
+from filebundler.FileBundlerApp import FileBundlerApp
 from filebundler.ui.notification import show_temp_notification
-from filebundler.managers.ProjectSettingsManager import ProjectSettingsManager
 
 
-def render_settings_panel(psm: ProjectSettingsManager):
-    # Only show settings when project is loaded
-    if st.session_state.project_loaded:
-        psm.project_settings.max_files = st.number_input(
+def render_settings_panel(app: FileBundlerApp):
+    if st.session_state.app:
+        app.psm.project_settings.max_files = st.number_input(
             "Max files to display",
             min_value=10,
-            value=psm.project_settings.max_files,
+            value=app.psm.project_settings.max_files,
         )
 
         # Add sorting controls
         st.subheader("File Sorting")
-        psm.project_settings.sort_files_first = st.checkbox(
+        app.psm.project_settings.sort_files_first = st.checkbox(
             "Show files before folders",
-            value=psm.project_settings.sort_files_first,
+            value=app.psm.project_settings.sort_files_first,
             help="When enabled, files will be displayed before folders in the file tree",
         )
 
-        # sort_direction = st.radio(
-        #     "Sort Direction",
-        #     options=["asc", "desc"],
-        #     index=0 if psm.project_settings.alphabetical_sort == "asc" else 1,
-        #     horizontal=True,
-        #     help="Choose ascending (A-Z) or descending (Z-A) sort order",
-        # )
-        # psm.project_settings.alphabetical_sort = sort_direction
-
         # Auto Bundle Settings
         st.subheader("Auto Bundle Settings")
-        auto_settings = psm.project_settings.auto_bundle_settings
+        auto_settings = app.psm.project_settings.auto_bundle_settings
 
         auto_settings.auto_refresh_project_structure = st.checkbox(
             "Auto-refresh project structure",
@@ -53,15 +43,15 @@ def render_settings_panel(psm: ProjectSettingsManager):
         with st.expander("Show/Hide Ignore Patterns", expanded=False):
             updated_patterns = st.text_area(
                 "Edit ignore patterns",
-                "\n".join(psm.project_settings.ignore_patterns),
+                "\n".join(app.psm.project_settings.ignore_patterns),
             )
 
             if updated_patterns:
-                psm.project_settings.ignore_patterns = updated_patterns.split("\n")
+                app.psm.project_settings.ignore_patterns = updated_patterns.split("\n")
 
         # Save button for all settings
         if st.button("Save Settings"):
-            success = psm.save_project_settings()
+            success = app.psm.save_project_settings()
 
             if success:
                 show_temp_notification("Settings saved", type="success")

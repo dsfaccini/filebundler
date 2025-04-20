@@ -6,7 +6,6 @@ import streamlit as st
 from filebundler.constants import get_env_settings
 from filebundler.models.Bundle import Bundle
 from filebundler.FileBundlerApp import FileBundlerApp
-from filebundler.managers.ProjectSettingsManager import ProjectSettingsManager
 
 from filebundler.services.project_structure import save_project_structure
 
@@ -22,9 +21,7 @@ from filebundler.lib.llm.auto_bundle import request_auto_bundle
 env_settings = get_env_settings()
 
 
-def render_auto_bundler_before_submit_tab(
-    app: FileBundlerApp, psm: ProjectSettingsManager
-):
+def render_auto_bundler_before_submit_tab(app: FileBundlerApp):
     spinner = st.spinner("Preparing files and sending to LLM...")
 
     # Auto-select files when the tab is opened
@@ -32,7 +29,7 @@ def render_auto_bundler_before_submit_tab(
         with logfire.span("initializing auto-bundle tab"):
             msgs = []
             try:
-                if app.project_settings.auto_bundle_settings.auto_refresh_project_structure:
+                if app.psm.project_settings.auto_bundle_settings.auto_refresh_project_structure:
                     project_structure_file_path = save_project_structure(app)
                     structure_file_item = app.file_items.get(
                         project_structure_file_path
@@ -43,7 +40,7 @@ def render_auto_bundler_before_submit_tab(
                         structure_file_item.selected = True
                         msgs.append("Auto-selected project structure")
 
-                if app.project_settings.auto_bundle_settings.auto_include_bundle_files:
+                if app.psm.project_settings.auto_bundle_settings.auto_include_bundle_files:
                     for bundle in app.bundles.bundles_dict.values():
                         for file_item in bundle.file_items:
                             if not file_item.selected:
@@ -87,14 +84,14 @@ def render_auto_bundler_before_submit_tab(
     user_prompt = st.text_area(
         "Enter your prompt for the LLM",
         placeholder="Describe what you're working on and what kind of files you need...",
-        value=psm.project_settings.auto_bundle_settings.user_prompt,
+        value=app.psm.project_settings.auto_bundle_settings.user_prompt,
         height=150,
         key="auto_bundler_user_prompt",
     )
 
     if user_prompt:
-        psm.project_settings.auto_bundle_settings.user_prompt = user_prompt
-        psm.save_project_settings()
+        app.psm.project_settings.auto_bundle_settings.user_prompt = user_prompt
+        app.psm.save_project_settings()
 
     # Model selection
     model_type = st.selectbox(

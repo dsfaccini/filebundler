@@ -58,6 +58,8 @@ DEFAULT_IGNORE_PATTERNS = [
     ".DS_Store",
     "*credentials.json",
     "package-lock.json",
+    ".prettierrc*",
+    ".eslint.config.js",
     # extensions
     "*.lock",
     "*.jpg",

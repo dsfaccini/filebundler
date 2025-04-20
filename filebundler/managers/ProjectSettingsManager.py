@@ -13,11 +13,13 @@ class ProjectSettingsManager:
     def __init__(self, project_path: Path):
         self.project_path = project_path
         self.project_settings = ProjectSettings()
-        self.settings_dir = self.project_path / ".filebundler"
-        self.settings_dir.mkdir(exist_ok=True)
-        self.settings_file = self.settings_dir / "settings.json"
+        self.filebundler_dir = self.project_path / ".filebundler"
+        self.filebundler_dir.mkdir(exist_ok=True)
+        self.settings_file = self.filebundler_dir / "settings.json"
+        self.load_project_settings()
 
     def load_project_settings(self):
+        # initialize ignore patterns based on .gitignore file
         if not self.settings_file.exists():
             project_gitignore_path = self.project_path / ".gitignore"
             try:
@@ -48,8 +50,6 @@ class ProjectSettingsManager:
             logger.error(
                 f"Error loading project settings from {self.settings_file}: {str(e)}"
             )
-
-        return self.project_settings
 
     def save_project_settings(self):
         try:

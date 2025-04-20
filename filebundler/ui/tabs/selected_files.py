@@ -42,7 +42,7 @@ def render_selected_files_tab(app: FileBundlerApp):
                 new_bundle = Bundle(
                     name=bundle_name, file_items=app.selections.selected_file_items
                 )
-                app.bundles.save_bundle(new_bundle)
+                app.bundles.save_one_bundle(new_bundle)
                 app.bundles.activate_bundle(new_bundle)
 
                 show_temp_notification(
