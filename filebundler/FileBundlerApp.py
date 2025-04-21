@@ -29,17 +29,17 @@ class FileBundlerApp(AppProtocol):
         self.file_items: Dict[Path, FileItem] = {}
 
         # Load the directory structure
-        root_item = FileItem(
+        self.root_item = FileItem(
             path=self.project_path,
             project_path=self.project_path,
             children=[],
             parent=None,
             selected=False,
         )
-        self.file_items[self.project_path] = root_item
+        self.file_items[self.project_path] = self.root_item
         self.load_directory_recursive(
             self.project_path,
-            root_item,
+            self.root_item,
         )
 
         self.bundles = BundleManager(app=self)

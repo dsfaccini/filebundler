@@ -1,4 +1,5 @@
 # filebundler/services/project_structure.py
+import sys
 import logging
 import logfire
 
@@ -35,8 +36,7 @@ def _generate_project_structure(app: FileBundlerApp):
             structure_markdown.append("## Directory Structure\n```\n")
 
             # Get the root item
-            root_item = app.file_items.get(app.project_path)
-            if not root_item:
+            if not app.root_item:
                 logger.error(f"Root item not found for {app.project_path}")
                 return "Error: Root directory not found in file items"
 
@@ -63,14 +63,12 @@ def _generate_project_structure(app: FileBundlerApp):
                         next_prefix = "    " if is_last else "│   "
 
                         if child.is_dir:
-                            # It's a directory
                             result.append(
                                 f"{prefix}{curr_prefix}📁 {child.name}/ ({child.tokens} tokens)"
                             )
                             subtree = build_tree(child, prefix + next_prefix)
                             result.extend(subtree)
                         else:
-                            # It's a file
                             result.append(
                                 f"{prefix}{curr_prefix}📄 {child.name} ({child.tokens} tokens)"
                             )
@@ -78,8 +76,10 @@ def _generate_project_structure(app: FileBundlerApp):
                     return result
 
             # Generate tree starting from root
-            tree_lines = build_tree(root_item)
-            structure_markdown.append(f"{app.project_path.name}/\n")
+            tree_lines = build_tree(app.root_item)
+            structure_markdown.append(
+                f"{app.project_path.name}/ ({app.root_item.tokens})\n"
+            )
             structure_markdown.extend([f"{line}\n" for line in tree_lines])
             structure_markdown.append("```\n")
 
@@ -103,12 +103,8 @@ def save_project_structure(app: FileBundlerApp) -> Path:
         Path: Path to the saved file
     """
     try:
-        # Create .filebundler directory if it doesn't exist
-        output_dir = app.project_path / ".filebundler"
-        output_dir.mkdir(exist_ok=True)
-
         # Create the output file
-        output_file = output_dir / "project-structure.md"
+        output_file = app.psm.filebundler_dir / "project-structure.md"
 
         # Generate the structure content
         structure_content = _generate_project_structure(app)
@@ -122,3 +118,13 @@ def save_project_structure(app: FileBundlerApp) -> Path:
     except Exception as e:
         logger.error(f"Error saving project structure: {e}", exc_info=True)
         raise
+
+
+if __name__ == "__main__":
+    assert len(sys.argv) > 1, "Please provide the project path as an argument."
+    filepath = Path(sys.argv[1])
+    # assert filepath.exists() and filepath.is_dir(), (
+    #     f"Path {filepath} does not exist or is not a directory."
+    # )
+    app = FileBundlerApp(filepath)
+    save_project_structure(app)

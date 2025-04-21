@@ -1,6 +1,6 @@
 [project]
 name = "filebundler"
-version = "0.9.9"
+version = "0.9.11"
 description = "File Bundler is an app to bundle project files together and use them for LLM prompting. It helps estimate and optimize token and context usage."
 readme = "README.md"
 requires-python = ">=3.12"
@@ -62,3 +62,5 @@ clean = true
 # options = ["--clean"]
 # packages = ["filebundler"]
 
+[logfire]
+ignore_no_config = true

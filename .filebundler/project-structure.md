@@ -2,106 +2,110 @@
 ## Directory Structure
 ```
 filebundler/
-├── 📁 .cursor/
-│   └── 📁 rules/
-│       ├── 📄 app-flow-user.md
-│       ├── 📄 app-flow.md
-│       ├── 📄 core-features.md
-│       ├── 📄 general.md
-│       ├── 📄 overview.md
-│       ├── 📄 prd.md
-│       └── 📄 testing.md
-├── 📁 .filebundler/
-│   ├── 📁 bundles/
-│   │   ├── 📄 bundle-management.json
-│   │   ├── 📄 bundles-and-exports.json
-│   │   ├── 📄 settings-and-persistence.json
-│   │   └── 📄 testing-ui-and-state.json
-│   ├── 📄 project-structure.md
-│   ├── 📄 selections.json
-│   └── 📄 settings.json
-├── 📁 .github/
-│   └── 📁 workflows/
-│       └── 📄 python-publish.yml
-├── 📁 .logfire/
-│   └── 📄 .gitignore
-├── 📁 .streamlit/
-│   └── 📄 config.toml
-├── 📁 docs/
-│   ├── 📄 ci-cd.md
-│   ├── 📄 state-logic.md
-│   ├── 📄 streamlit-testing-synthesized.md
-│   └── 📄 test-suite.md
-├── 📁 filebundler/
-│   ├── 📁 lib/
-│   │   └── 📁 llm/
-│   │       ├── 📄 auto_bundle.py
-│   │       └── 📄 claude.py
-│   ├── 📁 managers/
-│   │   ├── 📄 BundleManager.py
-│   │   ├── 📄 GlobalSettingsManager.py
-│   │   ├── 📄 ProjectSettingsManager.py
-│   │   └── 📄 SelectionsManager.py
-│   ├── 📁 models/
-│   │   ├── 📁 llm/
-│   │   │   └── 📄 AutoBundleResponse.py
-│   │   ├── 📄 AppProtocol.py
-│   │   ├── 📄 Bundle.py
-│   │   ├── 📄 BundleMetadata.py
-│   │   ├── 📄 FileItem.py
-│   │   ├── 📄 GlobalSettings.py
-│   │   └── 📄 ProjectSettings.py
-│   ├── 📁 services/
-│   │   ├── 📄 code_export_service.py
-│   │   ├── 📄 project_structure.py
-│   │   └── 📄 token_count.py
-│   ├── 📁 ui/
-│   │   ├── 📁 components/
-│   │   │   └── 📄 selectable_file_items.py
-│   │   ├── 📁 sidebar/
-│   │   │   ├── 📄 file_tree.py
-│   │   │   ├── 📄 file_tree_buttons.py
-│   │   │   ├── 📄 project_selection.py
-│   │   │   └── 📄 settings_panel.py
-│   │   ├── 📁 tabs/
-│   │   │   ├── 📁 auto_bundler/
-│   │   │   │   ├── 📄 before_submit.py
-│   │   │   │   └── 📄 render_auto_bundler.py
-│   │   │   ├── 📄 debug.py
-│   │   │   ├── 📄 export_contents.py
-│   │   │   ├── 📄 global_settings_panel.py
-│   │   │   ├── 📄 manage_bundles.py
-│   │   │   └── 📄 selected_files.py
-│   │   ├── 📄 confirm.py
-│   │   └── 📄 notification.py
-│   ├── 📁 utils/
-│   │   ├── 📄 __init__.py
-│   │   ├── 📄 filepath_checker.py
-│   │   ├── 📄 language_formatting.py
-│   │   └── 📄 project_utils.py
-│   ├── 📄 __init__.py
-│   ├── 📄 app.py
-│   ├── 📄 constants.py
-│   ├── 📄 FileBundlerApp.py
-│   ├── 📄 main.py
-│   └── 📄 state.py
-├── 📁 scripts/
-│   ├── 📄 increase_version.py
-│   └── 📄 start-server.bat
-├── 📁 tests/
-│   └── 📁 llm/
-│       └── 📄 test_auto_bundle.py
-├── 📄 .env
-├── 📄 .env.example
-├── 📄 .gitignore
-├── 📄 .pre-commit-config.yaml
-├── 📄 .python-version
-├── 📄 LICENSE
-├── 📄 mypy.ini
-├── 📄 pyproject.toml
-├── 📄 README.md
-├── 📄 test-utils.ipynb
-├── 📄 TODO-further-out.md
-├── 📄 TODO-less-relevant.md
-└── 📄 TODO.md
+├── 📁 .cursor/ (2542 tokens)
+│   └── 📁 rules/ (2542 tokens)
+│       ├── 📄 app-flow-user.md (455 tokens)
+│       ├── 📄 app-flow.md (1249 tokens)
+│       ├── 📄 core-features.md (273 tokens)
+│       ├── 📄 general.md (127 tokens)
+│       ├── 📄 overview.md (164 tokens)
+│       ├── 📄 prd.md (229 tokens)
+│       └── 📄 testing.md (45 tokens)
+├── 📁 .filebundler/ (3293 tokens)
+│   ├── 📁 bundles/ (1812 tokens)
+│   │   ├── 📄 bundle-management.json (322 tokens)
+│   │   ├── 📄 bundles-and-exports.json (431 tokens)
+│   │   ├── 📄 settings-and-persistence.json (459 tokens)
+│   │   └── 📄 testing-ui-and-state.json (600 tokens)
+│   ├── 📄 .gitignore (3 tokens)
+│   ├── 📄 project-structure.md (1192 tokens)
+│   ├── 📄 selections.json (39 tokens)
+│   └── 📄 settings.json (247 tokens)
+├── 📁 .github/ (435 tokens)
+│   └── 📁 workflows/ (435 tokens)
+│       └── 📄 python-publish.yml (435 tokens)
+├── 📁 .logfire/ (1 tokens)
+│   └── 📄 .gitignore (1 tokens)
+├── 📁 .streamlit/ (48 tokens)
+│   └── 📄 config.toml (48 tokens)
+├── 📁 docs/ (2424 tokens)
+│   ├── 📄 ci-cd.md (152 tokens)
+│   ├── 📄 state-logic.md (120 tokens)
+│   ├── 📄 streamlit-testing-synthesized.md (657 tokens)
+│   └── 📄 test-suite.md (1495 tokens)
+├── 📁 filebundler/ (20312 tokens)
+│   ├── 📁 lib/ (994 tokens)
+│   │   └── 📁 llm/ (994 tokens)
+│   │       ├── 📄 auto_bundle.py (513 tokens)
+│   │       └── 📄 claude.py (481 tokens)
+│   ├── 📁 managers/ (2846 tokens)
+│   │   ├── 📄 BundleManager.py (1128 tokens)
+│   │   ├── 📄 GlobalSettingsManager.py (379 tokens)
+│   │   ├── 📄 ProjectSettingsManager.py (445 tokens)
+│   │   └── 📄 SelectionsManager.py (894 tokens)
+│   ├── 📁 models/ (2688 tokens)
+│   │   ├── 📁 llm/ (278 tokens)
+│   │   │   └── 📄 AutoBundleResponse.py (278 tokens)
+│   │   ├── 📄 AppProtocol.py (106 tokens)
+│   │   ├── 📄 Bundle.py (1044 tokens)
+│   │   ├── 📄 BundleMetadata.py (318 tokens)
+│   │   ├── 📄 FileItem.py (532 tokens)
+│   │   ├── 📄 GlobalSettings.py (230 tokens)
+│   │   └── 📄 ProjectSettings.py (180 tokens)
+│   ├── 📁 services/ (1222 tokens)
+│   │   ├── 📄 code_export_service.py (235 tokens)
+│   │   ├── 📄 project_structure.py (841 tokens)
+│   │   └── 📄 token_count.py (146 tokens)
+│   ├── 📁 ui/ (8391 tokens)
+│   │   ├── 📁 components/ (204 tokens)
+│   │   │   └── 📄 selectable_file_items.py (204 tokens)
+│   │   ├── 📁 sidebar/ (2191 tokens)
+│   │   │   ├── 📄 file_tree.py (732 tokens)
+│   │   │   ├── 📄 file_tree_buttons.py (435 tokens)
+│   │   │   ├── 📄 project_selection.py (589 tokens)
+│   │   │   └── 📄 settings_panel.py (435 tokens)
+│   │   ├── 📁 tabs/ (5139 tokens)
+│   │   │   ├── 📁 auto_bundler/ (1950 tokens)
+│   │   │   │   ├── 📄 before_submit.py (1215 tokens)
+│   │   │   │   └── 📄 render_auto_bundler.py (735 tokens)
+│   │   │   ├── 📄 debug.py (285 tokens)
+│   │   │   ├── 📄 export_contents.py (424 tokens)
+│   │   │   ├── 📄 global_settings_panel.py (239 tokens)
+│   │   │   ├── 📄 manage_bundles.py (1426 tokens)
+│   │   │   └── 📄 selected_files.py (815 tokens)
+│   │   ├── 📄 confirm.py (81 tokens)
+│   │   └── 📄 notification.py (776 tokens)
+│   ├── 📁 utils/ (1092 tokens)
+│   │   ├── 📄 __init__.py (370 tokens)
+│   │   ├── 📄 filepath_checker.py (349 tokens)
+│   │   ├── 📄 language_formatting.py (168 tokens)
+│   │   └── 📄 project_utils.py (205 tokens)
+│   ├── 📄 __init__.py (0 tokens)
+│   ├── 📄 app.py (847 tokens)
+│   ├── 📄 constants.py (462 tokens)
+│   ├── 📄 FileBundlerApp.py (1201 tokens)
+│   ├── 📄 main.py (485 tokens)
+│   └── 📄 state.py (84 tokens)
+├── 📁 memory-bank/ (404 tokens)
+│   └── 📄 projectbrief.md (404 tokens)
+├── 📁 scripts/ (442 tokens)
+│   ├── 📄 increase_version.py (420 tokens)
+│   └── 📄 start-server.bat (22 tokens)
+├── 📁 tests/ (417 tokens)
+│   └── 📁 llm/ (417 tokens)
+│       └── 📄 test_auto_bundle.py (417 tokens)
+├── 📄 .clinerules (786 tokens)
+├── 📄 .env (83 tokens)
+├── 📄 .env.example (42 tokens)
+├── 📄 .gitignore (56 tokens)
+├── 📄 .pre-commit-config.yaml (63 tokens)
+├── 📄 .python-version (4 tokens)
+├── 📄 LICENSE (7446 tokens)
+├── 📄 mypy.ini (122 tokens)
+├── 📄 pyproject.toml (531 tokens)
+├── 📄 README.md (1534 tokens)
+├── 📄 test-utils.ipynb (1156 tokens)
+├── 📄 TODO-further-out.md (227 tokens)
+├── 📄 TODO-less-relevant.md (240 tokens)
+└── 📄 TODO.md (161 tokens)
 ```

@@ -291,7 +291,7 @@ wheels = [
 
 [[package]]
 name = "filebundler"
-version = "0.9.3"
+version = "0.9.9"
 source = { virtual = "." }
 dependencies = [
     { name = "logfire" },
