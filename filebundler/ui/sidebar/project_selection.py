@@ -1,4 +1,4 @@
-# filebundler/ui/project_selection.py
+# filebundler/ui/sidebar/project_selection.py
 import os
 import logging
 import streamlit as st

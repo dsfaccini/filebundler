@@ -1,4 +1,4 @@
-# filebundler/ui/components.py/selectable_file_items.py
+# filebundler/ui/components/selectable_file_items.py
 import streamlit as st
 
 from typing import List

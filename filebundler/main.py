@@ -1,4 +1,4 @@
-# main.py
+# filebundler/main.py
 import logging
 import os
 import sys

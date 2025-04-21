@@ -1,4 +1,4 @@
-# filebundler/managers/GlobalSettingsManager.py#
+# filebundler/managers/GlobalSettingsManager.py
 import logging
 
 from pathlib import Path

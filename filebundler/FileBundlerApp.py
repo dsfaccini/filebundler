@@ -6,6 +6,7 @@ import streamlit as st
 from pathlib import Path
 from typing import Dict, List
 
+from filebundler.features import tasks
 from filebundler.models.FileItem import FileItem
 from filebundler.models.AppProtocol import AppProtocol
 
@@ -44,6 +45,8 @@ class FileBundlerApp(AppProtocol):
 
         self.bundles = BundleManager(app=self)
         self.selections = SelectionsManager(app=self)
+
+        tasks.copy_templates(filebundler_dir=self.psm.filebundler_dir)
 
         logger.info(
             f"FileBundlerApp initialized with project path: {self.project_path}"

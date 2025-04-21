@@ -2,6 +2,7 @@
 import logging
 import argparse
 
+from typing import List
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
@@ -27,8 +28,8 @@ def validate_first_line(filepath: Path):
 
 def validate_files(directory: Path):
     """Validates all python files in a directory"""
-    invalid_files = []
-    valid_files = []
+    invalid_files: List[Path] = []
+    valid_files: List[Path] = []
 
     for file_path in directory.glob("**/*.py"):
         if validate_first_line(file_path):
@@ -51,7 +52,9 @@ if __name__ == "__main__":
 
     if invalid_files:
         print("# Invalid Files")
-        print("\n".join([f for f in invalid_files]))
+        print("\n".join([f.as_posix() for f in invalid_files]))
     else:
         print("All files are valid.")
         print(f"Total files: {len(valid_files)}")
+
+# usage: python filebundler/utils/filepath_checker.py filebundler

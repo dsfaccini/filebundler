@@ -1,4 +1,4 @@
-# app.py
+# filebundler/app.py
 import sys
 import logging
 import logfire

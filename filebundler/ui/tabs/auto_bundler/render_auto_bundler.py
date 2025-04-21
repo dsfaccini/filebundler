@@ -1,4 +1,4 @@
-# filebundler/ui/tabs/auto_bundler.py
+# filebundler/ui/tabs/auto_bundler/render_auto_bundler.py
 import streamlit as st
 from typing import Optional
 
