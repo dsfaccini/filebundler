@@ -120,11 +120,30 @@ def save_project_structure(app: FileBundlerApp) -> Path:
         raise
 
 
+def cli_entrypoint(argv=None):
+    """
+    CLI entrypoint for generating and saving the project structure.
+    Args:
+        argv: List of command-line arguments (default: sys.argv)
+    """
+    if argv is None:
+        argv = sys.argv
+    try:
+        assert len(argv) > 1, "Please provide the project path as an argument."
+        filepath = Path(argv[1])
+        # Optionally, validate path exists and is a directory
+        # assert filepath.exists() and filepath.is_dir(), (
+        #     f"Path {filepath} does not exist or is not a directory."
+        # )
+        app = FileBundlerApp(filepath)
+        output_file = save_project_structure(app)
+        print(f"[filebundler CLI] Project structure saved to: {output_file}")
+        logging.info(f"Project structure saved to {output_file}")
+    except Exception as e:
+        print(f"[filebundler CLI] Error: {e}")
+        logging.error(f"Error in project_structure CLI: {e}", exc_info=True)
+        sys.exit(1)
+
+
 if __name__ == "__main__":
-    assert len(sys.argv) > 1, "Please provide the project path as an argument."
-    filepath = Path(sys.argv[1])
-    # assert filepath.exists() and filepath.is_dir(), (
-    #     f"Path {filepath} does not exist or is not a directory."
-    # )
-    app = FileBundlerApp(filepath)
-    save_project_structure(app)
+    cli_entrypoint()

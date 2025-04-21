@@ -2,8 +2,13 @@
 
 ```bash
 uvx filebundler #  -> will automatically open a browser window!
-uvx filebundler --headless #  -> no auto open
-uvx filebundler --log-level debug #  or one of [debug|info|warning|error|critical]
+uvx filebundler web --headless #  -> no auto open
+uvx filebundler web --theme #  -> light|dark
+uvx filebundler web --log-level debug #  or one of [debug|info|warning|error|critical]
+
+# CLI usage (new!)
+uvx filebundler cli tree [project_path] #  -> generates .filebundler/project-structure.md for the given project (default: current directory)
+uvx filebundler web [options]           #  -> launches the web app (default if no subcommand)
 ```
 
 ## What is it?
@@ -34,7 +39,7 @@ Besides creating bundles FileBundler has additional features
 ## Project Structure
 The app automatically exports your project structure to a file called `project-structure.md` in the `.filebundler` folder. In the `Project Settings` tab on the sidebar you can add or remove glob patterns to ignore certain files or folders from the project structure. These patterns are taken into account for the whole app (i.e. the file tree, the auto-bundler and the project structure export).
 
-# Estimate token usage
+## Estimate token usage
 We currently use tiktoken with the [o200k_base](https://github.com/openai/tiktoken) model to estimate token count, but you can may a utility like [tokencounter.org](https://tokencounter.org/) to estimate token usage for other models or [openai's tokenizer](https://platform.openai.com/tokenizer) to compare estimates.
 
 ## Auto-Bundle
@@ -105,3 +110,23 @@ TODO
 
 # LICENSE
 We use GPLv3. Read it [here](https://raw.githubusercontent.com/dsfaccini/filebundler/refs/heads/master/LICENSE)
+
+## CLI Usage
+
+FileBundler now supports a CLI mode for project actions without starting the web server.
+
+- To generate the project structure markdown file for your project, run:
+
+```bash
+uvx filebundler cli tree [project_path]
+```
+- `project_path` is optional; if omitted, the current directory is used.
+- The output will be saved to `.filebundler/project-structure.md` in your project.
+
+- To launch the web app (default):
+
+```bash
+uvx filebundler web [options]
+```
+
+- If you run `uvx filebundler` with no subcommand, it defaults to `web` mode.
