@@ -1,10 +1,10 @@
 # IGNORE FOR NOW (may become relevant later)
 1. display file name in the file tree as they are
   1. at the moment, __init__.py file for example, are shown only as "init.py". Probably because the "__" is used by the markdown as formatting
-2. we could provide a Dockerfile
+2. we could provide a Dockerfile image
 3. [FEATURE] allow the user to modify the order of the files in the bundle
    1. we can do this by adding an "index" value to the FileItem model
-   2. but I'm not sure how to best implement the re-ordering in the UI 
+   2. but I'm not sure how to best implement the re-ordering in the UI
    3. drag and drop would be great be appearently this is only possible with a (not very widely used) library
    4. we may be better off making a component ourselves
 4. [QOL] refactor state modifications into a "state" folder to better track keys

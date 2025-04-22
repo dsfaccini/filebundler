@@ -1,18 +1,16 @@
 # FileBundler
 
 ```bash
-uvx filebundler #  -> will automatically open a browser window!
+uvx filebundler #  -> launches the web app
+uvx filebundler web [options] #  -> launches the web app
 uvx filebundler web --headless #  -> no auto open
 uvx filebundler web --theme #  -> light|dark
 uvx filebundler web --log-level debug #  or one of [debug|info|warning|error|critical]
-
-# CLI usage (new!)
 uvx filebundler cli tree [project_path] #  -> generates .filebundler/project-structure.md for the given project (default: current directory)
-uvx filebundler web [options]           #  -> launches the web app (default if no subcommand)
 ```
 
 ## What is it?
-File Bundler is a web app and CLI utility to bundle project files together and use them for LLM prompting. It helps estimate and optimize token and context usage.
+FileBundler is a web app and CLI utility to bundle project files together and use them for LLM prompting. It helps estimate and optimize token and context usage.
 
 # Who is FileBundler for?
 If you're used to copying your files into your "chat of choice" and find the output is often better than the edits your AI powered IDE proposes then FileBundler is for you.
@@ -37,19 +35,29 @@ If you're used to copying your files into your "chat of choice" and find the out
 Besides creating bundles FileBundler has additional features
 
 ## Project Structure
-The app automatically exports your project structure to a file called `project-structure.md` in the `.filebundler` folder. In the `Project Settings` tab on the sidebar you can add or remove glob patterns to ignore certain files or folders from the project structure. These patterns are taken into account for the whole app (i.e. the file tree, the auto-bundler and the project structure export).
+The app automatically exports your project structure to a file called `project-structure.md` with computed token counts for each file and folder not ignored. Checkout the [.filebundler/project-structure.md](https://raw.githubusercontent.com/dsfaccini/filebundler/refs/heads/master/.filebundler/project-structure.md) file in this project
+
+## Ignore patterns
+Not all files are included in the `project-structure.md`. *Ignore patterns* are made from a combination of `DEFAULT_IGNORE_PATTERNS` defined in this project and the .gitignore file of the project you open.
+
+Ignore patterns are stored in the `.filebundler/settings.json` file can be modified either directly in this file or using the *webapp* in the `Project Settings` tab on the sidebar you can add or remove glob patterns to ignore certain files or folders from the project structure.
 
 ## Estimate token usage
-We currently use tiktoken with the [o200k_base](https://github.com/openai/tiktoken) model to estimate token count, but you can may a utility like [tokencounter.org](https://tokencounter.org/) to estimate token usage for other models or [openai's tokenizer](https://platform.openai.com/tokenizer) to compare estimates.
+We currently use tiktoken with the [o200k_base](https://github.com/openai/tiktoken) model to compute token count, but you may a utility like [tokencounter.org](https://tokencounter.org/) to estimate token usage for other models or [openai's tokenizer](https://platform.openai.com/tokenizer) to compare estimates.
 
 ## Auto-Bundle
-The auto-bundler is a feature that uses an LLM to suggest you bundles relevant to your query. The auto-bundler automatically selects your exported project structure (which you can unselect if you want to).
+The auto-bundler uses an LLM to suggest you bundles relevant to your query. The auto-bundler automatically selects your exported project structure (which you can unselect if you want to).
 
 The auto-bundler will use your prompt and current selections to suggest bundles. The LLM will return a list of likely and probable files that are relevant to your query, and a message and/or code if you asked for it.
 
+### Auto-Bundle example
 A workflow example would be for you to provide the LLM with your TODO list (TODO.md) and ask it to provide you with the files that are related to the first n tasks. You could also ask it to sort your tasks into different categories and then re-prompt it to provide bundles for each category.
 
-Right now the auto-bundler uses Anthropic as a provider. If the app doesn't find an `ANTHROPIC_API_KEY` in your environment variables it will display an input field to enter it manually. All latest models from Anthropic are supported. (as of today 21 Mar 2025). As this is an open source project, more providers and models will be added if there's a need for them.
+### Tasks
+FileBundler will copy the templates under [tasks/templates/](https://github.com/dsfaccini/filebundler/tree/master/filebundler/features/tasks/templates) into the project's `.filebundler/tasks/` directory when filebundler is initialized. This is a useful task management workflow.
+
+## Supported LLM providers
+Right now the auto-bundler uses Anthropic as a provider. If the app doesn't find an `ANTHROPIC_API_KEY` in your environment variables it will display an input field to enter it manually. All latest models from Anthropic are supported. (as of today 21 Apr 2025). As this is an open source project, more providers and models will be added if there's a need for them.
 
 # Roadmap
 [TODO.md](https://raw.githubusercontent.com/dsfaccini/filebundler/refs/heads/master/TODO.md)
