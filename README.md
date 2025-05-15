@@ -1,12 +1,20 @@
 # FileBundler
 
+## Running with uvx
+You can run filebundler with uvx without installing it
 ```bash
-uvx filebundler #  -> launches the web app
+uvx filebundler #  -> prints the version
 uvx filebundler web [options] #  -> launches the web app
 uvx filebundler web --headless #  -> no auto open
 uvx filebundler web --theme #  -> light|dark
 uvx filebundler web --log-level debug #  or one of [debug|info|warning|error|critical]
 uvx filebundler cli tree [project_path] #  -> generates .filebundler/project-structure.md for the given project (default: current directory)
+uvx filebundler mcp # -> starts the MCP server
+```
+
+## Installing as a uv tool
+```bash
+uv tool install filebundler@latest
 ```
 
 ## What is it?
@@ -59,8 +67,67 @@ The auto-bundler will use your prompt and current selections to suggest bundles.
 ### Auto-Bundle example
 A workflow example would be for you to provide the LLM with your TODO list (TODO.md) and ask it to provide you with the files that are related to the first n tasks. You could also ask it to sort your tasks into different categories and then re-prompt it to provide bundles for each category.
 
-### Tasks
-FileBundler will copy the templates under [tasks/templates/](https://github.com/dsfaccini/filebundler/tree/master/filebundler/features/tasks/templates) into the project's `.filebundler/tasks/` directory when filebundler is initialized. This is a useful task management workflow.
+## Tasks
+FileBundler will copy the templates under [tasks/templates/](https://github.com/dsfaccini/filebundler/tree/master/filebundler/features/tasks/templates) into the project's `.filebundler/tasks/` directory when filebundler is initialized. This is a useful task management workflow. This will have no effect as long as your AI coding agent doesn't read the file. To use the task management workflow, you need to tell your agent to follow the instructions of the task management workflow using a trigger word or phrase, like `use the task management system whenever I tell you to "tackle a task"`.
+
+## MCP
+FileBundler includes a Model Context Protocol (MCP) server that allows AI-powered IDEs and other tools to programmatically request file bundles. This enables an LLM to receive the content of multiple specified files in a single, efficient transaction, potentially reducing interaction time and costs associated with multiple individual file-reading tool calls.
+
+The server provides a tool named `export_file_bundle` which accepts a list of relative file paths, the absolute project path, and an optional bundle name. It returns an XML-formatted string containing the content of these files, ready for LLM consumption.
+
+### Add the MCP server via JSON (like on Cursor)
+If you want to use uvx, this is the JSON to install the MCP server
+```json
+{
+    "mcpServers": {
+      "filebundler-server": {
+        "command": "uvx",
+        "args": ["filebundler", "mcp"],
+        "description": "Bundles a the contents of a list of files together into a single XML file"
+      }
+    }
+  }
+```
+
+If you install filebundler as a tool, the `command` and `args` fields need to look like this:
+```json
+{
+  // ...
+  "command": "filebundler",
+  "args": ["mcp"],
+  // ...
+}
+```
+
+Once configured, the AI in your IDE should be able to call the `export_file_bundle` tool, providing it with a list of file paths (these can be relative to the project root) and the absolute `project_path` of the project root to get a bundled context.
+
+## CLI Usage
+
+FileBundler supports a CLI mode for project actions without starting the web server.
+
+- To generate the project structure markdown file for your project, run:
+
+```bash
+uvx filebundler cli tree [project_path]
+```
+- `project_path` is optional; if omitted, the current directory is used.
+- The output will be saved to `.filebundler/project-structure.md` in your project.
+
+- To start the Model Context Protocol (MCP) server, run:
+
+```bash
+uvx filebundler mcp
+```
+- This server allows LLMs or other MCP-compatible clients to request file bundles programmatically. It listens on stdio.
+
+- To launch the web app (default):
+
+```bash
+uvx filebundler web [options]
+```
+
+- If you run `uvx filebundler` with no subcommand, it prints the current version of the package.
+
 
 ## Supported LLM models
 The auto-bundler supports models from multiple providers (Anthropic and Gemini). Simply choose any supported model from the "Select LLM model" dropdown; the app will infer its provider and prompt for the matching API key (e.g. `ANTHROPIC_API_KEY` or `GEMINI_API_KEY`). To add more models or providers, extend the `MODEL_REGISTRY` in `filebundler/lib/llm/registry.py`.
@@ -109,8 +176,9 @@ Before I started this tool I researched if there was already an existing tool an
 2. currently not available for Windows
 3. closed source
 4. pricing
+5. ~~Can't create bundles or persist file selections~~ I believe this has been added since around April 2025.
 
-For the record it seems like a great tool and I invite you to check it out. It offers lots of other functionality, like diffs and code trees.
+It seems like a great tool and I invite you to check it out. It offers lots of other functionality, like diffs and code trees.
 
 ## [Claude Code](https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview)
 Like cursor but on the CLI. With the introduction of [commands](https://x.com/_catwu/status/1900593730538864643) you can save markdown files with your prompts and issue them as commands to claude code. This is a bit different than bundling project files into topics, but shares the concept of persisting workflows that you repeat as settings.
@@ -125,22 +193,8 @@ TODO
 # LICENSE
 We use GPLv3. Read it [here](https://raw.githubusercontent.com/dsfaccini/filebundler/refs/heads/master/LICENSE)
 
-## CLI Usage
+# UI
+![Tab for exporting the code bundle](./docs/images/export-code-tab.png)
 
-FileBundler now supports a CLI mode for project actions without starting the web server.
-
-- To generate the project structure markdown file for your project, run:
-
-```bash
-uvx filebundler cli tree [project_path]
-```
-- `project_path` is optional; if omitted, the current directory is used.
-- The output will be saved to `.filebundler/project-structure.md` in your project.
-
-- To launch the web app (default):
-
-```bash
-uvx filebundler web [options]
-```
-
-- If you run `uvx filebundler` with no subcommand, it defaults to `web` mode.
+# Examples
+[How does a code bundle look like?](./docs/example-bundle.xml)
