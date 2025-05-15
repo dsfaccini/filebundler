@@ -16,25 +16,38 @@ uvx filebundler mcp # -> starts the MCP server
 ```bash
 uv tool install filebundler@latest
 
+# after installing filebundler as a uv tool you can run it as a global command like:
+# filebundler web
+# filebundler cli
+# without reinstalling the package each time
+
 # WARNING: If you already installed FileBundler as a local MCP server, close any process using the MCP server before uninstalling or upgrading FileBundler, as you may get a permission's error.
 # uv tool uninstall filebundler
 # uv tool upgrade filebundler
 ```
 
 ## What is it?
-FileBundler is a web app and CLI utility to bundle project files together and use them for LLM prompting. It helps estimate and optimize token and context usage.
+FileBundler is an MCP server, web app, and CLI utility to bundle project files together and use them for LLM prompting. It helps estimate and optimize token and context usage.
 
-# Who is FileBundler for?
-If you're used to copying your files into your "chat of choice" and find the output is often better than the edits your AI powered IDE proposes then FileBundler is for you.
+# Why use FileBundler?
+```
+Can I throw this whole folder into the chat?
+How many tokens do I need for this feature?
+The agent has spend 3 minutes listing directories and reading files
+```
+By creating file bundles you keep an overview of what parts of your codebase work with each other. You can optimize context usage by keeping track of how many tokens a certain area of your codebase takes.
 
-**Here are some reasons why:**
+Using the MCP server to bundle files together can save you time and money while your agent gathers context. [Here's an explanation why](./.filebundler/tasks/filebundler-MCP-server.md#what-is-the-value-in-doing-that)
+
+**More reasons why you would want to use FileBundler:**
 1. Segment your projects into topics (manually or with AI)
 2. Optimize your LLM context usage
 3. Copy fresh context in one click, no uploading files, no "Select a file..." dialog
 4. It encourages you to use best practices, like [anthropic's use of xml tags](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/use-xml-tags)
 
-# How do I use it?
-- install and run FileBundler per the command at the start of this README
+# How to use the Web App?
+- Install and run FileBundler per the command at the start of this README
+-
 - visit the URL shown on your terminal
 - you'll be prompted to enter the path of your project (this is your local filesystem path)
   - you can copy the path to your folder and paste it there
@@ -105,6 +118,12 @@ If you install filebundler as a tool, the `command` and `args` fields need to lo
 
 Once configured, the AI in your IDE should be able to call the `export_file_bundle` tool, providing it with a list of file paths (these can be relative to the project root) and the absolute `project_path` of the project root to get a bundled context.
 
+### Prime your agent to use the filebundler MCP
+Example:
+```
+look at this task @filebundler-MCP-server.md . Check the @project-structure.md to get a list of the files you want to read in order to tackle this task. Instead of reading the files one by one, make a list of the files you think you need and use the filebundler mcp server to get a bundle of them. Use proper filesystem notation for the project path in the current operating system (i.e. C:\\path\\to\\project for Windows and /path/to/project for linux)
+```
+
 ## CLI Usage
 
 FileBundler supports a CLI mode for project actions without starting the web server.
@@ -138,7 +157,7 @@ The auto-bundler supports models from multiple providers (Anthropic and Gemini).
 
 # Roadmap
 [TODO.md](https://raw.githubusercontent.com/dsfaccini/filebundler/refs/heads/master/TODO.md)
-We plan on adding other features, like codebase indexing
+We plan on adding other features, like more MCP tools and codebase indexing.
 
 # Performance and debugging
 If your application **doesn't start or freezes** you can check the logs in your terminal.
@@ -168,11 +187,17 @@ $env:LOGFIRE_TOKEN = "your_token_here"
 
 For any other issues you may open an issue in the [filebundler repo](https://github.com/dsfaccini/filebundler).
 
-### Errors
+## Errors
+
+### Access or permission denied
 Beware that if you install FileBundler as an MCP server for your IDE (e.g. Cursor, Windsurf, etc) or coding agent, that you may get permission's errors when upgrading or uninstalling FileBundler, if your coding agent is currently running.
 ```
 error: failed to remove directory `C:\Users\user\AppData\Roaming\uv\tools\filebundler`: Access is denied. (os error 5)
 ```
+### Wrong path syntax
+Sometimes a model will use the wrong syntax for the project path, like this:
+`/c:/Users/david/projects/filebundler`
+Even though the tool call will fail, the error message helps the agent auto-correct and call the tool again with the proper syntax.
 
 # Similar tools
 
