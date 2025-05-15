@@ -39,15 +39,9 @@ class Bundle(BaseModel):
     @property
     def last_modified_date(self) -> Optional[datetime]:
         """Get the most recent modification date of any file in the bundle"""
-        with logfire.span(
-            "computing last_modified_date for bundle {name}",
-            name=self.name,
-            _level="debug",
-        ):
-            return max(
-                datetime.fromtimestamp(fi.path.stat().st_mtime)
-                for fi in self.file_items
-            )
+        return max(
+            datetime.fromtimestamp(fi.path.stat().st_mtime) for fi in self.file_items
+        )
 
     @property
     def last_modified_date_str(self) -> str:
@@ -61,10 +55,7 @@ class Bundle(BaseModel):
     @property
     def size_bytes(self) -> int:
         """Get the total size in bytes of all files in the bundle"""
-        with logfire.span(
-            "computing size_bytes for bundle {name}", name=self.name, _level="debug"
-        ):
-            return sum(fi.path.stat().st_size for fi in self.file_items)
+        return sum(fi.path.stat().st_size for fi in self.file_items)
 
     @property
     def size_str(self) -> str:
@@ -74,10 +65,7 @@ class Bundle(BaseModel):
     @property
     def tokens(self) -> int:
         """Get the total token count of all files in the bundle"""
-        with logfire.span(
-            "computing token_count for bundle {name}", name=self.name, _level="debug"
-        ):
-            return sum(fi.tokens for fi in self.file_items)
+        return sum(fi.tokens for fi in self.file_items)
 
     @property
     def is_stale(self) -> bool:
