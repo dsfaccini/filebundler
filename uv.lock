@@ -291,8 +291,8 @@ wheels = [
 
 [[package]]
 name = "filebundler"
-version = "0.9.9"
-source = { virtual = "." }
+version = "0.9.11"
+source = { editable = "." }
 dependencies = [
     { name = "logfire" },
     { name = "pydantic" },
