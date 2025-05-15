@@ -15,6 +15,10 @@ uvx filebundler mcp # -> starts the MCP server
 ## Installing as a uv tool
 ```bash
 uv tool install filebundler@latest
+
+# WARNING: If you already installed FileBundler as a local MCP server, close any process using the MCP server before uninstalling or upgrading FileBundler, as you may get a permission's error.
+# uv tool uninstall filebundler
+# uv tool upgrade filebundler
 ```
 
 ## What is it?
@@ -163,6 +167,12 @@ $env:LOGFIRE_TOKEN = "your_token_here"
 </details>
 
 For any other issues you may open an issue in the [filebundler repo](https://github.com/dsfaccini/filebundler).
+
+### Errors
+Beware that if you install FileBundler as an MCP server for your IDE (e.g. Cursor, Windsurf, etc) or coding agent, that you may get permission's errors when upgrading or uninstalling FileBundler, if your coding agent is currently running.
+```
+error: failed to remove directory `C:\Users\user\AppData\Roaming\uv\tools\filebundler`: Access is denied. (os error 5)
+```
 
 # Similar tools
 
