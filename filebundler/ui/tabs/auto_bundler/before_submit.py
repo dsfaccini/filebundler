@@ -14,7 +14,7 @@ from filebundler.ui.components.selectable_file_items import (
     render_selectable_file_items_list,
 )
 
-from filebundler.lib.llm.claude import ANTHROPIC_MODEL_NAMES
+from filebundler.lib.llm.registry import MODEL_REGISTRY, PROVIDER_FOR_MODEL
 from filebundler.lib.llm.auto_bundle import request_auto_bundle
 
 
@@ -96,30 +96,35 @@ def render_auto_bundler_before_submit_tab(app: FileBundlerApp):
     # Model selection
     model_type = st.selectbox(
         "Select LLM model",
-        options=ANTHROPIC_MODEL_NAMES,
-        index=2
-        if env_settings.is_dev
-        else 1,  # Default to Haiku 3.5 in dev, Sonnet 3.5 in prod
+        options=list(MODEL_REGISTRY.keys()),
+        index=2 if env_settings.is_dev else 1,
         key="auto_bundler_model_type",
     )
+    provider = PROVIDER_FOR_MODEL.get(model_type, "")
 
-    # Anthropic API Key Input
-    anthropic_api_key = env_settings.anthropic_api_key
-    if not anthropic_api_key:
-        anthropic_api_key = st.text_input(
-            "Enter your Anthropic API Key",
+    # API key input and caching based on selected model's provider
+    provider_lower = provider.lower()
+    api_key_label = f"Enter your {provider} API Key"
+    api_key_env = getattr(env_settings, f"{provider_lower}_api_key", None)
+    api_key_session_key = f"{provider_lower}_api_key_input"
+    api_key_env_var = f"{provider.upper()}_API_KEY"
+
+    api_key = api_key_env
+    if not api_key:
+        api_key = st.text_input(
+            api_key_label,
             type="password",
-            key="anthropic_api_key_input",
+            key=api_key_session_key,
         )
-        if anthropic_api_key:
-            os.environ["ANTHROPIC_API_KEY"] = anthropic_api_key
-            env_settings.anthropic_api_key = anthropic_api_key
+        if api_key:
+            os.environ[api_key_env_var] = api_key
+            setattr(env_settings, f"{provider_lower}_api_key", api_key)
+            app.psm.save_project_settings()
 
     disable_button = (
         app.selections.nr_of_selected_files == 0
         or not user_prompt
-        or not anthropic_api_key
-        # this is no use because the user can re-click before this happens...
+        or not api_key
         or st.session_state.get("submitting_to_llm", None) is not None
         or st.session_state.get("auto_bundle_response", None) is not None
     )
@@ -133,10 +138,6 @@ def render_auto_bundler_before_submit_tab(app: FileBundlerApp):
             st.error("The app state is broken - missing user_prompt or model_type")
             return
         st.session_state["submitting_to_llm"] = True
-        # BUG not a bug per say, the spinner is shown below the button
-        # the button thus remains clickable
-        # which is a problem bc the user can click multiple times if they are impatient
-        # we need a fix so the user can't click multiple times
         with spinner:
             temp_bundle = Bundle(
                 name="temp-auto-bundle",

@@ -6,7 +6,7 @@ from filebundler.models.llm.AutoBundleResponse import AutoBundleResponse
 
 from filebundler.ui.notification import show_temp_notification
 
-from filebundler.lib.llm.claude import anthropic_synchronous_prompt
+from filebundler.lib.llm.registry import MODEL_REGISTRY, PROVIDER_FOR_MODEL
 
 # from typing import Literal
 # from filebundler.FileBundlerApp import FileBundlerApp
@@ -34,7 +34,16 @@ def request_auto_bundle(temp_bundle: Bundle, user_prompt: str, model_type: str):
     try:
         full_prompt = f"""{temp_bundle.export_code()}\n\n{user_prompt}"""
 
-        return anthropic_synchronous_prompt(
+        # Resolve prompt function and provider from central registry
+        prompt_fn = MODEL_REGISTRY.get(model_type)
+        if not prompt_fn:
+            logfire.error(f"Unknown model_type: {model_type}")
+            show_temp_notification(f"Unknown model_type: {model_type}", type="error")
+            return None
+
+        provider = PROVIDER_FOR_MODEL.get(model_type, "Unknown")
+        logfire.info(f"Using {provider} provider", model_type=model_type)
+        return prompt_fn(
             model_type=model_type,
             system_prompt=get_system_prompt(),
             user_prompt=full_prompt,

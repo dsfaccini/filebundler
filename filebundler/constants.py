@@ -12,6 +12,7 @@ class EnvironmentSettings(BaseSettings):
     env: Literal["dev", "prod"] = "prod"
     log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = "WARNING"
     anthropic_api_key: Optional[str] = None
+    gemini_api_key: Optional[str] = None
 
     @field_validator("log_level", mode="before")
     def validate_log_level(cls, value: str) -> str:
@@ -26,6 +27,8 @@ def get_env_settings():
     env_settings = EnvironmentSettings()
     if env_settings.is_dev and env_settings.anthropic_api_key:
         os.environ["ANTHROPIC_API_KEY"] = env_settings.anthropic_api_key
+    if env_settings.is_dev and env_settings.gemini_api_key:
+        os.environ["GEMINI_API_KEY"] = env_settings.gemini_api_key
 
     return env_settings
 

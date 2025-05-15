@@ -46,7 +46,7 @@ Ignore patterns are stored in the `.filebundler/settings.json` file can be modif
 We currently use tiktoken with the [o200k_base](https://github.com/openai/tiktoken) model to compute token count, but you may a utility like [tokencounter.org](https://tokencounter.org/) to estimate token usage for other models or [openai's tokenizer](https://platform.openai.com/tokenizer) to compare estimates.
 
 ## Auto-Bundle
-The auto-bundler uses an LLM to suggest you bundles relevant to your query. The auto-bundler automatically selects your exported project structure (which you can unselect if you want to).
+The auto-bundler uses an LLM to suggest you bundles relevant to your query. Simply choose your desired model from the "Select LLM model" dropdown; the app will automatically infer the correct provider (Anthropic or Gemini) and prompt you for the corresponding API key if needed. The auto-bundler automatically selects your exported project structure (which you can unselect if you want).
 
 The auto-bundler will use your prompt and current selections to suggest bundles. The LLM will return a list of likely and probable files that are relevant to your query, and a message and/or code if you asked for it.
 
@@ -56,8 +56,8 @@ A workflow example would be for you to provide the LLM with your TODO list (TODO
 ### Tasks
 FileBundler will copy the templates under [tasks/templates/](https://github.com/dsfaccini/filebundler/tree/master/filebundler/features/tasks/templates) into the project's `.filebundler/tasks/` directory when filebundler is initialized. This is a useful task management workflow.
 
-## Supported LLM providers
-Right now the auto-bundler uses Anthropic as a provider. If the app doesn't find an `ANTHROPIC_API_KEY` in your environment variables it will display an input field to enter it manually. All latest models from Anthropic are supported. (as of today 21 Apr 2025). As this is an open source project, more providers and models will be added if there's a need for them.
+## Supported LLM models
+The auto-bundler supports models from multiple providers (Anthropic and Gemini). Simply choose any supported model from the "Select LLM model" dropdown; the app will infer its provider and prompt for the matching API key (e.g. `ANTHROPIC_API_KEY` or `GEMINI_API_KEY`). To add more models or providers, extend the `MODEL_REGISTRY` in `filebundler/lib/llm/registry.py`.
 
 # Roadmap
 [TODO.md](https://raw.githubusercontent.com/dsfaccini/filebundler/refs/heads/master/TODO.md)
