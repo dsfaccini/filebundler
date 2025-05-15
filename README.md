@@ -45,6 +45,12 @@ Ignore patterns are stored in the `.filebundler/settings.json` file can be modif
 ## Estimate token usage
 We currently use tiktoken with the [o200k_base](https://github.com/openai/tiktoken) model to compute token count, but you may a utility like [tokencounter.org](https://tokencounter.org/) to estimate token usage for other models or [openai's tokenizer](https://platform.openai.com/tokenizer) to compare estimates.
 
+## Bundles
+A bundle is just a list of file paths relative to their project folder. It includes some metadata, such as the total byte size of the files in the bundle and the total tokens as calculated by our tokenizer (currretly o200k_base). A bundle can be exported, that means, the contents of the files listed in a bundle can be exported as an XML structure. This follows the best practices [mentioned above](#who-is-filebundler-for). This exported code is also called a bundle. So for clarity, we'll speak of "XML bundle" or "code bundle" when we talk about the **bundle of exported code** and refer to the list of file paths as the "file bundle" or just "bundle".
+
+### Persistance
+Bundles are also persisted to the project whenever they are created using the web app. They are JSON files found under `.filebundler/bundles`. You can also create a bundle by writing such a JSON file in the bundles folder.
+
 ## Auto-Bundle
 The auto-bundler uses an LLM to suggest you bundles relevant to your query. Simply choose your desired model from the "Select LLM model" dropdown; the app will automatically infer the correct provider (Anthropic or Gemini) and prompt you for the corresponding API key if needed. The auto-bundler automatically selects your exported project structure (which you can unselect if you want).
 

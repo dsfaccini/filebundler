@@ -103,7 +103,7 @@ class Bundle(BaseModel):
                 for i, file_item in enumerate(filtered_items)
             )
             return f"""<?xml version="1.0" encoding="UTF-8"?>
-<documents bundle-name="{self.name}">
+<documents bundle-name="{self.name}" token-count="{self.tokens}">
 {filtered_items_str}
 </documents>"""
 
