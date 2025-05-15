@@ -17,6 +17,7 @@ class ProjectSettingsManager:
         self.filebundler_dir.mkdir(exist_ok=True)
         self.settings_file = self.filebundler_dir / "settings.json"
         self.load_project_settings()
+        self.save_project_settings()
 
     def load_project_settings(self):
         # initialize ignore patterns based on .gitignore file

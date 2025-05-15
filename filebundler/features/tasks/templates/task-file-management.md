@@ -1,45 +1,45 @@
 ---
-description: 
-globs: 
+description:
+globs:
 alwaysApply: false
 ---
-# subtask File Management Guide
+# "Task File" Management Guide
 <!-- https://github.com/elie222/inbox-zero/blob/main/.cursor/rules/subtask-list.mdc -->
 Guidelines for creating and managing subtask lists in markdown files to track project progress
 
 ## Task File Creation
 
-1. Create markdown subtask files under the `.filebundler/` folder:
+1. Create markdown task files under the `.filebundler/tasks` folder:
    - Use a descriptive name relevant to the feature (e.g., `ASSISTANT_CHAT.md`)
    - Include a clear title and description of the feature being implemented
 
 2. Structure the file with these sections:
    ```markdown
    # Feature Name Implementation
-   
+
    Brief description of the feature and its purpose.
-   
+
    ## Completed Subtasks
-   
+
    - [x] Subtask 1 that has been completed
    - [x] Subtask 2 that has been completed
-   
+
    ## In Progress Subtasks
-   
+
    - [ ] Subtask 3 currently being worked on
    - [ ] Subtask 4 to be completed soon
-   
+
    ## Future Subtasks
-   
+
    - [ ] Subtask 5 planned for future implementation
    - [ ] Subtask 6 planned for future implementation
-   
+
    ## Implementation Plan
-   
+
    Detailed description of how the feature will be implemented.
-   
+
    ### Relevant Files
-   
+
    - path/to/file1.ts - Description of purpose
    - path/to/file2.ts - Description of purpose
    ```
