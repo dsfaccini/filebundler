@@ -15,7 +15,8 @@ def main():
     # Register app.cleanup to be called on normal exit
     atexit.register(app.cleanup)
 
-    print(f"Running FileBundler version {VERSION}")
+    # priniting anything to stdout will break the MCP server
+    # print(f"Running FileBundler version {VERSION}")
 
     parser = argparse.ArgumentParser(description="File Bundler App")
     parser.add_argument(
@@ -139,7 +140,7 @@ def main():
         sys.argv = st_args
 
         # Run Streamlit CLI with this file
-        sys.exit(stcli.main())
+        sys.exit(stcli.main())  # type: ignore
     except KeyboardInterrupt:
         # Handle Ctrl+C at the top level
         logging.info("Keyboard interrupt received, exiting...")
