@@ -291,7 +291,7 @@ wheels = [
 
 [[package]]
 name = "filebundler"
-version = "0.9.11"
+version = "0.9.13"
 source = { editable = "." }
 dependencies = [
     { name = "logfire" },

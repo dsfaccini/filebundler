@@ -22,7 +22,6 @@ from filebundler.ui.sidebar.project_selection import render_project_selection
 from filebundler.ui.notification import show_temp_notification
 
 # NOTE we do this here because this is the entry point for the Streamlit app
-logfire.configure(send_to_logfire="if-token-present")
 env_settings = constants.get_env_settings()
 LOG_LEVEL = logging._nameToLevel[env_settings.log_level.upper()]  # type: ignore
 
@@ -41,6 +40,8 @@ def cleanup():
 
 
 def main():
+    logfire.configure(send_to_logfire="if-token-present")
+
     """The actual Streamlit application logic"""
     try:
         st.set_page_config(page_title="File Bundler", layout="wide")

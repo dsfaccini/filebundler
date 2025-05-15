@@ -6,6 +6,7 @@ import logging
 import argparse
 
 from filebundler import app
+from filebundler._version import VERSION
 
 
 def main():
@@ -14,7 +15,17 @@ def main():
     # Register app.cleanup to be called on normal exit
     atexit.register(app.cleanup)
 
+    print(f"Running FileBundler version {VERSION}")
+
     parser = argparse.ArgumentParser(description="File Bundler App")
+    parser.add_argument(
+        "-v",
+        "-V",
+        "--version",
+        action="version",
+        version=f"%(prog)s {VERSION}",
+        help="Show program's version number and exit",
+    )
     subparsers = parser.add_subparsers(
         dest="command", help="Subcommands: web (default), cli"
     )
@@ -59,9 +70,21 @@ def main():
         help="Set the logging level (default: info)",
     )
 
-    # If no subcommand is provided, default to 'web'
-    if len(sys.argv) == 1 or (len(sys.argv) > 1 and sys.argv[1] not in ["web", "cli"]):
-        sys.argv.insert(1, "web")
+    # MCP Server subcommand
+    parser_mcp = subparsers.add_parser("mcp", help="Start the FileBundler MCP server")
+    parser_mcp.add_argument(
+        "--log-level",
+        default="info",
+        choices=["debug", "info", "warning", "error", "critical"],
+        help="Set the logging level (default: info)",
+    )
+
+    # If no subcommand is provided, default to '--version'
+    if len(sys.argv) == 1 or (
+        len(sys.argv) > 1 and sys.argv[1] not in ["web", "cli", "mcp"]
+    ):
+        print("No command provided, defaulting to '--version'")
+        sys.argv.insert(1, "--version")
 
     args = parser.parse_args()
 
@@ -82,11 +105,19 @@ def main():
             logger.error(f"Unknown CLI action: {args.action}")
             print(f"Unknown CLI action: {args.action}")
             sys.exit(1)
+    elif args.command == "mcp":
+        # MCP Server mode
+        from filebundler.mcp_server import main as mcp_main
+        # import asyncio
+        # asyncio.run(mcp_main())
+
+        mcp_main()
+        return
 
     # Web mode (default)
-    if "ANTHROPIC_API_KEY" not in os.environ:
+    if "ANTHROPIC_API_KEY" not in os.environ and "GEMINI_API_KEY" not in os.environ:
         logging.warning(
-            "\033[93mAnthropic API key not found in environment variables. "
+            "\033[93mAnthropic or Gemini API key not found in environment variables. "
             "Some features may not work as expected. "
             "(Color might not be supported in all terminals)\033[0m"
         )
