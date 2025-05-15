@@ -24,7 +24,7 @@ from filebundler.ui.notification import show_temp_notification
 # NOTE we do this here because this is the entry point for the Streamlit app
 logfire.configure(send_to_logfire="if-token-present")
 env_settings = constants.get_env_settings()
-LOG_LEVEL = logging._nameToLevel[env_settings.log_level.upper()]
+LOG_LEVEL = logging._nameToLevel[env_settings.log_level.upper()]  # type: ignore
 
 logging.basicConfig(
     level=LOG_LEVEL,
@@ -62,7 +62,7 @@ def main():
                 else:
                     st.warning("Please open a project to configure settings.")
 
-        st.write(
+        st.write(  # type: ignore
             "Bundle project files together for prompting, or estimating and optimizing token and context usage."
         )
         main_tab1, main_tab2, debug_tab = st.tabs(
@@ -75,7 +75,7 @@ def main():
         with main_tab1:
             # Only show if project is loaded
             if st.session_state.app:
-                tab1, tab2, tab3, tab4 = st.tabs(
+                tab1, tab2, tab3, tab4 = st.tabs(  # type: ignore
                     [
                         f"Selected Files ({st.session_state.app.selections.nr_of_selected_files})",
                         "Export Contents",

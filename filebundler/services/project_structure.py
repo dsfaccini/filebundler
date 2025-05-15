@@ -41,11 +41,11 @@ def _generate_project_structure(app: FileBundlerApp):
                 return "Error: Root directory not found in file items"
 
             # Recursive function to build the directory tree
-            def build_tree(directory_item: FileItem, prefix=""):
+            def build_tree(directory_item: FileItem, prefix: str = "") -> list[str]:
                 with logfire.span(
                     "building tree for {directory}", directory=directory_item.name
                 ):
-                    result = []
+                    result: list[str] = []
 
                     # Sort children: directories first, then files, all alphabetically
                     sorted_children = sorted(
@@ -120,7 +120,7 @@ def save_project_structure(app: FileBundlerApp) -> Path:
         raise
 
 
-def cli_entrypoint(argv=None):
+def cli_entrypoint(argv: list[str] | None = None):
     """
     CLI entrypoint for generating and saving the project structure.
     Args:

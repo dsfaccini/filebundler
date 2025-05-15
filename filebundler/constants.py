@@ -7,7 +7,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class EnvironmentSettings(BaseSettings):
-    model_config = SettingsConfigDict(case_sensitive=False)
+    model_config = SettingsConfigDict(case_sensitive=True)
 
     env: Literal["dev", "prod"] = "prod"
     log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = "WARNING"
@@ -61,7 +61,12 @@ DEFAULT_IGNORE_PATTERNS = [
     ".DS_Store",
     "*credentials.json",
     "package-lock.json",
-    ".prettierrc*",
+    "yarn.lock",
+    "pnpm-lock.yaml",
+    "bun.lock",
+    "bun.lockb",
+    "*-lock.yaml",
+    "*.lock*",
     ".eslint.config.js",
     # extensions
     "*.lock",
