@@ -82,6 +82,9 @@ DEFAULT_IGNORE_PATTERNS = [
     "*.so",
     "*.bin",
     "*.dat",
+    "LICENSE",
+    ".env",
+    ".gitignore",
 ]
 
 
