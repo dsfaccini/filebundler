@@ -17,21 +17,10 @@ def render_file_tree(app: FileBundlerApp):
     Args:
         app: FileBundlerApp instance
     """
-    st.markdown(
-        """
-    <style>
-    /* Create scrollable container for files tree */
-    [data-testid="stVerticalBlock"]:has(div.row-widget.stCheckbox) {
-        max-height: 80vh;
-        overflow-y: auto;
-        padding-right: 10px;
-    }
-    </style>
-    """,
-        unsafe_allow_html=True,
-    )
 
-    st.subheader(f"Files ({app.selections.nr_of_selected_files}/{app.nr_of_files})")
+    st.subheader(
+        f"Files ({app.selections.nr_of_selected_files}/{app.nr_of_files}) ({f'{app.root_item.tokens}'} tokens)"
+    )
 
     def clear_search():
         st.session_state["file_tree_search"] = ""
@@ -69,9 +58,9 @@ def render_file_tree(app: FileBundlerApp):
                     continue
 
                 checkbox_label = (
-                    f"{'&nbsp;' * indent * 4}📁 **{child.name}** ({child.tokens})"
+                    f"{'&nbsp;' * indent * 4}📁 **{child.name}** ({child.tokens} tokens)"
                     if child.is_dir
-                    else f"{'&nbsp;' * indent * 4} {child.name} ({child.tokens})"
+                    else f"{'&nbsp;' * indent * 4} {child.name} ({child.tokens} tokens)"
                 )
                 new_state = st.checkbox(
                     checkbox_label,
