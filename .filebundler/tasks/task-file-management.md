@@ -3,7 +3,7 @@ description:
 globs:
 alwaysApply: false
 ---
-# Task File Management Guide
+# "Task File" Management Guide
 <!-- https://github.com/elie222/inbox-zero/blob/main/.cursor/rules/subtask-list.mdc -->
 Guidelines for creating and managing subtask lists in markdown files to track project progress
 
@@ -64,9 +64,9 @@ Guidelines for creating and managing subtask lists in markdown files to track pr
 
 ## AI Instructions
 
-When working with subtask files, the AI should:
+When working with task files, the AI should:
 
-1. Regularly update the subtask file after implementing significant components
+1. Regularly update the task file after implementing significant components
 2. Mark completed subtasks with [x] when finished
 3. Add new subtasks discovered during implementation
 4. Maintain the "Relevant Files" section with accurate file paths and descriptions

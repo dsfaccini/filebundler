@@ -35,58 +35,6 @@ def get_env_settings():
 
 DEFAULT_MAX_RENDER_FILES = 500
 
-DEFAULT_IGNORE_PATTERNS = [
-    # root dir folders
-    "venv/**",
-    "venv",
-    ".venv/**",
-    ".venv",
-    "node_modules/**",
-    "node_modules",
-    ".mypy_cache/**",
-    ".mypy_cache",
-    ".pytest_cache/**",
-    ".pytest_cache",
-    ".git/**",
-    ".git",
-    ".ruff_cache/**",
-    ".ruff_cache",
-    ".vscode/**",
-    ".vscode",
-    # recursive folders
-    "*/__pycache__",
-    "*/.ipynb_checkpoints",
-    # files
-    ".env",
-    ".DS_Store",
-    "*credentials.json",
-    "package-lock.json",
-    "yarn.lock",
-    "pnpm-lock.yaml",
-    "bun.lock",
-    "bun.lockb",
-    "*-lock.yaml",
-    "*.lock*",
-    ".eslint.config.js",
-    # extensions
-    "*.lock",
-    "*.jpg",
-    "*.jpeg",
-    "*.png",
-    "*.gif",
-    "*.pdf",
-    "*.zip",
-    "*.exe",
-    "*.dll",
-    "*.pyc",
-    "*.so",
-    "*.bin",
-    "*.dat",
-    "LICENSE",
-    ".env",
-    ".gitignore",
-]
-
 
 DISPLAY_NR_OF_RECENT_PROJECTS = 5
 SELECTIONS_BUNDLE_NAME = "default-bundle"
