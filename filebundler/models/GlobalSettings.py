@@ -7,13 +7,12 @@ from pathlib import Path
 from pydantic import field_serializer, field_validator
 
 from filebundler.utils import BaseModel
-from filebundler.constants import DEFAULT_IGNORE_PATTERNS, DEFAULT_MAX_RENDER_FILES
+from filebundler.constants import DEFAULT_MAX_RENDER_FILES
 
 logger = logging.getLogger(__name__)
 
 
 class GlobalSettings(BaseModel):
-    ignore_patterns: List[str] = DEFAULT_IGNORE_PATTERNS
     max_files: int = DEFAULT_MAX_RENDER_FILES
     recent_projects: List[Path] = []
 

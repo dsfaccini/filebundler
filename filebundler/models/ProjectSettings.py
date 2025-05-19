@@ -2,7 +2,7 @@
 from typing import List
 
 from filebundler.utils import BaseModel
-from filebundler.constants import DEFAULT_IGNORE_PATTERNS, DEFAULT_MAX_RENDER_FILES
+from filebundler.constants import DEFAULT_MAX_RENDER_FILES
 
 
 class AutoBundleSettings(BaseModel):
@@ -14,7 +14,7 @@ class AutoBundleSettings(BaseModel):
 
 
 class ProjectSettings(BaseModel):
-    ignore_patterns: List[str] = DEFAULT_IGNORE_PATTERNS
+    ignore_patterns: List[str] = []
     max_files: int = DEFAULT_MAX_RENDER_FILES
     sort_files_first: bool = True
     # alphabetical_sort: Literal["asc", "desc"] = "asc"

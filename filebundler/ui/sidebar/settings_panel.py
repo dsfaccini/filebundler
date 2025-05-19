@@ -38,7 +38,7 @@ def render_settings_panel(app: FileBundlerApp):
         )
 
         st.subheader("Ignore Patterns")
-        st.write("Files matching these patterns will be ignored (glob syntax)")
+        st.write("Files matching these patterns will be ignored (glob syntax)")  # type: ignore
 
         with st.expander("Show/Hide Ignore Patterns", expanded=False):
             updated_patterns = st.text_area(

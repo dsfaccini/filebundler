@@ -3,7 +3,7 @@ description:
 globs:
 alwaysApply: false
 ---
-# Task File Management Guide
+# "Task File" Management Guide
 <!-- https://github.com/elie222/inbox-zero/blob/main/.cursor/rules/subtask-list.mdc -->
 Guidelines for creating and managing subtask lists in markdown files to track project progress
 
