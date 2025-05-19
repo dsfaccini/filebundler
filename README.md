@@ -233,3 +233,10 @@ We use GPLv3. Read it [here](https://raw.githubusercontent.com/dsfaccini/filebun
 
 # Examples
 [How does a code bundle look like?](./docs/example-bundle.xml)
+
+# Running locally
+```bash
+# git clone .../dsfaccini/filebundler.git
+# cd filebundler
+streamlit run filebundler/main.py --global.developmentMode=false
+```
