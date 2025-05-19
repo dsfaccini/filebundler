@@ -105,8 +105,11 @@ class ProjectSettingsManager:
         self.save_ignore_patterns()
         try:
             with open(self.settings_file, "w", encoding="utf-8") as f:
-                # Save all settings, but ignore_patterns will be loaded from file
-                json_dump(self.project_settings.model_dump(), f)
+                # Save all settings, but ignore_patterns will be loaded from file and not written
+                settings_dict = self.project_settings.model_dump()
+                if "ignore_patterns" in settings_dict:
+                    del settings_dict["ignore_patterns"]
+                json_dump(settings_dict, f)
             logger.info(f"Project settings saved to {self.settings_file}")
             return True
         except Exception as e:
