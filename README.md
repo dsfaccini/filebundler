@@ -9,17 +9,19 @@ uvx filebundler web --headless #  -> no auto open
 uvx filebundler web --theme #  -> light|dark
 uvx filebundler web --log-level debug #  or one of [debug|info|warning|error|critical]
 uvx filebundler cli tree [project_path] #  -> generates .filebundler/project-structure.md for the given project (default: current directory)
+uvx filebundler cli chat_instructions
+uvx filebundler cli unbundle # -> run these two together to paste multiple files from a chatbot into your project in a single move
 uvx filebundler mcp # -> starts the MCP server
 ```
 
-## Installing as a uv tool
+## Installing as a uv tool (Recommended)
 ```bash
 uv tool install filebundler@latest
 
 # after installing filebundler as a uv tool you can run it as a global command like:
 # filebundler web
 # filebundler cli
-# without reinstalling the package each time
+# without reinstalling the package each time (that is, downloading all dependencies each time)
 
 # WARNING: If you already installed FileBundler as a local MCP server, close any process using the MCP server before uninstalling or upgrading FileBundler, as you may get a permission's error.
 # uv tool uninstall filebundler
@@ -73,7 +75,18 @@ We currently use tiktoken with the [o200k_base](https://github.com/openai/tiktok
 ## Bundles
 A bundle is just a list of file paths relative to their project folder. It includes some metadata, such as the total byte size of the files in the bundle and the total tokens as calculated by our tokenizer (currretly o200k_base). A bundle can be exported, that means, the contents of the files listed in a bundle can be exported as an XML structure. This follows the best practices [mentioned above](#who-is-filebundler-for). This exported code is also called a bundle. So for clarity, we'll speak of "XML bundle" or "code bundle" when we talk about the **bundle of exported code** and refer to the list of file paths as the "file bundle" or just "bundle".
 
-**Unbundle:** Quickly recreate all files from a code bundle (e.g. from an LLM chat) using the CLI `unbundle` command. Just copy the bundle to your clipboard and run the command—no need to paste each file manually!
+### Unbundle
+Copy multiple files written by a chatbot using the CLI `unbundle` command.
+```bash
+filebundler cli chat_instructions # this copies the instrction to your clipboard, paste this instruction in your chat so the chatbot formats their response properly.
+filebundler cli unbundle # this gives you a moment to copy the XML response from the chatbot into your clipboard.
+
+# you don't need to paste the content into the terminal, just press enter when you're ready
+# unbundle will unbundle the contents of your clipboard into the files and folders defined by the llm using their relative paths
+
+# NOTE we suggest you do this after committing your staged files so you can more clearly see what changes were done
+# Second note: if the format isn't right the function will fail
+```
 
 ### Persistance
 Bundles are also persisted to the project whenever they are created using the web app. They are JSON files found under `.filebundler/bundles`. You can also create a bundle by writing such a JSON file in the bundles folder.
@@ -127,43 +140,32 @@ look at this task @filebundler-MCP-server.md . Check the @project-structure.md t
 ```
 
 ## CLI Usage
-
 FileBundler supports a CLI mode for project actions without starting the web server.
 
-- To generate the project structure markdown file for your project, run:
+### Export the project structure
+To generate the project structure markdown file for your project, run:
 
 ```bash
-uvx filebundler cli tree [project_path]
+filebundler cli tree [project_path]
 ```
 - `project_path` is optional; if omitted, the current directory is used.
 - The output will be saved to `.filebundler/project-structure.md` in your project.
 
-- To quickly create files from a code bundle (e.g. from an LLM chat), run:
+### Paste multiple code files from a chatbot into your project
+To quickly create files from a code bundle (e.g. from an LLM chat), run:
 
 ```bash
-uvx filebundler cli chat_instructions && uvx filebundler cli unbundle
+filebundler cli chat_instructions && filebundler cli unbundle
 # chat_instructions copies the instructions you need to give your chat to format the output files in xml
-# unbundle will unbundle the contents of your clipboard after you ahve copied the response from your chat
+# unbundle will unbundle the contents of your clipboard after you have copied the response from your chat
 # NOTE "unbundle" assumes your LLM has followed the instructions and formatted your code in the described xml format
 # if the format isn't right the function will fail
 ```
 - **Recommended:** Copy the code bundle to your clipboard, then simply press Enter when prompted (do NOT paste in the terminal; FileBundler will fetch it directly from your clipboard).
 
-- To start the Model Context Protocol (MCP) server, run:
-
-```bash
-uvx filebundler mcp
-```
-- This server allows LLMs or other MCP-compatible clients to request file bundles programmatically. It listens on stdio.
-
-- To launch the web app (default):
-
-```bash
-uvx filebundler web [options]
-```
-
-- If you run `uvx filebundler` with no subcommand, it prints the current version of the package.
-
+### Print version
+If you run `filebundler` with no subcommand, it prints the current version of the package.
+You can also explicitly run `filebundler -v`
 
 ## Supported LLM models
 The auto-bundler supports models from multiple providers (Anthropic and Gemini). Simply choose any supported model from the "Select LLM model" dropdown; the app will infer its provider and prompt for the matching API key (e.g. `ANTHROPIC_API_KEY` or `GEMINI_API_KEY`). To add more models or providers, extend the `MODEL_REGISTRY` in `filebundler/lib/llm/registry.py`.
