@@ -73,6 +73,8 @@ We currently use tiktoken with the [o200k_base](https://github.com/openai/tiktok
 ## Bundles
 A bundle is just a list of file paths relative to their project folder. It includes some metadata, such as the total byte size of the files in the bundle and the total tokens as calculated by our tokenizer (currretly o200k_base). A bundle can be exported, that means, the contents of the files listed in a bundle can be exported as an XML structure. This follows the best practices [mentioned above](#who-is-filebundler-for). This exported code is also called a bundle. So for clarity, we'll speak of "XML bundle" or "code bundle" when we talk about the **bundle of exported code** and refer to the list of file paths as the "file bundle" or just "bundle".
 
+**Unbundle:** Quickly recreate all files from a code bundle (e.g. from an LLM chat) using the CLI `unbundle` command. Just copy the bundle to your clipboard and run the command—no need to paste each file manually!
+
 ### Persistance
 Bundles are also persisted to the project whenever they are created using the web app. They are JSON files found under `.filebundler/bundles`. You can also create a bundle by writing such a JSON file in the bundles folder.
 
@@ -135,6 +137,17 @@ uvx filebundler cli tree [project_path]
 ```
 - `project_path` is optional; if omitted, the current directory is used.
 - The output will be saved to `.filebundler/project-structure.md` in your project.
+
+- To quickly create files from a code bundle (e.g. from an LLM chat), run:
+
+```bash
+uvx filebundler cli chat_instructions && uvx filebundler cli unbundle
+# chat_instructions copies the instructions you need to give your chat to format the output files in xml
+# unbundle will unbundle the contents of your clipboard after you ahve copied the response from your chat
+# NOTE "unbundle" assumes your LLM has followed the instructions and formatted your code in the described xml format
+# if the format isn't right the function will fail
+```
+- **Recommended:** Copy the code bundle to your clipboard, then simply press Enter when prompted (do NOT paste in the terminal; FileBundler will fetch it directly from your clipboard).
 
 - To start the Model Context Protocol (MCP) server, run:
 
