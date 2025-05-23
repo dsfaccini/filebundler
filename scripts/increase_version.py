@@ -71,7 +71,10 @@ if __name__ == "__main__":
         description="Increase version in pyproject.toml and filebundler/_version.py."
     )
     parser.add_argument(
-        "part", choices=["major", "minor", "patch"], help="Version part to increase."
+        "part",
+        choices=["major", "minor", "patch"],
+        help="Version part to increase.",
+        default="patch",
     )
     parser.add_argument(
         "--pyproject",

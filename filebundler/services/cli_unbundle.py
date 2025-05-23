@@ -1,9 +1,9 @@
 import sys
-import xml.etree.ElementTree as ET
-import os
-from pathlib import Path
 import html
 import pyperclip
+import xml.etree.ElementTree as ET
+
+from pathlib import Path
 
 def cli_unbundle():
     print("After copying your FileBundler code bundle to the clipboard, simply press Enter.\n(Do NOT paste the bundle into the terminal; we'll fetch it directly from your clipboard.)\nIf you prefer to paste manually (visible), type any character and press Enter.")
