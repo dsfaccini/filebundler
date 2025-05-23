@@ -56,7 +56,7 @@ def main():
         "cli", help="Run CLI actions without starting the web server"
     )
     parser_cli.add_argument(
-        "action", choices=["tree"], help="CLI action to perform (currently only 'tree')"
+        "action", choices=["tree", "chat_instruction", "unbundle"], help="CLI action to perform ('tree', 'chat_instruction', 'unbundle')"
     )
     parser_cli.add_argument(
         "project_path",
@@ -97,11 +97,18 @@ def main():
         # CLI mode
         if args.action == "tree":
             from filebundler.services.project_structure import cli_entrypoint
-
-            # Pass only the relevant arguments: script name and project_path
             cli_entrypoint([sys.argv[0], args.project_path])
             return
+        elif args.action == "chat_instruction":
+            from filebundler.services.cli_chat_instruction import cli_chat_instruction
+            cli_chat_instruction()
+            return
+        elif args.action == "unbundle":
+            from filebundler.services.cli_unbundle import cli_unbundle
+            cli_unbundle()
+            return
         else:
+            import logging
             logger = logging.getLogger("filebundler.cli")
             logger.error(f"Unknown CLI action: {args.action}")
             print(f"Unknown CLI action: {args.action}")
