@@ -11,11 +11,20 @@ def cli_unbundle():
     except Exception as e:
         print(f"Error reading input: {e}")
         sys.exit(1)
-    if len(pasted.strip()) < 20:
-        print("Error: Pasted input is too short. Please ensure you have copied the entire code bundle.")
+    # Remove markdown code block markers if present
+    lines = pasted.splitlines()
+    if lines and lines[0].strip().startswith('```'):
+        # Remove opening code block (may be ``` or ```xml)
+        lines = lines[1:]
+    if lines and lines[-1].strip().startswith('```'):
+        # Remove closing code block
+        lines = lines[:-1]
+    pasted_clean = '\n'.join(lines)
+    if len(pasted_clean) < 20 or '<documents' not in pasted_clean:
+        print("Error: Pasted input is too short or missing <documents> tag. Please ensure you have copied the entire code bundle.")
         sys.exit(1)
     try:
-        root = ET.fromstring(pasted)
+        root = ET.fromstring(pasted_clean)
         if root.tag != "documents":
             raise ValueError("Root tag is not <documents>.")
         created_files = []
