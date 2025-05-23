@@ -4,7 +4,7 @@ def cli_chat_instruction():
     instruction = """
 # FileBundler Multi-File Code Bundle Instruction
 
-To provide multiple code files as a single bundle, output your answer in the following XML format. This allows the user to copy all files at once and recreate them with FileBundler CLI.
+To provide multiple code files as a single bundle, output your answer in the following XML format. This allows the user to copy all files at once into their project.
 
 ## Format
 
@@ -39,6 +39,8 @@ requests==2.31.0
 - Indent and format as shown for readability.
 - Do not include any text outside the XML block.
 - The user will copy the entire XML and run `filebundler cli unbundle` to create all files at once.
+
+MOST IMPORTANT: produce one single artifact that uses our xml structure.
 """
     pyperclip.copy(instruction)
     print("\n---\n")
