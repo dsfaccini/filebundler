@@ -1,24 +1,27 @@
 import sys
-import getpass
 import xml.etree.ElementTree as ET
 import os
 from pathlib import Path
 import html
+import pyperclip
 
 def cli_unbundle():
-    print("Paste your FileBundler code bundle below (input will be invisible). Press Enter when done:")
+    print("After copying your FileBundler code bundle to the clipboard, simply press Enter.\n(Do NOT paste the bundle into the terminal; we'll fetch it directly from your clipboard.)\nIf you prefer to paste manually (visible), type any character and press Enter.")
     try:
-        pasted = getpass.getpass("")
+        choice = input()
+        if choice.strip() == "":
+            pasted = pyperclip.paste()
+        else:
+            print("Paste your bundle below. Press Ctrl+D (Unix/macOS) or Ctrl+Z then Enter (Windows) when done:")
+            pasted = sys.stdin.read()
     except Exception as e:
         print(f"Error reading input: {e}")
         sys.exit(1)
     # Remove markdown code block markers if present
     lines = pasted.splitlines()
     if lines and lines[0].strip().startswith('```'):
-        # Remove opening code block (may be ``` or ```xml)
         lines = lines[1:]
     if lines and lines[-1].strip().startswith('```'):
-        # Remove closing code block
         lines = lines[:-1]
     pasted_clean = '\n'.join(lines)
     if len(pasted_clean) < 20 or '<documents' not in pasted_clean:
