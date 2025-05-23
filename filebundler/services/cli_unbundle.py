@@ -3,6 +3,7 @@ import getpass
 import xml.etree.ElementTree as ET
 import os
 from pathlib import Path
+import html
 
 def cli_unbundle():
     print("Paste your FileBundler code bundle below (input will be invisible). Press Enter when done:")
@@ -36,6 +37,8 @@ def cli_unbundle():
                 continue
             file_path = source_elem.text.strip() if source_elem.text else None
             file_content = content_elem.text or ""
+            # Unescape XML entities in file content
+            file_content = html.unescape(file_content)
             if not file_path:
                 print("Warning: Skipping a <document> with empty <source>.")
                 continue
