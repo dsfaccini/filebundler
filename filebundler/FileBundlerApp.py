@@ -7,6 +7,9 @@ from pathlib import Path
 from typing import Dict, List
 
 from filebundler.features import tasks
+from filebundler.features.sort_files import sort_files
+from filebundler.features.ignore_patterns import invalid_path
+
 from filebundler.models.FileItem import FileItem
 from filebundler.models.AppProtocol import AppProtocol
 
@@ -16,11 +19,9 @@ from filebundler.managers.ProjectSettingsManager import ProjectSettingsManager
 
 from filebundler.ui.notification import show_temp_notification
 
-from filebundler.utils.project_utils import invalid_path, sort_files
 
 lf = logfire.with_settings(console_log=False)
 logger = logging.getLogger(__name__)
-
 
 # class ProjectManager
 class FileBundlerApp(AppProtocol):
@@ -88,7 +89,7 @@ class FileBundlerApp(AppProtocol):
             ):
                 filtered_filepaths: List[Path] = []
                 for filepath in dir_path.iterdir():
-                    rel_path = filepath.relative_to(self.project_path)
+                    rel_path = filepath.relative_to(self.project_path).as_posix()
                     if not invalid_path(
                         rel_path, self.psm.project_settings.ignore_patterns
                     ):

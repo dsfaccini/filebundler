@@ -108,7 +108,6 @@ def main():
             cli_unbundle()
             return
         else:
-            import logging
             logger = logging.getLogger("filebundler.cli")
             logger.error(f"Unknown CLI action: {args.action}")
             print(f"Unknown CLI action: {args.action}")

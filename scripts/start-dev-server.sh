@@ -1,0 +1,1 @@
+streamlit run filebundler/main.py --global.developmentMode=false

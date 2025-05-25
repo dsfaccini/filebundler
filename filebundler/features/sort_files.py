@@ -1,5 +1,4 @@
-# filebundler/utils/project_utils.py
-import fnmatch
+# filebundler/features/sort_files.py
 
 from typing import List
 from pathlib import Path
@@ -22,11 +21,3 @@ def sort_files(files: List[Path], ps: ProjectSettings):
         key=sorting_key,
         # reverse=ps.alphabetical_sort == "desc",
     )
-
-
-def invalid_path(relative_path: Path, ignore_patterns: List[str]):
-    """Check if file matches any ignore patterns"""
-    for pattern in ignore_patterns:
-        if fnmatch.fnmatch(relative_path.as_posix(), pattern):
-            return True
-    return False
