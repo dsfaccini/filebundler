@@ -5,6 +5,5 @@ repos:
         name: Increase version
         entry: python scripts/increase_version.py patch
         language: system
-        files: pyproject.toml
         pass_filenames: false
         skip: "-nobump"
