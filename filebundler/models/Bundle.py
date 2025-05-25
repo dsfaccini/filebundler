@@ -39,9 +39,11 @@ class Bundle(BaseModel):
     @property
     def last_modified_date(self) -> Optional[datetime]:
         """Get the most recent modification date of any file in the bundle"""
-        return max(
-            datetime.fromtimestamp(fi.path.stat().st_mtime) for fi in self.file_items
-        )
+        if self.file_items:
+            return max(
+                datetime.fromtimestamp(fi.path.stat().st_mtime) for fi in self.file_items
+            )
+        return None
 
     @property
     def last_modified_date_str(self) -> str:
