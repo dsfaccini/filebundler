@@ -14,6 +14,7 @@ from filebundler.ui.tabs.selected_files import render_selected_files_tab
 from filebundler.ui.tabs.export_contents import render_export_contents_tab
 from filebundler.ui.tabs.global_settings_panel import render_global_settings
 from filebundler.ui.tabs.auto_bundler.render_auto_bundler import render_auto_bundler_tab
+from filebundler.ui.tabs.token_ranking import render_token_ranking_tab
 
 from filebundler.ui.sidebar.file_tree import render_file_tree
 from filebundler.ui.sidebar.settings_panel import render_settings_panel
@@ -76,12 +77,13 @@ def main():
         with main_tab1:
             # Only show if project is loaded
             if st.session_state.app:
-                tab1, tab2, tab3, tab4 = st.tabs(  # type: ignore
+                tab1, tab2, tab3, tab4, tab5 = st.tabs(  # type: ignore
                     [
                         f"Selected Files ({st.session_state.app.selections.nr_of_selected_files})",
                         "Export Contents",
                         f"Manage Bundles ({st.session_state.app.bundles.nr_of_bundles})",
                         "Auto-Bundle",
+                        "Token Ranking",
                     ]
                 )
 
@@ -97,6 +99,9 @@ def main():
 
                 with tab4:
                     render_auto_bundler_tab(st.session_state.app)
+
+                with tab5:
+                    render_token_ranking_tab(st.session_state.app)
             else:
                 # If no project loaded
                 show_temp_notification(
