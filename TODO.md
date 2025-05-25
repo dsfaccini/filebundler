@@ -1,3 +1,8 @@
+# Critical TODOs
+1. In the settings file, set the absolute project path (as possix). When we load a new project we want to check that the platform hasn't changed or the project has been moved.
+    - If it has changed we need to prompt the user to update the path. We can do this automatically by replacing the path in all files in the filebundler directory.
+    - If the user decides against updating it we need to warn them to update it manually themselves, as the app will not work correctly.
+
 # Big TODOs
 
 ## Add a gemini LLM utility

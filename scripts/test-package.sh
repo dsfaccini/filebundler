@@ -1,0 +1,1 @@
+uv run --with filebundler --no-project -- python -c "import filebundler"

@@ -3,27 +3,27 @@
   "file_items": [
     {
       "path": ".cursor/rules/prd.md",
-      "project_path": "C:/Users/lobsp/projects/filebundler"
+      "project_path": "/Users/david/projects/filebundler"
     },
     {
       "path": "filebundler/managers/BundleManager.py",
-      "project_path": "C:/Users/lobsp/projects/filebundler"
+      "project_path": "/Users/david/projects/filebundler"
     },
     {
       "path": "filebundler/models/Bundle.py",
-      "project_path": "C:/Users/lobsp/projects/filebundler"
+      "project_path": "/Users/david/projects/filebundler"
     },
     {
       "path": "filebundler/models/FileItem.py",
-      "project_path": "C:/Users/lobsp/projects/filebundler"
+      "project_path": "/Users/david/projects/filebundler"
     },
     {
       "path": "filebundler/ui/tabs/export_contents.py",
-      "project_path": "C:/Users/lobsp/projects/filebundler"
+      "project_path": "/Users/david/projects/filebundler"
     },
     {
       "path": "filebundler/ui/tabs/selected_files.py",
-      "project_path": "C:/Users/lobsp/projects/filebundler"
+      "project_path": "/Users/david/projects/filebundler"
     }
   ],
   "metadata": {
