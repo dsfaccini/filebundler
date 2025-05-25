@@ -1,9 +1,8 @@
 # Critical TODOs
-1. In the settings file, set the absolute project path (as possix). When we load a new project we want to check that the platform hasn't changed or the project has been moved.
-    - If it has changed we need to prompt the user to update the path. We can do this automatically by replacing the path in all files in the filebundler directory.
-    - If the user decides against updating it we need to warn them to update it manually themselves, as the app will not work correctly.
+- none for now
 
 # Big TODOs
+- none for now
 
 ## Add a gemini LLM utility
 1. we need to update the input field where the user enters the anthropic key, it should read differently depending on what model provider the user chooses to use. Any API key entered needs to be cached in the app state
