@@ -8,6 +8,8 @@ from pathlib import Path
 from filebundler.constants import DISPLAY_NR_OF_RECENT_PROJECTS
 
 from filebundler.ui.notification import show_temp_notification
+from filebundler.ui.components.path_migration_dialog import render_path_migration_dialog, render_path_validation_warning
+
 from filebundler.services.project_structure import save_project_structure
 
 from filebundler.FileBundlerApp import FileBundlerApp
@@ -30,6 +32,27 @@ def open_selected_project(project_path: str):
         # Load project settings BEFORE loading the project
         # This ensures ignore patterns are available when loading the file tree
         app = FileBundlerApp(project_path=project_path_obj)
+        
+        # Check for path validation issues and handle them
+        if hasattr(app, 'path_validation_result') and not app.path_validation_result.is_valid:
+            # Show path migration dialog if there are validation issues
+            new_path = render_path_migration_dialog(
+                app.path_validation_result, 
+                app.psm.filebundler_dir
+            )
+            
+            if new_path:
+                # User chose to update the path
+                success = app.update_project_path_if_needed(new_path)
+                if success:
+                    show_temp_notification("Project path updated successfully!", type="success")
+                else:
+                    show_temp_notification("Failed to update project path", type="error")
+                    return False
+            else:
+                # User didn't resolve the issue, but we'll continue with a warning
+                render_path_validation_warning(app.path_validation_result)
+        
         st.session_state.app = app
 
         # Add to recent projects
@@ -85,3 +108,8 @@ def render_project_selection(global_settings: GlobalSettings):
         if st.button("Open Project") and project_path:
             open_selected_project(project_path)
             st.rerun()
+    
+    # Show path validation warning for already loaded projects
+    if st.session_state.app and hasattr(st.session_state.app, 'path_validation_result'):
+        if not st.session_state.app.path_validation_result.is_valid:
+            render_path_validation_warning(st.session_state.app.path_validation_result)

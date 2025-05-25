@@ -23,11 +23,20 @@ from filebundler.ui.notification import show_temp_notification
 lf = logfire.with_settings(console_log=False)
 logger = logging.getLogger(__name__)
 
+
 # class ProjectManager
 class FileBundlerApp(AppProtocol):
     def __init__(self, project_path: Path):
         self.project_path = project_path.resolve()
         self.psm = ProjectSettingsManager(self.project_path)
+        
+        # Validate project path after settings are loaded
+        self.path_validation_result = self.psm.validate_project_path()
+        
+        # Handle path validation issues - this will be checked in UI
+        if not self.path_validation_result.is_valid:
+            logger.warning(f"Path validation issues detected: {self.path_validation_result.issues}")
+        
         self.file_items: Dict[Path, FileItem] = {}
 
         # Load the directory structure
@@ -52,6 +61,27 @@ class FileBundlerApp(AppProtocol):
         logger.info(
             f"FileBundlerApp initialized with project path: {self.project_path}"
         )
+
+    def update_project_path_if_needed(self, new_path: Path) -> bool:
+        """
+        Update the project path if it has changed and refresh the app.
+        
+        Args:
+            new_path: The new project path to use
+            
+        Returns:
+            True if update was successful, False otherwise
+        """
+        try:
+            success = self.psm.update_project_path(new_path)
+            if success:
+                # Refresh the validation result
+                self.path_validation_result = self.psm.validate_project_path()
+                logger.info(f"Project path updated to: {new_path}")
+            return success
+        except Exception as e:
+            logger.error(f"Error updating project path: {e}")
+            return False
 
     def refresh(self):
         """

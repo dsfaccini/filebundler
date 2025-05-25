@@ -2,9 +2,11 @@
 import logging
 
 from pathlib import Path
+from typing import Optional
 
 from filebundler.utils import json_dump, read_file
 from filebundler.models.ProjectSettings import ProjectSettings
+from filebundler.services.path_validation import validate_project_path, PathValidationResult
 
 from filebundler.features.ignore_patterns import copy_default_ignore_patterns
 
@@ -19,10 +21,45 @@ class ProjectSettingsManager:
         self.filebundler_dir.mkdir(exist_ok=True)
         self.settings_file = self.filebundler_dir / "settings.json"
         self.ignore_patterns_file = self.filebundler_dir / "ignore-patterns.txt"
+        self.path_validation_result: Optional[PathValidationResult] = None
+        
         if not self.ignore_patterns_file.exists():
             copy_default_ignore_patterns(self.filebundler_dir)
+        
         self.load_project_settings()
         self.save_project_settings()
+
+    def validate_project_path(self) -> PathValidationResult:
+        """
+        Validate the current project path against the stored path.
+        
+        Returns:
+            PathValidationResult with validation details
+        """
+        stored_path = self.project_settings.absolute_project_path
+        self.path_validation_result = validate_project_path(self.project_path, stored_path)
+        
+        if not self.path_validation_result.is_valid:
+            logger.warning(f"Project path validation failed: {self.path_validation_result.issues}")
+        
+        return self.path_validation_result
+
+    def update_project_path(self, new_path: Path) -> bool:
+        """
+        Update the stored project path and save settings.
+        
+        Args:
+            new_path: The new project path to store
+            
+        Returns:
+            True if successful, False otherwise
+        """
+        try:
+            self.project_settings.absolute_project_path = new_path.resolve()
+            return self.save_project_settings()
+        except Exception as e:
+            logger.error(f"Error updating project path: {e}")
+            return False
 
     def load_ignore_patterns(self):
         # Try to load from ignore-patterns.txt first
@@ -36,7 +73,8 @@ class ProjectSettingsManager:
                 return patterns
             except Exception as e:
                 logger.warning(f"Error reading ignore-patterns.txt: {str(e)}")
-        # Fallback: try to load from settings or .gitignore
+
+        # Fallback: try to load from settings
         if self.settings_file.exists():
             try:
                 json_text = read_file(self.settings_file)
@@ -48,10 +86,11 @@ class ProjectSettingsManager:
                     return settings.ignore_patterns
             except Exception as e:
                 logger.warning(f"Error reading ignore patterns from settings: {str(e)}")
+                
         # Fallback: try to load from .gitignore
         project_gitignore_path = self.project_path / ".gitignore"
         try:
-            if project_gitignore_path.exists():
+            if project_gitignore_path.exists() and not self.ignore_patterns_file.exists():
                 gitignore_content = read_file(project_gitignore_path)
                 if gitignore_content:
                     ignore_patterns = [
@@ -88,7 +127,7 @@ class ProjectSettingsManager:
             try:
                 json_text = read_file(self.settings_file)
                 loaded_settings = ProjectSettings.model_validate_json(json_text)
-                # Only update non-ignore-patterns fields
+                # Update all fields including the new absolute_project_path
                 self.project_settings.max_files = loaded_settings.max_files
                 self.project_settings.sort_files_first = (
                     loaded_settings.sort_files_first
@@ -96,10 +135,18 @@ class ProjectSettingsManager:
                 self.project_settings.auto_bundle_settings = (
                     loaded_settings.auto_bundle_settings
                 )
+                self.project_settings.absolute_project_path = (
+                    loaded_settings.absolute_project_path
+                )
             except Exception as e:
                 logger.error(
                     f"Error loading project settings from {self.settings_file}: {str(e)}"
                 )
+        
+        # If no stored path, set it to current path
+        if self.project_settings.absolute_project_path is None:
+            self.project_settings.absolute_project_path = self.project_path.resolve()
+            logger.info(f"Setting initial project path: {self.project_path}")
 
     def save_project_settings(self):
         self.save_ignore_patterns()
@@ -113,5 +160,5 @@ class ProjectSettingsManager:
             logger.info(f"Project settings saved to {self.settings_file}")
             return True
         except Exception as e:
-            print(f"Error saving project settings: {str(e)}")
+            logger.error(f"Error saving project settings: {str(e)}")
             return False
