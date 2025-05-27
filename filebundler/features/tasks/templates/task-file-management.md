@@ -64,15 +64,15 @@ Guidelines for creating and managing subtask lists in markdown files to track pr
 
 ## AI Instructions
 
-When working with subtask files, the AI should:
+When working with task files, the AI should:
 
-1. Regularly update the subtask file after implementing significant components
+1. Regularly update the task file after implementing significant components
 2. Mark completed subtasks with [x] when finished
 3. Add new subtasks discovered during implementation
 4. Maintain the "Relevant Files" section with accurate file paths and descriptions
 5. Document implementation details, especially for complex features
 6. When implementing subtasks one by one, first check which subtask to implement next
-7. After implementing a subtask, update the file to reflect progress
+7. After implementing a subtask, update the task file to reflect progress
 
 ## Example subtask Update
 

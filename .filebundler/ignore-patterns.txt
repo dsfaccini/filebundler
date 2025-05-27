@@ -45,6 +45,7 @@ bun.lockb
 *.lock*
 .eslint.config.js
 *.lock
+*.ico
 *.jpg
 *.jpeg
 *.png
