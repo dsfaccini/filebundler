@@ -52,6 +52,11 @@ class SelectionsManager:
             logger.info(f"Loaded selections: {self.selected_file_items = }")
 
     @property
+    def tokens(self):
+        """Return the number of selected tokens"""
+        return sum(file_item.tokens for file_item in self.selected_file_items)
+
+    @property
     def nr_of_selected_files(self):
         """Return the number of selected files"""
         return len(self.selected_file_items)

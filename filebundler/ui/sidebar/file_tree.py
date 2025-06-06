@@ -19,7 +19,7 @@ def render_file_tree(app: FileBundlerApp):
     """
 
     st.subheader(
-        f"Files ({app.selections.nr_of_selected_files}/{app.nr_of_files}) ({f'{app.root_item.tokens}'} tokens)"
+        f"Files ({app.selections.nr_of_selected_files}/{app.nr_of_files}) ({f'{app.selections.tokens}/{app.root_item.tokens}'} tokens)"
     )
 
     def clear_search():
@@ -35,6 +35,37 @@ def render_file_tree(app: FileBundlerApp):
                 st.rerun()
 
     render_file_tree_buttons(app)
+
+    highest_token_item = app.highest_token_item
+    max_tokens = highest_token_item.tokens if highest_token_item else 0
+
+    def get_token_color(tokens: int) -> str:
+        """Get a color for a token count based on its value within the range."""
+        min_tokens = 0
+        if not tokens or tokens == 0 or max_tokens == min_tokens:
+            return ""
+
+        normalized = (tokens - min_tokens) / (max_tokens - min_tokens)
+
+        if normalized < 0.25:
+            return "green"
+        elif normalized < 0.5:
+            return "yellow"
+        elif normalized < 0.75:
+            return "orange"
+        else:
+            return "red"
+
+    def format_token_string(tokens: int) -> str:
+        """Format the token count with a color."""
+        if tokens is None:  # Handles directories without a direct token count
+            return ""
+        if tokens == 0:
+            return "(0 tokens)"
+        color = get_token_color(tokens)
+        if color:
+            return f"(:{color}[{tokens} tokens])"
+        return f"({tokens} tokens)"
 
     def matches_search(item: FileItem) -> bool:
         """Check if an item matches the search term"""
@@ -57,10 +88,12 @@ def render_file_tree(app: FileBundlerApp):
                 if not has_matching_children(child):
                     continue
 
+                token_str = format_token_string(child.tokens)
+                indent_str = "&nbsp;" * indent * 4
                 checkbox_label = (
-                    f"{'&nbsp;' * indent * 4}📁 **{child.name}** ({child.tokens} tokens)"
+                    f"{indent_str}->📁 **{child.name}** {token_str}"
                     if child.is_dir
-                    else f"{'&nbsp;' * indent * 4} {child.name} ({child.tokens} tokens)"
+                    else f"{indent_str}-> {child.name} {token_str}"
                 )
                 new_state = st.checkbox(
                     checkbox_label,
@@ -84,8 +117,10 @@ def render_file_tree(app: FileBundlerApp):
 
     try:
         # Display the file tree starting from root
-        root_item = app.file_items[app.project_path]
-        display_directory(root_item)
+        if app.root_item:
+            display_directory(app.root_item)
+        else:
+            st.info("Please wait for the file tree to be generated.")
     except Exception as e:
         logger.error(f"Error rendering file tree: {e}", exc_info=True)
         st.error(f"Error rendering file tree: {str(e)}")

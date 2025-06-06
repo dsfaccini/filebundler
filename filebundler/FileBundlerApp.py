@@ -29,14 +29,14 @@ class FileBundlerApp(AppProtocol):
     def __init__(self, project_path: Path):
         self.project_path = project_path.resolve()
         self.psm = ProjectSettingsManager(self.project_path)
-        
+
         # Validate project path after settings are loaded
         self.path_validation_result = self.psm.validate_project_path()
-        
+
         # Handle path validation issues - this will be checked in UI
         if not self.path_validation_result.is_valid:
             logger.warning(f"Path validation issues detected: {self.path_validation_result.issues}")
-        
+
         self.file_items: Dict[Path, FileItem] = {}
 
         # Load the directory structure
@@ -65,10 +65,10 @@ class FileBundlerApp(AppProtocol):
     def update_project_path_if_needed(self, new_path: Path) -> bool:
         """
         Update the project path if it has changed and refresh the app.
-        
+
         Args:
             new_path: The new project path to use
-            
+
         Returns:
             True if update was successful, False otherwise
         """
@@ -89,6 +89,10 @@ class FileBundlerApp(AppProtocol):
         """
         self.__init__(self.project_path)
         st.rerun()
+
+    @property
+    def highest_token_item(self):
+        return max(self.file_items.values(), key=lambda x: x.tokens) if self.file_items else None
 
     @property
     def nr_of_files(self):
