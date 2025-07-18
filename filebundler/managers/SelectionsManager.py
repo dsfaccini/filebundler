@@ -31,7 +31,7 @@ class SelectionsManager:
         ):
             logger.info(f"Loading selections for {self.app.project_path}")
             if not self.selections_file.exists():
-                logger.warning(f"{self.selections_file = } hasn't been created yet")
+                logger.info(f"{self.selections_file = } hasn't been created yet")
                 return
 
             with open(self.selections_file, "r") as f:

@@ -3,7 +3,7 @@ repos:
     hooks:
       - id: increase-version
         name: Increase version
-        entry: python scripts/increase_version.py patch
+        entry: .venv/bin/python scripts/increase_version.py patch
         language: system
         pass_filenames: false
         skip: "-nobump"

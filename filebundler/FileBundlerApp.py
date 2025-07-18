@@ -56,7 +56,8 @@ class FileBundlerApp(AppProtocol):
         self.bundles = BundleManager(app=self)
         self.selections = SelectionsManager(app=self)
 
-        tasks.copy_templates(filebundler_dir=self.psm.filebundler_dir)
+        # this is an optional feature that should be triggered by CLI if the user so chooses
+        # tasks.copy_templates(filebundler_dir=self.psm.filebundler_dir)
 
         logger.info(
             f"FileBundlerApp initialized with project path: {self.project_path}"

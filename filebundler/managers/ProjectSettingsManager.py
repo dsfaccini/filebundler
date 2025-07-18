@@ -139,8 +139,8 @@ class ProjectSettingsManager:
                     loaded_settings.absolute_project_path
                 )
             except Exception as e:
-                logger.error(
-                    f"Error loading project settings from {self.settings_file}: {str(e)}"
+                logger.info(
+                    f"Exception loading project settings from {self.settings_file}: {str(e)}"
                 )
         
         # If no stored path, set it to current path

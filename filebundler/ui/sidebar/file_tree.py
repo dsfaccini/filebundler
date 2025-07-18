@@ -46,25 +46,22 @@ def render_file_tree(app: FileBundlerApp):
             return ""
 
         normalized = (tokens - min_tokens) / (max_tokens - min_tokens)
-
-        if normalized < 0.25:
-            return "green"
+        if normalized < 0.1:
+            return "✅"
+        elif normalized < 0.3:
+            return "⚠️"
         elif normalized < 0.5:
-            return "yellow"
-        elif normalized < 0.75:
-            return "orange"
+            return "❗"
         else:
-            return "red"
+            return "❗❗"
 
     def format_token_string(tokens: int) -> str:
         """Format the token count with a color."""
-        if tokens is None:  # Handles directories without a direct token count
+        if not tokens:  # Handles directories without a direct token count
             return ""
-        if tokens == 0:
-            return "(0 tokens)"
         color = get_token_color(tokens)
         if color:
-            return f"(:{color}[{tokens} tokens])"
+            return f"""({tokens} tokens){color}"""
         return f"({tokens} tokens)"
 
     def matches_search(item: FileItem) -> bool:
