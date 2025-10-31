@@ -1,5 +1,7 @@
 # FileBundler
 
+<img width="1145" height="733" alt="snapshot of the ranking tab from the filebundler web interface" src="https://github.com/user-attachments/assets/e3cdd2b7-74b1-455f-859c-f093b59fc5b5" />
+
 ## Running with uvx
 You can run filebundler with uvx without installing it
 ```bash
