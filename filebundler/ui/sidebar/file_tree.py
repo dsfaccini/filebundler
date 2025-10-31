@@ -95,7 +95,7 @@ def render_file_tree(app: FileBundlerApp):
                 new_state = st.checkbox(
                     checkbox_label,
                     value=child.selected,
-                    key=f"file_{child.path}",
+                    key=f"file_{child.path}", # TODO: handle symlinks
                     help=f"Select {child.name} for bundling",
                 )
 

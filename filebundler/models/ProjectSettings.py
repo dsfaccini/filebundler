@@ -17,7 +17,7 @@ class AutoBundleSettings(BaseModel):
 
 
 class ProjectSettings(BaseModel):
-    ignore_patterns: List[str] = []
+    include_patterns: List[str] = []
     max_files: int = DEFAULT_MAX_RENDER_FILES
     sort_files_first: bool = True
     # alphabetical_sort: Literal["asc", "desc"] = "asc"

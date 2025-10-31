@@ -1,0 +1,95 @@
+# Default include patterns for filebundler
+# Only files matching these patterns will be included in bundles
+
+# Source code directories
+src/
+lib/
+app/
+apps/
+modules/
+components/
+utils/
+helpers/
+services/
+models/
+controllers/
+views/
+templates/
+assets/
+static/
+public/
+
+# Configuration files
+*.py
+*.js
+*.ts
+*.jsx
+*.tsx
+*.html
+*.css
+*.scss
+*.sass
+*.less
+*.json
+*.xml
+*.yaml
+*.yml
+*.toml
+*.ini
+*.cfg
+*.conf
+*.config
+*.md
+*.txt
+*.sh
+*.bat
+*.ps1
+*.sql
+*.graphql
+*.gql
+*.env*
+!.env.example
+
+# Documentation
+README*
+CHANGELOG*
+LICENSE*
+CONTRIBUTING*
+docs/
+documentation/
+examples/
+tests/
+test/
+spec/
+specs/
+
+# Build and deployment
+Dockerfile*
+docker-compose*
+.dockerignore
+Makefile*
+package.json
+pyproject.toml
+setup.py
+requirements*.txt
+Pipfile*
+poetry.lock
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+.circleci/
+.jenkins/
+azure-pipelines.yml
+
+# Other important files
+*.pyw
+*.pyc
+*.pyd
+__init__.py
+__main__.py
+main.py
+index.py
+app.py
+server.py

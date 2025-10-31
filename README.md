@@ -64,10 +64,42 @@ Besides creating bundles FileBundler has additional features
 ## Project Structure
 The app automatically exports your project structure to a file called `project-structure.md` with computed token counts for each file and folder not ignored. Checkout the [.filebundler/project-structure.md](https://raw.githubusercontent.com/dsfaccini/filebundler/refs/heads/master/.filebundler/project-structure.md) file in this project
 
-## Ignore patterns
-Not all files are included in the `project-structure.md`. *Ignore patterns* are made from a combination of `DEFAULT_IGNORE_PATTERNS` defined in this project and the .gitignore file of the project you open.
+## Include patterns
+FileBundler uses an *include patterns* system where only files matching the specified patterns are included in the project structure and bundles. This approach is more intuitive than ignore patterns as you explicitly specify what you want to include rather than what to exclude.
 
-Ignore patterns are stored in the `.filebundler/settings.json` file can be modified either directly in this file or using the *webapp* in the `Project Settings` tab on the sidebar you can add or remove glob patterns to ignore certain files or folders from the project structure.
+Include patterns are stored in the `.filebundler/.include` file and can be modified either directly in this file or using the *webapp* in the `Project Settings` tab on the sidebar. You can add or remove glob patterns to control which files or folders are included in the project structure.
+
+<details>
+<summary>📋 Migration from Ignore Patterns to Include Patterns</summary>
+
+### What Changed
+FileBundler previously used an "ignore patterns" system where files were included by default and excluded based on patterns. This has been changed to an "include patterns" system where files are only included if they match the specified patterns.
+
+### Why the Change
+- **More intuitive**: You specify what you want to include rather than what to exclude
+- **Better defaults**: Comprehensive include patterns cover most common use cases
+- **Flexible**: Still supports exclusion patterns with `!` prefix for fine-tuning
+
+### Default Include Patterns
+The default `.include` file includes patterns for:
+- Source code directories (`src/`, `lib/`, `app/`, etc.)
+- Configuration files (`*.py`, `*.js`, `*.json`, etc.)
+- Documentation (`README*`, `docs/`, etc.)
+- Build/deployment files (`Dockerfile*`, `package.json`, etc.)
+
+### Migration Notes
+- Existing projects will automatically get the new `.include` file with default patterns
+- The old `ignore-patterns.txt` file is no longer used
+- Settings are now stored in `.filebundler/.include` instead of `.filebundler/ignore-patterns.txt`
+- The UI now shows "Include Patterns" instead of "Ignore Patterns"
+
+### Customizing Include Patterns
+You can customize the include patterns by:
+1. Editing the `.filebundler/.include` file directly
+2. Using the "Project Settings" tab in the web app
+3. Adding exclusion patterns with `!` prefix (e.g., `!*.log` to exclude log files)
+
+</details>
 
 ## Estimate token usage
 We currently use tiktoken with the [o200k_base](https://github.com/openai/tiktoken) model to compute token count, but you may a utility like [tokencounter.org](https://tokencounter.org/) to estimate token usage for other models or [openai's tokenizer](https://platform.openai.com/tokenizer) to compare estimates.

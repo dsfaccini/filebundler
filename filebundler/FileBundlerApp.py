@@ -6,9 +6,9 @@ import streamlit as st
 from pathlib import Path
 from typing import Dict, List
 
-from filebundler.features import tasks
+# from filebundler.features import tasks
 from filebundler.features.sort_files import sort_files
-from filebundler.features.ignore_patterns import invalid_path
+from filebundler.features.ignore_patterns import should_include_path
 
 from filebundler.models.FileItem import FileItem
 from filebundler.models.AppProtocol import AppProtocol
@@ -110,7 +110,7 @@ class FileBundlerApp(AppProtocol):
         Args:
             dir_path: Directory to scan
             parent_item: Parent FileItem to attach children to
-            project_settings: List of glob patterns to ignore
+            project_settings: ProjectSettings
             max_files: Maximum number of files to include
 
         Returns:
@@ -125,8 +125,8 @@ class FileBundlerApp(AppProtocol):
                 filtered_filepaths: List[Path] = []
                 for filepath in dir_path.iterdir():
                     rel_path = filepath.relative_to(self.project_path).as_posix()
-                    if not invalid_path(
-                        rel_path, self.psm.project_settings.ignore_patterns
+                    if should_include_path(
+                        rel_path, self.psm.project_settings.include_patterns
                     ):
                         filtered_filepaths.append(filepath)
 

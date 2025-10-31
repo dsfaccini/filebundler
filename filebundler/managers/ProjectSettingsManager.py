@@ -8,7 +8,7 @@ from filebundler.utils import json_dump, read_file
 from filebundler.models.ProjectSettings import ProjectSettings
 from filebundler.services.path_validation import validate_project_path, PathValidationResult
 
-from filebundler.features.ignore_patterns import copy_default_ignore_patterns
+from filebundler.features.ignore_patterns import copy_default_include_patterns
 
 logger = logging.getLogger(__name__)
 
@@ -20,12 +20,12 @@ class ProjectSettingsManager:
         self.filebundler_dir = self.project_path / ".filebundler"
         self.filebundler_dir.mkdir(exist_ok=True)
         self.settings_file = self.filebundler_dir / "settings.json"
-        self.ignore_patterns_file = self.filebundler_dir / "ignore-patterns.txt"
+        self.include_patterns_file = self.filebundler_dir / ".include"
         self.path_validation_result: Optional[PathValidationResult] = None
-        
-        if not self.ignore_patterns_file.exists():
-            copy_default_ignore_patterns(self.filebundler_dir)
-        
+
+        if not self.include_patterns_file.exists():
+            copy_default_include_patterns(self.filebundler_dir)
+
         self.load_project_settings()
         self.save_project_settings()
 
@@ -61,67 +61,50 @@ class ProjectSettingsManager:
             logger.error(f"Error updating project path: {e}")
             return False
 
-    def load_ignore_patterns(self):
-        # Try to load from ignore-patterns.txt first
-        if self.ignore_patterns_file.exists():
+    def load_include_patterns(self):
+        # Try to load from .include file first
+        if self.include_patterns_file.exists():
             try:
-                content = read_file(self.ignore_patterns_file)
+                content = read_file(self.include_patterns_file)
                 patterns = [
                     line.strip() for line in content.splitlines() if line.strip()
                 ]
-                self.project_settings.ignore_patterns = patterns
+                self.project_settings.include_patterns = patterns
                 return patterns
             except Exception as e:
-                logger.warning(f"Error reading ignore-patterns.txt: {str(e)}")
+                logger.warning(f"Error reading .include file: {str(e)}")
 
-        # Fallback: try to load from settings
+        # Fallback: try to load from settings (for migration)
         if self.settings_file.exists():
             try:
                 json_text = read_file(self.settings_file)
                 settings = ProjectSettings.model_validate_json(json_text)
-                if settings.ignore_patterns:
-                    self.project_settings.ignore_patterns = settings.ignore_patterns
-                    # Migrate to ignore-patterns.txt
-                    self.save_ignore_patterns()
-                    return settings.ignore_patterns
+                if settings.include_patterns:
+                    self.project_settings.include_patterns = settings.include_patterns
+                    # Migrate to .include file
+                    self.save_include_patterns()
+                    return settings.include_patterns
             except Exception as e:
-                logger.warning(f"Error reading ignore patterns from settings: {str(e)}")
-                
-        # Fallback: try to load from .gitignore
-        project_gitignore_path = self.project_path / ".gitignore"
-        try:
-            if project_gitignore_path.exists() and not self.ignore_patterns_file.exists():
-                gitignore_content = read_file(project_gitignore_path)
-                if gitignore_content:
-                    ignore_patterns = [
-                        line.strip()
-                        for line in gitignore_content.splitlines()
-                        if line.strip()
-                    ]
-                    self.project_settings.ignore_patterns = ignore_patterns
-                    # Migrate to ignore-patterns.txt
-                    self.save_ignore_patterns()
-                    return ignore_patterns
-        except Exception as e:
-            logger.warning(
-                f"Error reading .gitignore file: {str(e)}. Using default ignore patterns."
-            )
-        # If all else fails, use whatever is in the model (defaults)
-        return self.project_settings.ignore_patterns
+                logger.warning(f"Error reading include patterns from settings: {str(e)}")
 
-    def save_ignore_patterns(self):
+
+
+        # If all else fails, use whatever is in the model (defaults)
+        return self.project_settings.include_patterns
+
+    def save_include_patterns(self):
         try:
-            with open(self.ignore_patterns_file, "w", encoding="utf-8") as f:
-                for pattern in self.project_settings.ignore_patterns:
+            with open(self.include_patterns_file, "w", encoding="utf-8") as f:
+                for pattern in self.project_settings.include_patterns:
                     f.write(pattern + "\n")
-            logger.info(f"Ignore patterns saved to {self.ignore_patterns_file}")
+            logger.info(f"Include patterns saved to {self.include_patterns_file}")
             return True
         except Exception as e:
-            logger.error(f"Error saving ignore patterns: {str(e)}")
+            logger.error(f"Error saving include patterns: {str(e)}")
             return False
 
     def load_project_settings(self):
-        self.load_ignore_patterns()
+        self.load_include_patterns()
         # Always try to load other settings from settings.json
         if self.settings_file.exists():
             try:
@@ -142,20 +125,20 @@ class ProjectSettingsManager:
                 logger.info(
                     f"Exception loading project settings from {self.settings_file}: {str(e)}"
                 )
-        
+
         # If no stored path, set it to current path
         if self.project_settings.absolute_project_path is None:
             self.project_settings.absolute_project_path = self.project_path.resolve()
             logger.info(f"Setting initial project path: {self.project_path}")
 
     def save_project_settings(self):
-        self.save_ignore_patterns()
+        self.save_include_patterns()
         try:
             with open(self.settings_file, "w", encoding="utf-8") as f:
-                # Save all settings, but ignore_patterns will be loaded from file and not written
+                # Save all settings, but include_patterns will be loaded from file and not written
                 settings_dict = self.project_settings.model_dump()
-                if "ignore_patterns" in settings_dict:
-                    del settings_dict["ignore_patterns"]
+                if "include_patterns" in settings_dict:
+                    del settings_dict["include_patterns"]
                 json_dump(settings_dict, f)
             logger.info(f"Project settings saved to {self.settings_file}")
             return True

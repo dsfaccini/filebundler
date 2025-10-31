@@ -37,17 +37,17 @@ def render_settings_panel(app: FileBundlerApp):
             help="Automatically include relevant files in the bundle",
         )
 
-        st.subheader("Ignore Patterns")
-        st.write("Files matching these patterns will be ignored (glob syntax)")  # type: ignore
+        st.subheader("Include Patterns")
+        st.write("Only files matching these patterns will be included (glob syntax)")  # type: ignore
 
-        with st.expander("Show/Hide Ignore Patterns", expanded=False):
+        with st.expander("Show/Hide Include Patterns", expanded=False):
             updated_patterns = st.text_area(
-                "Edit ignore patterns",
-                "\n".join(app.psm.project_settings.ignore_patterns),
+                "Edit include patterns",
+                "\n".join(app.psm.project_settings.include_patterns),
             )
 
             if updated_patterns:
-                app.psm.project_settings.ignore_patterns = updated_patterns.split("\n")
+                app.psm.project_settings.include_patterns = updated_patterns.split("\n")
 
         # Save button for all settings
         if st.button("Save Settings"):
