@@ -1,7 +1,7 @@
 [project]
 name = "filebundler"
-version = "0.9.31"
-description = "File Bundler is an app to bundle project files together and use them for LLM prompting. It helps estimate and optimize token and context usage."
+version = "0.9.32"
+description = "filebundler is a streamlit app to bundle project files together and use them for LLM prompting. It helps estimate and optimize token and context usage."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -10,10 +10,9 @@ dependencies = [
     "streamlit>=1.43.2",
     "pydantic-settings>=2.8.1",
     "tiktoken>=0.9.0",
-    "logfire>=3.9.0",
-    "pydantic-ai-slim[anthropic]>=0.0.42",
-    "pydantic-ai[logfire]>=0.0.42",
     "aiofiles>=25.1.0",
+    "logfire>=4.14.2",
+    "pydantic-ai>=1.9.1",
 ]
 authors = [
     { name = "DavidSF", email = "david@filebundler.com" }

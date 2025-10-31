@@ -249,7 +249,7 @@ Even though the tool call will fail, the error message helps the agent auto-corr
 # Similar tools
 
 ## [Cursor](https://www.cursor.com/)
-Currently, you can add project rules to your project and include globs for files related to those rules. This is kind of a reverse file bundler, since cursor uses the files in the glob to determine what rules you send to the LLM.
+Currently, you can add project rules to your project and include globs for files related to those rules. This is kind of a reverse `filebundler`, since cursor uses the files in the glob to determine what rules you send to the LLM.
 You can as well make a selection of files to be included in a chat, but you don't have an overview of how much context has been used. To clear the context you can start a new chat, but the selection you made for the previous chat won't be persisted (as of today), so you need to reselect your files.
 
 ## RepoPrompt
