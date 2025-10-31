@@ -1,10 +1,11 @@
 # filebundler/FileBundlerApp.py
+import asyncio
 import logging
 import logfire
 import streamlit as st
 
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 # from filebundler.features import tasks
 from filebundler.features.sort_files import sort_files
@@ -20,7 +21,7 @@ from filebundler.managers.ProjectSettingsManager import ProjectSettingsManager
 from filebundler.ui.notification import show_temp_notification
 
 
-lf = logfire.with_settings(console_log=False)
+logfire.configure(send_to_logfire='if-token-present', console=False)
 logger = logging.getLogger(__name__)
 
 
@@ -104,25 +105,24 @@ class FileBundlerApp(AppProtocol):
         self.selections.clear_all_selections()
         self.bundles.current_bundle = None
 
-    def load_directory_recursive(self, dir_path: Path, parent_item: FileItem):
+    async def _load_directory_recursive_async(self, dir_path: Path, parent_item: FileItem) -> bool:
         """
-        Recursively load directory structure into a parent/child hierarchy.
+        Async version of directory loading with parallel subdirectory processing.
 
         Args:
             dir_path: Directory to scan
             parent_item: Parent FileItem to attach children to
-            project_settings: ProjectSettings
-            max_files: Maximum number of files to include
 
         Returns:
             bool: True if directory has visible content, False otherwise
         """
         try:
-            with lf.span(
+            with logfire.span(
                 "loading directory {dir_path}",
                 dir_path=dir_path.relative_to(self.project_path),
                 _level="debug",
             ):
+                # Iterate directory
                 filtered_filepaths: List[Path] = []
                 for filepath in dir_path.iterdir():
                     rel_path = filepath.relative_to(self.project_path).as_posix()
@@ -146,11 +146,11 @@ class FileBundlerApp(AppProtocol):
                     )
 
                 has_visible_content = False
+                subdirectory_tasks: List[Tuple[Path, FileItem]] = []
 
-                # Process filepaths in a single pass
+                # Process files and collect subdirectory tasks
                 for filepath in sorted_filepaths:
                     try:
-                        # Create FileItem once and reuse
                         file_item = FileItem(
                             path=filepath,
                             project_path=self.project_path,
@@ -160,16 +160,10 @@ class FileBundlerApp(AppProtocol):
                         )
 
                         if filepath.is_dir():
-                            # Recursively process subdirectory
-                            subdirectory_has_content = self.load_directory_recursive(
-                                filepath,
-                                file_item,
-                            )
-                            if subdirectory_has_content:
-                                self.file_items[filepath] = file_item
-                                parent_item.children.append(file_item)
-                                has_visible_content = True
-                        else:  # File
+                            # Schedule subdirectory processing for parallel execution
+                            subdirectory_tasks.append((filepath, file_item))
+                        else:
+                            # Process files immediately
                             self.file_items[filepath] = file_item
                             parent_item.children.append(file_item)
                             has_visible_content = True
@@ -185,7 +179,31 @@ class FileBundlerApp(AppProtocol):
                         )
                         continue
 
-                # Clean up empty directories (optional, based on your needs)
+                # Process all subdirectories in parallel
+                if subdirectory_tasks:
+                    subdirectory_results = await asyncio.gather(
+                        *[
+                            self._load_directory_recursive_async(subdir_path, subdir_item)
+                            for subdir_path, subdir_item in subdirectory_tasks
+                        ],
+                        return_exceptions=True
+                    )
+
+                    # Add subdirectories that have content
+                    for (subdir_path, subdir_item), result in zip(subdirectory_tasks, subdirectory_results):
+                        if isinstance(result, Exception):
+                            show_temp_notification(
+                                f"Error processing {subdir_path.relative_to(self.project_path)}: {result}",
+                                type="error",
+                            )
+                            continue
+
+                        if result:
+                            self.file_items[subdir_path] = subdir_item
+                            parent_item.children.append(subdir_item)
+                            has_visible_content = True
+
+                # Clean up empty directories
                 if not has_visible_content and dir_path in self.file_items:
                     del self.file_items[dir_path]
 
@@ -194,6 +212,19 @@ class FileBundlerApp(AppProtocol):
         except Exception as e:
             st.error(f"Error loading directory {dir_path}: {str(e)}")
             return False
+
+    def load_directory_recursive(self, dir_path: Path, parent_item: FileItem):
+        """
+        Synchronous wrapper for async directory loading.
+
+        Args:
+            dir_path: Directory to scan
+            parent_item: Parent FileItem to attach children to
+
+        Returns:
+            bool: True if directory has visible content, False otherwise
+        """
+        return asyncio.run(self._load_directory_recursive_async(dir_path, parent_item))
 
     def paths_to_file_items(self, paths: List[Path]):
         file_items: List[FileItem] = []

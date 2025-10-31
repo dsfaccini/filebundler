@@ -1,0 +1,12 @@
+.python-version
+.gitignore
+.env.example
+mypy.ini
+
+*.md
+
+.filebundler/project-structure.md
+docs/
+filebundler/
+scripts/
+tests/

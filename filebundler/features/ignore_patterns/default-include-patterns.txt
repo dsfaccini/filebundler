@@ -1,25 +1,13 @@
 # Default include patterns for filebundler
 # Only files matching these patterns will be included in bundles
 
-# Source code directories
+.filebundler/project-structure.md
+
 src/
 lib/
 app/
 apps/
-modules/
-components/
-utils/
-helpers/
-services/
-models/
-controllers/
-views/
-templates/
-assets/
-static/
-public/
 
-# Configuration files
 *.py
 *.js
 *.ts
@@ -48,9 +36,8 @@ public/
 *.graphql
 *.gql
 *.env*
-!.env.example
+.env.example
 
-# Documentation
 README*
 CHANGELOG*
 LICENSE*
@@ -63,7 +50,6 @@ test/
 spec/
 specs/
 
-# Build and deployment
 Dockerfile*
 docker-compose*
 .dockerignore
@@ -75,7 +61,6 @@ requirements*.txt
 Pipfile*
 poetry.lock
 
-# CI/CD
 .github/
 .gitlab-ci.yml
 .travis.yml
@@ -83,10 +68,6 @@ poetry.lock
 .jenkins/
 azure-pipelines.yml
 
-# Other important files
-*.pyw
-*.pyc
-*.pyd
 __init__.py
 __main__.py
 main.py
