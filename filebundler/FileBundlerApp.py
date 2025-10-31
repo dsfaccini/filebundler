@@ -4,7 +4,7 @@ import logfire
 import streamlit as st
 
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 # from filebundler.features import tasks
 from filebundler.features.sort_files import sort_files
@@ -38,6 +38,7 @@ class FileBundlerApp(AppProtocol):
             logger.warning(f"Path validation issues detected: {self.path_validation_result.issues}")
 
         self.file_items: Dict[Path, FileItem] = {}
+        self._highest_token_item: Optional[FileItem] = None
 
         # Load the directory structure
         self.root_item = FileItem(
@@ -93,7 +94,7 @@ class FileBundlerApp(AppProtocol):
 
     @property
     def highest_token_item(self):
-        return max(self.file_items.values(), key=lambda x: x.tokens) if self.file_items else None
+        return self._highest_token_item
 
     @property
     def nr_of_files(self):
@@ -172,6 +173,10 @@ class FileBundlerApp(AppProtocol):
                             self.file_items[filepath] = file_item
                             parent_item.children.append(file_item)
                             has_visible_content = True
+
+                            # Track highest token item during loading
+                            if not self._highest_token_item or file_item.tokens > self._highest_token_item.tokens:
+                                self._highest_token_item = file_item
 
                     except (PermissionError, OSError):
                         show_temp_notification(

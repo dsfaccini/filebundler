@@ -5,6 +5,7 @@
 TODO-further-out.md
 .ruff_cache/
 dist/
+typings/
 
 # Python-generated files
 __pycache__/

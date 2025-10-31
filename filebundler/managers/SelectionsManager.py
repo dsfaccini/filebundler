@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any, List, Optional
 
 from filebundler.models.AppProtocol import AppProtocol
+from filebundler.services.cached_operations import get_total_tokens
 
 from filebundler.utils import json_dump, json_load, read_file
 from filebundler.ui.notification import show_temp_notification
@@ -53,8 +54,15 @@ class SelectionsManager:
 
     @property
     def tokens(self):
-        """Return the number of selected tokens"""
-        return sum(file_item.tokens for file_item in self.selected_file_items)
+        """Return the number of selected tokens (cached)"""
+        selected = self.selected_file_items
+        if not selected:
+            return 0
+
+        file_paths = tuple(str(fi.path) for fi in selected)
+        mtimes = tuple(fi.path.stat().st_mtime for fi in selected)
+
+        return get_total_tokens(file_paths, mtimes)
 
     @property
     def nr_of_selected_files(self):

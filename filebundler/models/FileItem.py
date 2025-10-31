@@ -3,8 +3,8 @@ from pathlib import Path
 from typing_extensions import List, Optional, Self
 from pydantic import Field, field_serializer, model_validator
 
-from filebundler.services.token_count import count_tokens
-from filebundler.utils import BaseModel, read_file
+from filebundler.services.cached_operations import get_file_content, get_file_tokens
+from filebundler.utils import BaseModel
 
 
 class FileItem(BaseModel):
@@ -52,12 +52,14 @@ class FileItem(BaseModel):
     @property
     def content(self):
         if self.path.is_file():
-            return read_file(self.path)
+            mtime = self.path.stat().st_mtime
+            return get_file_content(str(self.path), mtime)
 
     @property
     def tokens(self):
         if self.path.is_file():
-            return count_tokens(self.content)  # type: ignore
+            mtime = self.path.stat().st_mtime
+            return get_file_tokens(str(self.path), mtime)
         else:
             return sum(fi.tokens for fi in self.children)  # type: ignore
 
