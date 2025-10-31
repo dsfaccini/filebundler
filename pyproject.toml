@@ -1,6 +1,6 @@
 [project]
 name = "filebundler"
-version = "0.9.33"
+version = "0.9.34"
 description = "filebundler is a streamlit app to bundle project files together and use them for LLM prompting. It helps estimate and optimize token and context usage."
 readme = "README.md"
 requires-python = ">=3.12"

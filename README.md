@@ -49,11 +49,10 @@ Using the MCP server to bundle files together can save you time and money while 
 
 # How to use the Web App?
 - Install and run FileBundler per the command at the start of this README
--
 - visit the URL shown on your terminal
 - you'll be prompted to enter the path of your project (this is your local filesystem path)
-  - you can copy the path to your folder and paste it there
-  - <details><summary>why no file selection window</summary>we currently don't support a "Select file" dialog but we're open to it if this is a major pain point</details>
+    - you can copy the path to your folder and paste it there
+    - <details><summary>why no file selection window</summary>we currently don't support a "Select file" dialog but we're open to it if this is a major pain point</details>
 - This will load the <span style="color:green">file tree 🌳</span> on the sidebar and the tabs on the right
 - The tabs will display your currently selected files, allow you to save them in a bundle and export their contents to be pasted on your chat of preference
 - To save a bundle you need to enter a name. The name must be lowercase and include only hyphens ("-") letters and numbers
@@ -69,48 +68,17 @@ FileBundler uses an *include patterns* system where only files matching the spec
 
 Include patterns are stored in the `.filebundler/.include` file and can be modified either directly in this file or using the *webapp* in the `Project Settings` tab on the sidebar. You can add or remove glob patterns to control which files or folders are included in the project structure.
 
-<details>
-<summary>📋 Migration from Ignore Patterns to Include Patterns</summary>
-
-### What Changed
-FileBundler previously used an "ignore patterns" system where files were included by default and excluded based on patterns. This has been changed to an "include patterns" system where files are only included if they match the specified patterns.
-
-### Why the Change
-- **More intuitive**: You specify what you want to include rather than what to exclude
-- **Better defaults**: Comprehensive include patterns cover most common use cases
-- **Flexible**: Still supports exclusion patterns with `!` prefix for fine-tuning
-
-### Default Include Patterns
-The default `.include` file includes patterns for:
-- Source code directories (`src/`, `lib/`, `app/`, etc.)
-- Configuration files (`*.py`, `*.js`, `*.json`, etc.)
-- Documentation (`README*`, `docs/`, etc.)
-- Build/deployment files (`Dockerfile*`, `package.json`, etc.)
-
-### Migration Notes
-- Existing projects will automatically get the new `.include` file with default patterns
-- The old `ignore-patterns.txt` file is no longer used
-- Settings are now stored in `.filebundler/.include` instead of `.filebundler/ignore-patterns.txt`
-- The UI now shows "Include Patterns" instead of "Ignore Patterns"
-
-### Customizing Include Patterns
-You can customize the include patterns by:
-1. Editing the `.filebundler/.include` file directly
-2. Using the "Project Settings" tab in the web app
-3. Adding exclusion patterns with `!` prefix (e.g., `!*.log` to exclude log files)
-
-</details>
-
 ## Estimate token usage
 We currently use tiktoken with the [o200k_base](https://github.com/openai/tiktoken) model to compute token count, but you may a utility like [tokencounter.org](https://tokencounter.org/) to estimate token usage for other models or [openai's tokenizer](https://platform.openai.com/tokenizer) to compare estimates.
 
 ## Bundles
-A bundle is just a list of file paths relative to their project folder. It includes some metadata, such as the total byte size of the files in the bundle and the total tokens as calculated by our tokenizer (currretly o200k_base). A bundle can be exported, that means, the contents of the files listed in a bundle can be exported as an XML structure. This follows the best practices [mentioned above](#who-is-filebundler-for). This exported code is also called a bundle. So for clarity, we'll speak of "XML bundle" or "code bundle" when we talk about the **bundle of exported code** and refer to the list of file paths as the "file bundle" or just "bundle".
+A bundle is just a list of file paths relative to their project folder. It includes some metadata, such as the total byte size of the files in the bundle and the total tokens as calculated by our tokenizer. A bundle can be exported, that means, the contents of the files listed in a bundle can be exported as an XML structure. This follows the best practices [mentioned above](#who-is-filebundler-for). This exported code is also called a bundle. So for clarity, we'll speak of "XML bundle" or "code bundle" when we talk about the **bundle of exported code** and refer to the list of file paths as the "file bundle" or just "bundle".
 
 ### Unbundle
-Copy multiple files written by a chatbot using the CLI `unbundle` command.
+Chat UIs (ChatGPT, Claude, Gemini) will often create many files as `artifacts` which take time to copy one by one. The `chat_instructions` prompt makes them format their response in one single XML artifact containing all file contents and filepaths. You can then copy that and run the `unbundle` command to write those contents automatically into their respective files.
+To use unbundle, run the following two commands in sequence:
 ```bash
-filebundler cli chat_instructions # this copies the instrction to your clipboard, paste this instruction in your chat so the chatbot formats their response properly.
+filebundler cli chat_instructions # this copies the instruction to your clipboard, paste this instruction in your chat so the chatbot formats their response properly.
 filebundler cli unbundle # this gives you a moment to copy the XML response from the chatbot into your clipboard.
 
 # you don't need to paste the content into the terminal, just press enter when you're ready
@@ -129,7 +97,7 @@ The auto-bundler uses an LLM to suggest you bundles relevant to your query. Simp
 The auto-bundler will use your prompt and current selections to suggest bundles. The LLM will return a list of likely and probable files that are relevant to your query, and a message and/or code if you asked for it.
 
 ### Auto-Bundle example
-A workflow example would be for you to provide the LLM with your TODO list (TODO.md) and ask it to provide you with the files that are related to the first n tasks. You could also ask it to sort your tasks into different categories and then re-prompt it to provide bundles for each category.
+A workflow example would be for you to provide the LLM with your TODO list (`TODO.md`) and ask it to provide you with the files that are related to the first n tasks. You could also ask it to sort your tasks into different categories and then re-prompt it to provide bundles for each category.
 
 ## Tasks
 FileBundler will copy the templates under [tasks/templates/](https://github.com/dsfaccini/filebundler/tree/master/filebundler/features/tasks/templates) into the project's `.filebundler/tasks/` directory when filebundler is initialized. This is a useful task management workflow. This will have no effect as long as your AI coding agent doesn't read the file. To use the task management workflow, you need to tell your agent to follow the instructions of the task management workflow using a trigger word or phrase, like `use the task management system whenever I tell you to "tackle a task"`.
@@ -168,7 +136,7 @@ Once configured, the AI in your IDE should be able to call the `export_file_bund
 ### Prime your agent to use the filebundler MCP
 Example:
 ```
-look at this task @filebundler-MCP-server.md . Check the @project-structure.md to get a list of the files you want to read in order to tackle this task. Instead of reading the files one by one, make a list of the files you think you need and use the filebundler mcp server to get a bundle of them. Use proper filesystem notation for the project path in the current operating system (i.e. C:\\path\\to\\project for Windows and /path/to/project for linux)
+look at this task @filebundler-MCP-server.md . Check the @project-structure.md to get a list of the files you want to read in order to tackle this task. Instead of reading the files one by one, make a list of the files you think you need and use the filebundler mcp server to get a bundle of them. Use posix filesystem notation all that way.
 ```
 
 ## CLI Usage
@@ -260,7 +228,7 @@ Before I started this tool I researched if there was already an existing tool an
 4. pricing
 5. ~~Can't create bundles or persist file selections~~ I believe this has been added since around April 2025.
 
-It seems like a great tool and I invite you to check it out. It offers lots of other functionality, like diffs and code trees.
+It offers lots of other functionality, like diffs and code trees.
 
 ## [Claude Code](https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview)
 Like cursor but on the CLI. With the introduction of [commands](https://x.com/_catwu/status/1900593730538864643) you can save markdown files with your prompts and issue them as commands to claude code. This is a bit different than bundling project files into topics, but shares the concept of persisting workflows that you repeat as settings.
