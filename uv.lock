@@ -569,7 +569,7 @@ wheels = [
 
 [[package]]
 name = "filebundler"
-version = "0.9.31"
+version = "0.9.32"
 source = { editable = "." }
 dependencies = [
     { name = "aiofiles" },
@@ -594,12 +594,12 @@ dev = [
 requires-dist = [
     { name = "aiofiles", specifier = ">=25.1.0" },
     { name = "logfire", specifier = ">=4.14.2" },
-    { name = "pydantic", specifier = ">=2.10.6" },
+    { name = "pydantic", specifier = ">=2.12.3" },
     { name = "pydantic-ai", specifier = ">=1.9.1" },
-    { name = "pydantic-settings", specifier = ">=2.8.1" },
-    { name = "pyperclip", specifier = ">=1.9.0" },
-    { name = "streamlit", specifier = ">=1.43.2" },
-    { name = "tiktoken", specifier = ">=0.9.0" },
+    { name = "pydantic-settings", specifier = ">=2.11.0" },
+    { name = "pyperclip", specifier = ">=1.11.0" },
+    { name = "streamlit", specifier = ">=1.51.0" },
+    { name = "tiktoken", specifier = ">=0.12.0" },
 ]
 
 [package.metadata.requires-dev]

@@ -1,18 +1,18 @@
 [project]
 name = "filebundler"
-version = "0.9.32"
+version = "0.9.33"
 description = "filebundler is a streamlit app to bundle project files together and use them for LLM prompting. It helps estimate and optimize token and context usage."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "pydantic>=2.10.6",
-    "pyperclip>=1.9.0",
-    "streamlit>=1.43.2",
-    "pydantic-settings>=2.8.1",
-    "tiktoken>=0.9.0",
     "aiofiles>=25.1.0",
     "logfire>=4.14.2",
     "pydantic-ai>=1.9.1",
+    "tiktoken>=0.12.0",
+    "pydantic>=2.12.3",
+    "pyperclip>=1.11.0",
+    "streamlit>=1.51.0",
+    "pydantic-settings>=2.11.0",
 ]
 authors = [
     { name = "DavidSF", email = "david@filebundler.com" }
@@ -61,6 +61,3 @@ clean = true
 # [tool.hatch.build.targets.wheel]
 # options = ["--clean"]
 # packages = ["filebundler"]
-
-[logfire]
-ignore_no_config = true
